@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:calendar/calendar_page.dart';
 import 'package:calendar/src/logic/calendar_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:calendar/src/config/global_config.dart' as config;
@@ -7,6 +8,7 @@ import 'package:calendar/src/time_planner_style.dart';
 import 'package:calendar/src/time_planner_task.dart';
 import 'package:calendar/src/time_planner_time.dart';
 import 'package:calendar/src/time_planner_title.dart';
+import 'package:intl/intl.dart';
 
 /// Time planner widget
 class TimePlanner extends StatefulWidget {
@@ -105,10 +107,12 @@ class _TimePlannerState extends State<TimePlanner> {
     tasks = widget.tasks ?? [];
   }
 
+  DateTime currentTime = DateTime.now();
   @override
   void initState() {
     _initData();
     super.initState();
+    DateTime currentTime = DateTime.now();
     Future.delayed(Duration.zero).then((_) {
       int hour = DateTime.now().hour;
       if (isAnimated != null && isAnimated == true) {
@@ -128,6 +132,68 @@ class _TimePlannerState extends State<TimePlanner> {
         }
       }
     });
+  }
+
+  Map<DateTime, List<Lesson>> lessons = {
+    DateTime(2024, 5, 20): [
+      Lesson(
+          start: DateTime(2024, 5, 20, 14, 00),
+          end: DateTime(2024, 5, 20, 15, 00),
+          name: 'Евгений'),
+      Lesson(
+          start: DateTime(2024, 5, 20, 15, 00),
+          end: DateTime(2024, 5, 20, 15, 30),
+          name: 'Алеся'),
+      Lesson(
+          start: DateTime(2024, 5, 20, 15, 30),
+          end: DateTime(2024, 5, 20, 16, 00),
+          name: 'Василий')
+    ],
+    DateTime(2024, 5, 21): [
+      Lesson(
+          start: DateTime(2024, 5, 21, 14, 00),
+          end: DateTime(2024, 5, 21, 15, 00),
+          name: 'Елена (США)'),
+      Lesson(
+          start: DateTime(2024, 5, 21, 15, 00),
+          end: DateTime(2024, 5, 21, 15, 30),
+          name: 'Таня'),
+      Lesson(
+          start: DateTime(2024, 5, 21, 15, 30),
+          end: DateTime(2024, 5, 21, 16, 00),
+          name: 'Пробный с к'),
+      Lesson(
+          start: DateTime(2024, 5, 21, 16, 00),
+          end: DateTime(2024, 5, 21, 16, 30),
+          name: 'Василий')
+    ],
+    DateTime(2024, 5, 22): [
+      Lesson(
+          start: DateTime(2024, 5, 21, 15, 00),
+          end: DateTime(2024, 5, 21, 15, 30),
+          name: 'Sprint Calendar')
+    ],
+  };
+
+  void prevWeek() {
+    setState(() {
+      currentTime = currentTime.subtract(const Duration(days: 7));
+    });
+  }
+
+  void nextWeek() {
+    setState(() {
+      currentTime = currentTime.add(const Duration(days: 7));
+    });
+  }
+
+  List<List<Lesson>> get lessonsData {
+    final startTime = currentTime.startOfCurrentWeek().startOfDay();
+    final result = <List<Lesson>>[[]];
+    for (int i = 0; i < 7; i++) {
+      result.add(lessons[startTime.add(Duration(days: i))] ?? []);
+    }
+    return result;
   }
 
   @override
@@ -348,153 +414,210 @@ class _TimePlannerState extends State<TimePlanner> {
   }
 
   Widget buildMainBody() {
-    return SingleChildScrollView(
-      controller: mainVerticalController,
-      child: SingleChildScrollView(
-          controller: mainHorizontalController,
-          scrollDirection: Axis.horizontal,
-          child: Align(
-            alignment: Alignment.topLeft,
-            child: Container(
-              height: (config.totalHours * config.cellHeight!) + 80,
-              width: (config.totalDays * config.cellWidth!).toDouble(),
-              color: Colors.grey[100],
-              child: Stack(
-                children: [
-                  GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: config.totalDays,
-                      childAspectRatio: config.cellWidth! / config.cellHeight!,
-                    ),
-                    itemCount:
-                        (config.totalHours.toInt() + 1) * config.totalDays,
-                    itemBuilder: (context, index) {
-                      int day = index % config.totalDays + 1;
-
-                      return InkWell(
-                        onTap: () {
-                          _showBlurredDialog(
-                              context, TimeOfDay(hour: 10, minute: 20));
+    final titles = ['', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+    final startTime = currentTime.startOfCurrentWeek();
+    return Scaffold(
+      backgroundColor: const Color(0xffcfd7e5),
+      body: Column(
+        children: [
+          Row(
+            children: List.generate(8, (index) {
+              if (index == 0) {
+                return SizedBox(
+                  width: 100,
+                  child: Row(
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          prevWeek();
                         },
-                        child: Container(
-                          margin: EdgeInsets.all(1),
-                          color: Colors.white,
-                          child: Center(
-                            child: Text('$day'),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                  // Добавляем задачи на календарь
-                  ...tasks.where((task) {
-                    DateTime taskDate = DateTime(
-                      task.dateTime.year,
-                      task.dateTime.month,
-                      task.dateTime.day,
-                    );
-                    return taskDate.year == 2024 && taskDate.month == 5;
-                  }).map((task) {
-                    double top = ((config.cellHeight! *
-                                (task.dateTime.hour - config.startHour)) +
-                            ((task.dateTime.minutes * config.cellHeight!) / 60))
-                        .toDouble();
-                    double left =
-                        config.cellWidth! * (task.dateTime.day - 1).toDouble();
-
-                    return Positioned(
-                      top: top,
-                      left: left,
-                      child: TimePlannerTask(
-                        task: task,
-                        widthTask: config.cellWidth!.toDouble(),
-                        leftSpace: 0.0,
-                        onTap: () {
-                          // Обработка нажатия на задачу
-                        },
+                        icon: const Icon(Icons.arrow_back),
                       ),
-                    );
-                  }).toList(),
-                ],
+                      IconButton(
+                        onPressed: () {
+                          nextWeek();
+                        },
+                        icon: const Icon(Icons.arrow_forward),
+                      )
+                    ],
+                  ),
+                );
+              }
+              final time = DateFormat('dd.MM')
+                  .format(startTime.add(Duration(days: index - 1)));
+              return Expanded(
+                  child: Center(
+                child: Text(
+                  '${titles[index]} $time',
+                ),
+              ));
+            }),
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Row(
+                children: List.generate(
+                    8,
+                    (index) => index == 0
+                        ? const ColumnTimeWidget()
+                        : Expanded(
+                            child: ColumnDayWidget(
+                            lessons: lessonsData[index],
+                          ))),
               ),
             ),
-          )),
+          ),
+        ],
+      ),
     );
-
-    //   return SingleChildScrollView(
-    //     controller: mainVerticalController,
-    //     child: SingleChildScrollView(
-    //       controller: mainHorizontalController,
-    //       scrollDirection: Axis.horizontal,
-    //       child: Column(
-    //         crossAxisAlignment: CrossAxisAlignment.end,
-    //         mainAxisAlignment: MainAxisAlignment.end,
-    //         mainAxisSize: MainAxisSize.min,
-    //         children: <Widget>[
-    //           Row(
-    //             crossAxisAlignment: CrossAxisAlignment.end,
-    //             mainAxisAlignment: MainAxisAlignment.end,
-    //             mainAxisSize: MainAxisSize.min,
-    //             children: <Widget>[
-    //               InkWell(
-    //                 onTap: () {},
-    //                 overlayColor: MaterialStateProperty.all(Colors.green),
-    //                 child: SizedBox(
-    //                   height: (config.totalHours * config.cellHeight!) + 80,
-    //                   width: (config.totalDays * config.cellWidth!).toDouble(),
-    //                   child: Stack(
-    //                     children: <Widget>[
-    //                       Column(
-    //                         mainAxisSize: MainAxisSize.min,
-    //                         children: <Widget>[
-    //                           for (var i = 0; i < config.totalHours; i++)
-    //                             Column(
-    //                               mainAxisSize: MainAxisSize.min,
-    //                               children: <Widget>[
-    //                                 SizedBox(
-    //                                   height: (config.cellHeight! - 1).toDouble(),
-    //                                 ),
-    //                                 const Divider(
-    //                                   height: 1,
-    //                                 ),
-    //                               ],
-    //                             )
-    //                         ],
-    //                       ),
-    //                       Row(
-    //                         mainAxisSize: MainAxisSize.min,
-    //                         children: <Widget>[
-    //                           for (var i = 0; i < config.totalDays; i++)
-    //                             Row(
-    //                               mainAxisSize: MainAxisSize.min,
-    //                               children: <Widget>[
-    //                                 SizedBox(
-    //                                   width: (config.cellWidth! - 1).toDouble(),
-    //                                 ),
-    //                                 Container(
-    //                                   width: 1,
-    //                                   height: (config.totalHours *
-    //                                           config.cellHeight!) +
-    //                                       config.cellHeight!,
-    //                                   color: Colors.black12,
-    //                                 )
-    //                               ],
-    //                             )
-    //                         ],
-    //                       ),
-    //                       for (int i = 0; i < tasks.length; i++) tasks[i],
-    //                     ],
-    //                   ),
-    //                 ),
-    //               ),
-    //             ],
-    //           ),
-    //         ],
-    //       ),
-    //     ),
-    //   );
-    // }
   }
+
+  // return SingleChildScrollView(
+  //   controller: mainVerticalController,
+  //   child: SingleChildScrollView(
+  //       controller: mainHorizontalController,
+  //       scrollDirection: Axis.horizontal,
+  //       child: Align(
+  //         alignment: Alignment.topLeft,
+  //         child: Container(
+  //           height: (config.totalHours * config.cellHeight!) + 80,
+  //           width: (config.totalDays * config.cellWidth!).toDouble(),
+  //           color: Colors.grey[100],
+  //           child: Stack(
+  //             children: [
+  //               GridView.builder(
+  //                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+  //                   crossAxisCount: config.totalDays,
+  //                   childAspectRatio: config.cellWidth! / config.cellHeight!,
+  //                 ),
+  //                 itemCount:
+  //                     (config.totalHours.toInt() + 1) * config.totalDays,
+  //                 itemBuilder: (context, index) {
+  //                   int day = index % config.totalDays + 1;
+
+  //                   return InkWell(
+  //                     onTap: () {
+  //                       _showBlurredDialog(
+  //                           context, TimeOfDay(hour: 10, minute: 20));
+  //                     },
+  //                     child: Container(
+  //                       margin: EdgeInsets.all(1),
+  //                       color: Colors.white,
+  //                       child: Center(
+  //                         child: Text('$day'),
+  //                       ),
+  //                     ),
+  //                   );
+  //                 },
+  //               ),
+  //               // Добавляем задачи на календарь
+  //               ...tasks.where((task) {
+  //                 DateTime taskDate = DateTime(
+  //                   task.dateTime.year,
+  //                   task.dateTime.month,
+  //                   task.dateTime.day,
+  //                 );
+  //                 return taskDate.year == 2024 && taskDate.month == 5;
+  //               }).map((task) {
+  //                 double top = ((config.cellHeight! *
+  //                             (task.dateTime.hour - config.startHour)) +
+  //                         ((task.dateTime.minutes * config.cellHeight!) / 60))
+  //                     .toDouble();
+  //                 double left =
+  //                     config.cellWidth! * (task.dateTime.day - 1).toDouble();
+
+  //                 return Positioned(
+  //                   top: top,
+  //                   left: left,
+  //                   child: TimePlannerTask(
+  //                     task: task,
+  //                     widthTask: config.cellWidth!.toDouble(),
+  //                     leftSpace: 0.0,
+  //                     onTap: () {
+  //                       // Обработка нажатия на задачу
+  //                     },
+  //                   ),
+  //                 );
+  //               }).toList(),
+  //             ],
+  //           ),
+  //         ),
+  //       )),
+  // );
+
+  //   return SingleChildScrollView(
+  //     controller: mainVerticalController,
+  //     child: SingleChildScrollView(
+  //       controller: mainHorizontalController,
+  //       scrollDirection: Axis.horizontal,
+  //       child: Column(
+  //         crossAxisAlignment: CrossAxisAlignment.end,
+  //         mainAxisAlignment: MainAxisAlignment.end,
+  //         mainAxisSize: MainAxisSize.min,
+  //         children: <Widget>[
+  //           Row(
+  //             crossAxisAlignment: CrossAxisAlignment.end,
+  //             mainAxisAlignment: MainAxisAlignment.end,
+  //             mainAxisSize: MainAxisSize.min,
+  //             children: <Widget>[
+  //               InkWell(
+  //                 onTap: () {},
+  //                 overlayColor: MaterialStateProperty.all(Colors.green),
+  //                 child: SizedBox(
+  //                   height: (config.totalHours * config.cellHeight!) + 80,
+  //                   width: (config.totalDays * config.cellWidth!).toDouble(),
+  //                   child: Stack(
+  //                     children: <Widget>[
+  //                       Column(
+  //                         mainAxisSize: MainAxisSize.min,
+  //                         children: <Widget>[
+  //                           for (var i = 0; i < config.totalHours; i++)
+  //                             Column(
+  //                               mainAxisSize: MainAxisSize.min,
+  //                               children: <Widget>[
+  //                                 SizedBox(
+  //                                   height: (config.cellHeight! - 1).toDouble(),
+  //                                 ),
+  //                                 const Divider(
+  //                                   height: 1,
+  //                                 ),
+  //                               ],
+  //                             )
+  //                         ],
+  //                       ),
+  //                       Row(
+  //                         mainAxisSize: MainAxisSize.min,
+  //                         children: <Widget>[
+  //                           for (var i = 0; i < config.totalDays; i++)
+  //                             Row(
+  //                               mainAxisSize: MainAxisSize.min,
+  //                               children: <Widget>[
+  //                                 SizedBox(
+  //                                   width: (config.cellWidth! - 1).toDouble(),
+  //                                 ),
+  //                                 Container(
+  //                                   width: 1,
+  //                                   height: (config.totalHours *
+  //                                           config.cellHeight!) +
+  //                                       config.cellHeight!,
+  //                                   color: Colors.black12,
+  //                                 )
+  //                               ],
+  //                             )
+  //                         ],
+  //                       ),
+  //                       for (int i = 0; i < tasks.length; i++) tasks[i],
+  //                     ],
+  //                   ),
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   String formattedTime(int hour) {
     /// this method formats the input hour into a time string

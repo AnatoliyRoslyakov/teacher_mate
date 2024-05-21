@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:math' as math;
 import 'dart:ui';
 
+import 'package:calendar/calendar_page.dart';
 import 'package:calendar/src/logic/calendar_bloc.dart';
 import 'package:calendar/time_planner.dart';
 import 'package:flutter/material.dart';
@@ -26,9 +27,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: CalendarBaseWidget(),
-    );
+    return const MaterialApp(home: CalendarBaseWidget()
+        // CalendarPage(),
+
+        );
   }
 }
 
