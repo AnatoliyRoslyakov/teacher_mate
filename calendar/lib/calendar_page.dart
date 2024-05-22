@@ -138,14 +138,14 @@ class _CalendarPageState extends State<CalendarPage> {
 
   @override
   Widget build(BuildContext context) {
-    final titles = ['', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+    final titles = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
     final startTime = currentTime.startOfCurrentWeek();
     return Scaffold(
       backgroundColor: const Color(0xffcfd7e5),
       body: Column(
         children: [
           Row(
-            children: List.generate(8, (index) {
+            children: List.generate(7, (index) {
               if (index == 0) {
                 return SizedBox(
                   width: 100,
@@ -181,7 +181,7 @@ class _CalendarPageState extends State<CalendarPage> {
             child: SingleChildScrollView(
               child: Row(
                 children: List.generate(
-                    8,
+                    7,
                     (index) => index == 0
                         ? const ColumnTimeWidget()
                         : Expanded(

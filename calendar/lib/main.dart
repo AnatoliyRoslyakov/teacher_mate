@@ -66,20 +66,6 @@ class CalendarBaseWidgetState extends State<CalendarBaseWidget> {
       body: Center(
         child: Column(
           children: [
-            DateRangeWidget(
-              nextDate: () {
-                setState(() {
-                  startDate = startDate.add(const Duration(days: 6));
-                  log(startDate.toString());
-                });
-              },
-              afterDate: () {
-                setState(() {
-                  startDate = startDate.subtract(const Duration(days: 6));
-                  log(startDate.toString());
-                });
-              },
-            ),
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.only(top: 20, left: 20),
@@ -94,13 +80,6 @@ class CalendarBaseWidgetState extends State<CalendarBaseWidget> {
                     interstitialEvenColor: Colors.grey[50],
                     interstitialOddColor: Colors.grey[150],
                   ),
-                  headers: [
-                    ...List.generate(10, (int day) {
-                      return TimePlannerTitle(
-                          title: formatDate(day: day, startTime: startDate)
-                              .toLowerCase());
-                    })
-                  ],
                   tasks: [
                     CalendarTask(
                         minutesDuration: 60,
@@ -170,13 +149,13 @@ class DateRangeWidget extends StatefulWidget {
 }
 
 class _DateRangeWidgetState extends State<DateRangeWidget> {
-  DateTime _selectedDate = DateTime.now();
+  DateTime _selectedDate = DateTime.now().startOfCurrentWeek();
 
   void _updateDate(bool isForward) {
     setState(() {
       _selectedDate = isForward
-          ? _selectedDate.add(Duration(days: 6))
-          : _selectedDate.subtract(Duration(days: 6));
+          ? _selectedDate.add(Duration(days: 7))
+          : _selectedDate.subtract(Duration(days: 7));
     });
   }
 

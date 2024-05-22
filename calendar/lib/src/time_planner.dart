@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:calendar/calendar_page.dart';
+import 'package:calendar/main.dart';
 import 'package:calendar/src/logic/calendar_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:calendar/src/config/global_config.dart' as config;
@@ -21,7 +22,6 @@ class TimePlanner extends StatefulWidget {
   /// Create days from here, each day is a TimePlannerTitle.
   ///
   /// you should create at least one day
-  final List<TimePlannerTitle> headers;
 
   /// List of widgets on time planner
   final List<CalendarTask>? tasks;
@@ -43,7 +43,6 @@ class TimePlanner extends StatefulWidget {
     Key? key,
     required this.startHour,
     required this.endHour,
-    required this.headers,
     this.tasks,
     this.style,
     this.use24HourFormat = false,
@@ -71,8 +70,6 @@ class _TimePlannerState extends State<TimePlanner> {
       throw FlutterError("Start hour should be larger than 0");
     } else if (widget.endHour > 23) {
       throw FlutterError("Start hour should be lower than 23");
-    } else if (widget.headers.isEmpty) {
-      throw FlutterError("header can't be empty");
     }
   }
 
@@ -98,7 +95,6 @@ class _TimePlannerState extends State<TimePlanner> {
     config.cellHeight = style.cellHeight;
     config.cellWidth = style.cellWidth;
     config.totalHours = (widget.endHour - widget.startHour).toDouble();
-    config.totalDays = widget.headers.length;
     config.startHour = widget.startHour;
     config.use24HourFormat = widget.use24HourFormat;
     config.setTimeOnAxis = widget.setTimeOnAxis;
@@ -217,22 +213,6 @@ class _TimePlannerState extends State<TimePlanner> {
         mainAxisAlignment: MainAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          SingleChildScrollView(
-            controller: dayHorizontalController,
-            scrollDirection: Axis.horizontal,
-            physics: const NeverScrollableScrollPhysics(),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.end,
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                const SizedBox(
-                  width: 60,
-                ),
-                for (int i = 0; i < config.totalDays; i++) widget.headers[i],
-              ],
-            ),
-          ),
           // Container(
           //   height: 1,
           //   color: style.dividerColor ?? Theme.of(context).primaryColor,
@@ -414,61 +394,44 @@ class _TimePlannerState extends State<TimePlanner> {
   }
 
   Widget buildMainBody() {
-    final titles = ['', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+    final titles = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
     final startTime = currentTime.startOfCurrentWeek();
-    return Scaffold(
-      backgroundColor: const Color(0xffcfd7e5),
-      body: Column(
-        children: [
-          Row(
-            children: List.generate(8, (index) {
-              if (index == 0) {
-                return SizedBox(
-                  width: 100,
-                  child: Row(
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          prevWeek();
-                        },
-                        icon: const Icon(Icons.arrow_back),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          nextWeek();
-                        },
-                        icon: const Icon(Icons.arrow_forward),
-                      )
-                    ],
-                  ),
-                );
-              }
-              final time = DateFormat('dd.MM')
-                  .format(startTime.add(Duration(days: index - 1)));
-              return Expanded(
-                  child: Center(
-                child: Text(
-                  '${titles[index]} $time',
-                ),
-              ));
-            }),
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Row(
-                children: List.generate(
-                    8,
-                    (index) => index == 0
-                        ? const ColumnTimeWidget()
-                        : Expanded(
-                            child: ColumnDayWidget(
-                            lessons: lessonsData[index],
-                          ))),
+    return Column(
+      children: [
+        DateRangeWidget(
+          nextDate: () {
+            nextWeek();
+          },
+          afterDate: () {
+            prevWeek();
+          },
+        ),
+        Row(
+          children: List.generate(7, (index) {
+            final time = DateFormat('dd.MM')
+                .format(startTime.add(Duration(days: index)));
+            return Expanded(
+                child: Center(
+              child: Text(
+                '${titles[index]} $time',
               ),
+            ));
+          }),
+        ),
+        Expanded(
+          child: SingleChildScrollView(
+            controller: mainVerticalController,
+            child: Row(
+              children: List.generate(
+                  7,
+                  (index) => Expanded(
+                          child: ColumnDayWidget(
+                        lessons: lessonsData[index + 1],
+                      ))),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
