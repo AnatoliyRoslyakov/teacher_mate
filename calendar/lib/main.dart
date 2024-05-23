@@ -1,12 +1,7 @@
-import 'dart:developer';
-import 'dart:math' as math;
 import 'dart:ui';
-
 import 'package:calendar/calendar_page.dart';
-import 'package:calendar/src/logic/calendar_bloc.dart';
 import 'package:calendar/time_planner.dart';
 import 'package:flutter/material.dart';
-
 import 'package:intl/intl.dart';
 
 void main() {
@@ -27,10 +22,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(home: CalendarBaseWidget()
-        // CalendarPage(),
-
-        );
+    return const MaterialApp(home: CalendarBaseWidget());
   }
 }
 
@@ -44,95 +36,82 @@ class CalendarBaseWidget extends StatefulWidget {
 }
 
 class CalendarBaseWidgetState extends State<CalendarBaseWidget> {
-  List<CalendarTask> tasks = [];
-  String formattedDate = '';
-  DateTime startDate = DateTime.now();
-
-  List<CalendarTask> createTaskMap(List<CalendarTask> tasks) {
-    return tasks;
-  }
-
-  String formatDate({required int day, required DateTime startTime}) {
-    DateTime now = startTime.add(Duration(days: day));
-    String formattedDayOfWeek = DateFormat.EEEE().format(now).substring(0, 2);
-    String formattedDateOfMonth = DateFormat.d().format(now);
-    return '$formattedDateOfMonth $formattedDayOfWeek';
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
-        child: Column(
-          children: [
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 20, left: 20),
-                child: TimePlanner(
-                  startHour: 7,
-                  endHour: 23,
-                  use24HourFormat: true,
-                  setTimeOnAxis: true,
-                  style: TimePlannerStyle(
-                    dividerColor: Colors.grey,
-                    showScrollBar: true,
-                    interstitialEvenColor: Colors.grey[50],
-                    interstitialOddColor: Colors.grey[150],
-                  ),
-                  tasks: [
-                    CalendarTask(
-                        minutesDuration: 60,
-                        dateTime: DateTaskStart(
-                            day: 1,
-                            hour: 10,
-                            minutes: 10,
-                            year: 2024,
-                            month: 5),
-                        title: 'title'),
-                    CalendarTask(
-                        minutesDuration: 30,
-                        dateTime: DateTaskStart(
-                            day: 2,
-                            hour: 11,
-                            minutes: 10,
-                            year: 2024,
-                            month: 5),
-                        title: 'title'),
-                    CalendarTask(
-                        minutesDuration: 90,
-                        dateTime: DateTaskStart(
-                            day: 3,
-                            hour: 12,
-                            minutes: 10,
-                            year: 2024,
-                            month: 5),
-                        title: 'title')
-                  ],
-                ),
-              ),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 20, left: 20),
+          child: TimePlanner(
+            minutesGrid: 0.5,
+            startHour: 9,
+            endHour: 22,
+            style: TimePlannerStyle(
+              dividerColor: Colors.grey,
+              showScrollBar: true,
+              interstitialEvenColor: Colors.grey[50],
+              interstitialOddColor: Colors.grey[150],
             ),
-          ],
+            lessons: {
+              DateTime(2024, 5, 20): [
+                Lesson(
+                    start: DateTime(2024, 5, 20, 14, 00),
+                    end: DateTime(2024, 5, 20, 15, 00),
+                    name: 'Евгений'),
+                Lesson(
+                    start: DateTime(2024, 5, 20, 15, 00),
+                    end: DateTime(2024, 5, 20, 15, 30),
+                    name: 'Алеся'),
+                Lesson(
+                    start: DateTime(2024, 5, 20, 15, 30),
+                    end: DateTime(2024, 5, 20, 16, 00),
+                    name: 'Василий')
+              ],
+              DateTime(2024, 5, 21): [
+                Lesson(
+                    start: DateTime(2024, 5, 21, 14, 00),
+                    end: DateTime(2024, 5, 21, 15, 00),
+                    name: 'Елена (США)'),
+                Lesson(
+                    start: DateTime(2024, 5, 21, 15, 00),
+                    end: DateTime(2024, 5, 21, 15, 30),
+                    name: 'Таня'),
+                Lesson(
+                    start: DateTime(2024, 5, 21, 15, 30),
+                    end: DateTime(2024, 5, 21, 16, 00),
+                    name: 'Пробный с к'),
+                Lesson(
+                    start: DateTime(2024, 5, 21, 16, 00),
+                    end: DateTime(2024, 5, 21, 16, 30),
+                    name: 'Василий')
+              ],
+              DateTime(2024, 5, 22): [
+                Lesson(
+                    start: DateTime(2024, 5, 21, 15, 00),
+                    end: DateTime(2024, 5, 21, 15, 30),
+                    name: 'Sprint Calendar')
+              ],
+              DateTime(2024, 5, 23): [
+                Lesson(
+                    start: DateTime(2024, 5, 23, 14, 00),
+                    end: DateTime(2024, 5, 23, 15, 30),
+                    name: 'Евгений'),
+                Lesson(
+                    start: DateTime(2024, 5, 23, 15, 00),
+                    end: DateTime(2024, 5, 23, 15, 30),
+                    name: 'Алеся'),
+                Lesson(
+                    start: DateTime(2024, 5, 23, 17, 30),
+                    end: DateTime(2024, 5, 23, 21, 00),
+                    name: 'Василий')
+              ],
+            },
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => createTaskMap([
-          CalendarTask(
-              minutesDuration: 60,
-              dateTime: DateTaskStart(
-                  day: 20, hour: 10, minutes: 10, year: 2024, month: 5),
-              title: 'title'),
-          CalendarTask(
-              minutesDuration: 30,
-              dateTime: DateTaskStart(
-                  day: 25, hour: 11, minutes: 10, year: 2024, month: 5),
-              title: 'title'),
-          CalendarTask(
-              minutesDuration: 90,
-              dateTime: DateTaskStart(
-                  day: 27, hour: 12, minutes: 10, year: 2024, month: 5),
-              title: 'title')
-        ]),
+        onPressed: () {},
         child: const Icon(Icons.add),
       ),
     );
@@ -143,7 +122,8 @@ class DateRangeWidget extends StatefulWidget {
   final VoidCallback nextDate;
   final VoidCallback afterDate;
 
-  const DateRangeWidget({required this.nextDate, required this.afterDate});
+  const DateRangeWidget(
+      {super.key, required this.nextDate, required this.afterDate});
   @override
   _DateRangeWidgetState createState() => _DateRangeWidgetState();
 }
@@ -154,8 +134,8 @@ class _DateRangeWidgetState extends State<DateRangeWidget> {
   void _updateDate(bool isForward) {
     setState(() {
       _selectedDate = isForward
-          ? _selectedDate.add(Duration(days: 7))
-          : _selectedDate.subtract(Duration(days: 7));
+          ? _selectedDate.add(const Duration(days: 7))
+          : _selectedDate.subtract(const Duration(days: 7));
     });
   }
 
@@ -163,12 +143,8 @@ class _DateRangeWidgetState extends State<DateRangeWidget> {
   Widget build(BuildContext context) {
     DateTime startDate = _selectedDate;
     DateTime endDate = _selectedDate.add(const Duration(days: 6));
-
-    String formattedStartDate =
-        DateFormat('dd MMM').format(startDate).toLowerCase();
-    String formattedEndDate =
-        DateFormat('dd MMM').format(endDate).toLowerCase();
-
+    String formattedStartDate = DateFormat('dd MMM').format(startDate);
+    String formattedEndDate = DateFormat('dd MMM').format(endDate);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
@@ -176,7 +152,7 @@ class _DateRangeWidgetState extends State<DateRangeWidget> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             IconButton(
-              icon: Icon(Icons.arrow_back),
+              icon: const Icon(Icons.arrow_back),
               onPressed: () {
                 widget.afterDate.call();
 
@@ -185,10 +161,10 @@ class _DateRangeWidgetState extends State<DateRangeWidget> {
             ),
             Text(
               '$formattedStartDate - $formattedEndDate',
-              style: TextStyle(fontSize: 18),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w200),
             ),
             IconButton(
-              icon: Icon(Icons.arrow_forward),
+              icon: const Icon(Icons.arrow_forward),
               onPressed: () {
                 widget.nextDate.call();
                 _updateDate(true);

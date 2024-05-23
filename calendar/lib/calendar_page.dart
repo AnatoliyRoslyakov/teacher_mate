@@ -1,3 +1,4 @@
+import 'package:calendar/time_planner.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -183,10 +184,15 @@ class _CalendarPageState extends State<CalendarPage> {
                 children: List.generate(
                     7,
                     (index) => index == 0
-                        ? const ColumnTimeWidget()
+                        ? ColumnTimeWidget(
+                            onTap: () {},
+                          )
                         : Expanded(
                             child: ColumnDayWidget(
                             lessons: lessonsData[index],
+                            startHour: 9,
+                            endHour: 22,
+                            minutesGrid: 0.5,
                           ))),
               ),
             ),
@@ -198,8 +204,10 @@ class _CalendarPageState extends State<CalendarPage> {
 }
 
 class ColumnTimeWidget extends StatelessWidget {
+  final VoidCallback onTap;
   const ColumnTimeWidget({
     super.key,
+    required this.onTap,
   });
 
   @override
@@ -216,12 +224,15 @@ class ColumnTimeWidget extends StatelessWidget {
           final hour = (index + 18) ~/ 2;
           final minutes =
               int.parse(((index + 18) / 2).toString().split('.').last) * 6;
-          return Container(
-            width: double.infinity,
-            height: 60.0,
-            decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
-            child: Text(
-                '$hour:${minutes.toString().length < 2 ? '0$minutes' : minutes}'),
+          return InkWell(
+            onTap: onTap,
+            child: Container(
+              width: double.infinity,
+              height: 60.0,
+              decoration: BoxDecoration(border: Border.all(color: Colors.grey)),
+              child: Text(
+                  '$hour:${minutes.toString().length < 2 ? '0$minutes' : minutes}'),
+            ),
           );
         }),
       ),
@@ -231,35 +242,54 @@ class ColumnTimeWidget extends StatelessWidget {
 
 class ColumnDayWidget extends StatelessWidget {
   final List<Lesson> lessons;
+  final int startHour;
+  final int endHour;
+  final double minutesGrid;
+
   const ColumnDayWidget({
     super.key,
     required this.lessons,
+    required this.startHour,
+    required this.endHour,
+    required this.minutesGrid,
   });
 
   @override
   Widget build(BuildContext context) {
-    const minutesGrid = 0.5;
-    final start = DateTime.now().copyWith(hour: 9, minute: 0);
-    final end = DateTime.now().copyWith(hour: 22, minute: 0);
+    final start = DateTime.now().copyWith(hour: startHour);
+    final end = DateTime.now().copyWith(hour: endHour);
     final count = (end.hour - start.hour) ~/ minutesGrid;
     return SizedBox(
-      height: count * 60,
+      height: count * minutesGrid * 120,
       width: double.infinity,
       child: Stack(
         fit: StackFit.expand,
         children: [
           Positioned.fill(
             child: SizedBox(
-              height: 60.0 * count,
+              height: minutesGrid * 120 * count,
               child: Column(
                 children: List.generate(count, (index) {
-                  return GestureDetector(
+                  return InkWell(
+                    hoverColor: Colors.amber,
                     onTap: () {
                       print('onTap $index');
+                      showBlurredDialog(
+                          context,
+                          start.copyWith(
+                              hour: minutesGrid == 0.5
+                                  ? startHour + (index / 2).floor()
+                                  : startHour + index,
+                              minute: minutesGrid == 0.5 ? 30 : 00),
+                          end.copyWith(
+                              hour: minutesGrid == 0.5
+                                  ? startHour + ((index + 1) / 2).floor()
+                                  : startHour + ((index + 1) / 2).floor(),
+                              minute: minutesGrid == 0.5 ? 30 : 00));
                     },
                     child: Container(
                       width: double.infinity,
-                      height: 60.0,
+                      height: minutesGrid * 120,
                       decoration:
                           BoxDecoration(border: Border.all(color: Colors.grey)),
                     ),
@@ -286,7 +316,7 @@ class ColumnDayWidget extends StatelessWidget {
                       height: height * 2,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8.0),
-                          color: Colors.white,
+                          color: Colors.blue.withOpacity(0.5),
                           border: Border.all(color: Colors.black)),
                       child: FittedBox(
                         fit: BoxFit.scaleDown,

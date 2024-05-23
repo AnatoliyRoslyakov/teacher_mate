@@ -9,5 +9,6 @@ late double totalHours;
 late bool use24HourFormat;
 late int totalDays;
 late int startHour;
+late double minutesGrid;
 late bool setTimeOnAxis;
 BorderRadiusGeometry? borderRadius;
