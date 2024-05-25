@@ -1,17 +1,10 @@
-import 'dart:ui';
-
 import 'package:calendar/calendar_page.dart';
 import 'package:calendar/main.dart';
-
 import 'package:flutter/material.dart';
-import 'package:calendar/src/config/global_config.dart' as config;
 import 'package:calendar/src/time_planner_style.dart';
-
 import 'package:calendar/src/time_planner_time.dart';
-
 import 'package:intl/intl.dart';
 
-/// Time planner widget
 class TimePlanner extends StatefulWidget {
   final int startHour;
   final int endHour;
@@ -21,13 +14,13 @@ class TimePlanner extends StatefulWidget {
   final TimePlannerStyle? style;
 
   const TimePlanner({
-    Key? key,
+    super.key,
     required this.startHour,
     required this.endHour,
     this.lessons,
     this.style,
     required this.minutesGrid,
-  }) : super(key: key);
+  });
   @override
   _TimePlannerState createState() => _TimePlannerState();
 }
@@ -41,6 +34,12 @@ class _TimePlannerState extends State<TimePlanner> {
   bool? isAnimated = true;
 
   DateTime currentTime = DateTime.now();
+
+  void currentWeek() {
+    setState(() {
+      currentTime = DateTime.now();
+    });
+  }
 
   void prevWeek() {
     setState(() {
@@ -70,13 +69,6 @@ class _TimePlannerState extends State<TimePlanner> {
 
   @override
   Widget build(BuildContext context) {
-    mainHorizontalController.addListener(() {
-      dayHorizontalController.jumpTo(mainHorizontalController.offset);
-    });
-    mainVerticalController.addListener(() {
-      timeVerticalController.jumpTo(mainVerticalController.offset);
-    });
-
     final startTime = currentTime.startOfCurrentWeek();
     return Column(
       children: [
@@ -88,12 +80,22 @@ class _TimePlannerState extends State<TimePlanner> {
             prevWeek();
           },
         ),
-        const SizedBox(
-          height: 40,
-        ),
+        // const SizedBox(
+        //   height: 40,
+        // ),
         Row(children: [
           SizedBox(
             width: 60,
+            height: 60,
+            child: Center(
+              child: IconButton(
+                  onPressed: () {
+                    currentWeek();
+                  },
+                  icon: const Icon(
+                    Icons.calendar_month,
+                  )),
+            ),
           ),
           ...List.generate(7, (index) {
             final time = DateFormat('E dd.MM')
@@ -108,7 +110,6 @@ class _TimePlannerState extends State<TimePlanner> {
         ]),
         Expanded(
           child: SingleChildScrollView(
-            controller: mainVerticalController,
             child: Column(
               children: [
                 Row(
@@ -150,14 +151,6 @@ void showBlurredDialog(
 
   String selectedTime = '';
 
-  String formatTimeOfDay(TimeOfDay time) {
-    final int hour = time.hour;
-    final int minute = time.minute;
-    final String formattedHour = hour.toString().padLeft(2, '0');
-    final String formattedMinute = minute.toString().padLeft(2, '0');
-    return '$formattedHour:$formattedMinute';
-  }
-
   showDialog(
     context: context,
     barrierDismissible: true,
@@ -168,8 +161,6 @@ void showBlurredDialog(
             backgroundColor: Colors.transparent,
             child: Center(
               child: Container(
-                height: MediaQuery.of(context).size.height - 100,
-                width: MediaQuery.of(context).size.width - 100,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10.0),
@@ -180,7 +171,7 @@ void showBlurredDialog(
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text('Диалоговое окно', style: TextStyle(fontSize: 24)),
+                      Text('Создать урок', style: TextStyle(fontSize: 24)),
                       SizedBox(height: 20),
                       TextField(
                         controller: textController,
@@ -210,7 +201,7 @@ void showBlurredDialog(
                           if (picked != null) {
                             setState(() {
                               selectedTime =
-                                  'Начальное время: ${formatTimeOfDay(picked)}';
+                                  'Начальное время: ${DateFormat('E dd.MM').format(initialStartTime.copyWith(hour: picked.hour, minute: picked.minute))}';
                             });
                           }
                         },
@@ -237,7 +228,7 @@ void showBlurredDialog(
                           if (picked != null) {
                             setState(() {
                               selectedTime +=
-                                  ', Время окончания: ${formatTimeOfDay(picked)}';
+                                  ', Время окончания: ${DateFormat('E dd.MM').format(initialEndTime.copyWith(hour: picked.hour, minute: picked.minute))}';
                             });
                           }
                         },
