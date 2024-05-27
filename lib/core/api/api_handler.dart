@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
+import 'package:teacher_mate/core/models/request/lesson_delete_request.dart';
 import 'package:teacher_mate/core/models/request/lesson_request.dart';
 import 'package:teacher_mate/core/models/response/lesson_response.dart';
 
@@ -17,4 +18,7 @@ abstract class ApiHandler {
   @GET('/lesson')
   Future<List<LessonResponse>> getListLessons(
       @Query('start') String start, @Query('end') String end);
+
+  @DELETE('/lesson')
+  Future<String> deleteLesson(@Body() LessonDeleteRequest lessonDeleteRequest);
 }

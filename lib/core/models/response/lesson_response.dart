@@ -10,8 +10,10 @@ class LessonResponse {
   final int end;
   final int userId;
   final int type;
+  final int id;
 
-  LessonResponse({
+  LessonResponse(
+    this.id, {
     required this.studentId,
     required this.start,
     required this.end,

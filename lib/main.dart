@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:calendar/calendar.dart';
@@ -42,14 +41,18 @@ class CalendarBaseWidget extends StatefulWidget {
 }
 
 class CalendarBaseWidgetState extends State<CalendarBaseWidget> {
+  void addLesson({required int start, required int end}) {
+    context.read<CalendarBloc>().add(CalendarEvent.create(start, end));
+  }
+
+  void deleteLesson({required String id}) {
+    context.read<CalendarBloc>().add(CalendarEvent.delete(id));
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CalendarBloc, CalendarState>(builder: (context, state) {
-      if (state.listLessons.isNotEmpty) {
-        log(DateTime.fromMillisecondsSinceEpoch(
-                state.listLessons[0].start * 1000)
-            .toString());
-      }
+      if (state.mapLessons.isNotEmpty) {}
       return Scaffold(
         backgroundColor: Colors.white,
         body: state.isLoading
@@ -61,18 +64,9 @@ class CalendarBaseWidgetState extends State<CalendarBaseWidget> {
                     minutesGrid: 0.5,
                     startHour: 9,
                     endHour: 22,
-                    lessons: {
-                      DateTime(2024, 5, 27): [
-                        ...List.generate(
-                            state.listLessons.length,
-                            (int index) => Lesson(
-                                start: DateTime.fromMillisecondsSinceEpoch(
-                                    state.listLessons[index].start * 1000),
-                                end: DateTime.fromMillisecondsSinceEpoch(
-                                    state.listLessons[index].end * 1000),
-                                name: index.toString()))
-                      ],
-                    },
+                    lessons: state.mapLessons,
+                    addLesson: addLesson,
+                    deleteLesson: deleteLesson,
                   ),
                 ),
               ),

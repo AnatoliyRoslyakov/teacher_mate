@@ -18,7 +18,7 @@ class LessonEntity {
   factory LessonEntity.isEmpty() =>
       LessonEntity(studentId: 0, start: 0, end: 0, userId: 0, type: 0);
 
-  factory LessonEntity.fromEntity({required LessonResponse lessonResponse}) =>
+  factory LessonEntity.fromResponse({required LessonResponse lessonResponse}) =>
       LessonEntity(
           studentId: lessonResponse.studentId,
           start: lessonResponse.start,

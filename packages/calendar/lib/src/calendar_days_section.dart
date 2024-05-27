@@ -7,6 +7,10 @@ class CalendarDaysSection extends StatefulWidget {
   final int startHour;
   final int endHour;
   final double minutesGrid;
+  final int dayIndex;
+  final DateTime currentTime;
+  final void Function({required int start, required int end}) addLesson;
+  final void Function({required String id}) deleteLesson;
 
   const CalendarDaysSection({
     super.key,
@@ -14,6 +18,10 @@ class CalendarDaysSection extends StatefulWidget {
     required this.startHour,
     required this.endHour,
     required this.minutesGrid,
+    required this.addLesson,
+    required this.dayIndex,
+    required this.currentTime,
+    required this.deleteLesson,
   });
 
   @override
@@ -23,8 +31,11 @@ class CalendarDaysSection extends StatefulWidget {
 class _CalendarDaysSectionState extends State<CalendarDaysSection> {
   @override
   Widget build(BuildContext context) {
-    final start = DateTime.now().copyWith(hour: widget.startHour);
-    final end = DateTime.now().copyWith(hour: widget.endHour);
+    final start = widget.currentTime
+        .startOfCurrentWeek()
+        .copyWith(hour: widget.startHour);
+    final end =
+        widget.currentTime.startOfCurrentWeek().copyWith(hour: widget.endHour);
     final count = (end.hour - start.hour) ~/ widget.minutesGrid;
     return SizedBox(
       height: count * widget.minutesGrid * 120,
@@ -38,7 +49,7 @@ class _CalendarDaysSectionState extends State<CalendarDaysSection> {
             child: AnimationLimiter(
               child: Column(
                 children: AnimationConfiguration.toStaggeredList(
-                  duration: const Duration(milliseconds: 500),
+                  duration: const Duration(milliseconds: 300),
                   childAnimationBuilder: (widget) => SlideAnimation(
                     verticalOffset: 100,
                     child: FadeInAnimation(
@@ -51,7 +62,7 @@ class _CalendarDaysSectionState extends State<CalendarDaysSection> {
                       onTap: () {
                         showBlurredDialog(
                             context,
-                            start.copyWith(
+                            start.add(Duration(days: widget.dayIndex)).copyWith(
                                 hour: widget.minutesGrid == 0.5
                                     ? widget.startHour + index ~/ 2
                                     : widget.startHour + index,
@@ -59,14 +70,15 @@ class _CalendarDaysSectionState extends State<CalendarDaysSection> {
                                     widget.minutesGrid == 0.5 && index % 2 != 0
                                         ? 30
                                         : 00),
-                            end.copyWith(
+                            end.add(Duration(days: widget.dayIndex)).copyWith(
                                 hour: widget.minutesGrid == 0.5
                                     ? widget.startHour + (index + 1) ~/ 2
                                     : widget.startHour + (index + 1),
                                 minute: widget.minutesGrid == 0.5 &&
                                         (index + 1) % 2 != 0
                                     ? 30
-                                    : 00));
+                                    : 00),
+                            widget.addLesson);
                         setState(() {});
                       },
                       child: Container(
@@ -95,7 +107,7 @@ class _CalendarDaysSectionState extends State<CalendarDaysSection> {
                     hoverColor: Colors.blue,
                     borderRadius: BorderRadius.circular(8.0),
                     onTap: () {
-                      print(lesson.name);
+                      widget.deleteLesson(id: lesson.name);
                     },
                     child: SizedBox(
                       width: (MediaQuery.of(context).size.width / 7) - 100 / 7,

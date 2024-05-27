@@ -2,23 +2,23 @@
 part of 'calendar_bloc.dart';
 
 class CalendarState {
-  final List<LessonEntity> listLessons;
+  final Map<DateTime, List<Lesson>> mapLessons;
   final bool isLoading;
   const CalendarState({
-    required this.listLessons,
+    required this.mapLessons,
     required this.isLoading,
   });
   factory CalendarState.initial() => const CalendarState(
-        listLessons: [],
+        mapLessons: {},
         isLoading: false,
       );
 
   CalendarState copyWith({
-    List<LessonEntity>? listLessons,
+    Map<DateTime, List<Lesson>>? mapLessons,
     bool? isLoading,
   }) {
     return CalendarState(
-      listLessons: listLessons ?? this.listLessons,
+      mapLessons: mapLessons ?? this.mapLessons,
       isLoading: isLoading ?? this.isLoading,
     );
   }
