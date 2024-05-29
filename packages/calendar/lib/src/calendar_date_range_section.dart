@@ -5,28 +5,41 @@ import 'package:intl/intl.dart';
 class DateRangeSection extends StatefulWidget {
   final VoidCallback nextDate;
   final VoidCallback afterDate;
+  final int viewDay;
+  final bool startOfWeek;
 
   const DateRangeSection(
-      {super.key, required this.nextDate, required this.afterDate});
+      {super.key,
+      required this.nextDate,
+      required this.afterDate,
+      required this.viewDay,
+      required this.startOfWeek});
   @override
   _DateRangeSectionState createState() => _DateRangeSectionState();
 }
 
 class _DateRangeSectionState extends State<DateRangeSection> {
-  DateTime _selectedDate = DateTime.now().startOfCurrentWeek();
+  DateTime _selectedDate = DateTime.now();
+  int viewDay = 7;
 
   void _updateDate(bool isForward) {
     setState(() {
       _selectedDate = isForward
-          ? _selectedDate.add(const Duration(days: 7))
-          : _selectedDate.subtract(const Duration(days: 7));
+          ? _selectedDate.add(
+              Duration(days: widget.startOfWeek ? viewDay : widget.viewDay))
+          : _selectedDate.subtract(
+              Duration(days: widget.startOfWeek ? viewDay : widget.viewDay));
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    DateTime startDate = _selectedDate;
-    DateTime endDate = _selectedDate.add(const Duration(days: 6));
+    DateTime startDate = widget.startOfWeek
+        ? DateTime.now().startOfCurrentWeek()
+        : _selectedDate;
+    DateTime endDate = widget.startOfWeek
+        ? DateTime.now().startOfCurrentWeek().add(Duration(days: viewDay - 1))
+        : _selectedDate.add(Duration(days: widget.viewDay - 1));
     String formattedStartDate = DateFormat('dd MMM').format(startDate);
     String formattedEndDate = DateFormat('dd MMM').format(endDate);
     return Column(

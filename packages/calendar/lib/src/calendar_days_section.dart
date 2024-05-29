@@ -9,6 +9,8 @@ class CalendarDaysSection extends StatefulWidget {
   final double minutesGrid;
   final int dayIndex;
   final DateTime currentTime;
+  final int viewDay;
+  final bool startOfWeek;
   final void Function({required int start, required int end}) addLesson;
   final void Function({required String id}) deleteLesson;
 
@@ -22,6 +24,8 @@ class CalendarDaysSection extends StatefulWidget {
     required this.dayIndex,
     required this.currentTime,
     required this.deleteLesson,
+    required this.viewDay,
+    required this.startOfWeek,
   });
 
   @override
@@ -31,11 +35,14 @@ class CalendarDaysSection extends StatefulWidget {
 class _CalendarDaysSectionState extends State<CalendarDaysSection> {
   @override
   Widget build(BuildContext context) {
-    final start = widget.currentTime
-        .startOfCurrentWeek()
-        .copyWith(hour: widget.startHour);
-    final end =
-        widget.currentTime.startOfCurrentWeek().copyWith(hour: widget.endHour);
+    final start = widget.startOfWeek
+        ? widget.currentTime
+            .startOfCurrentWeek()
+            .copyWith(hour: widget.startHour)
+        : widget.currentTime.copyWith(hour: widget.startHour);
+    final end = widget.startOfWeek
+        ? widget.currentTime.startOfCurrentWeek().copyWith(hour: widget.endHour)
+        : widget.currentTime.copyWith(hour: widget.endHour);
     final count = (end.hour - start.hour) ~/ widget.minutesGrid;
     return SizedBox(
       height: count * widget.minutesGrid * 120,
@@ -98,7 +105,7 @@ class _CalendarDaysSectionState extends State<CalendarDaysSection> {
             final lesson = widget.lessons[index];
             final start = lesson.start.hour * 60 + lesson.start.minute;
             final end = lesson.end.hour * 60 + lesson.end.minute;
-            final top = (start - 9 * 60.0) * 2;
+            final top = (start - widget.startHour * 60.0) * 2;
             final height = (end - start).toDouble();
             return Positioned(
                 top: top,
@@ -110,7 +117,9 @@ class _CalendarDaysSectionState extends State<CalendarDaysSection> {
                       widget.deleteLesson(id: lesson.name);
                     },
                     child: SizedBox(
-                      width: (MediaQuery.of(context).size.width / 7) - 100 / 7,
+                      width:
+                          (MediaQuery.of(context).size.width / widget.viewDay) -
+                              100 / widget.viewDay,
                       height: height * 2,
                       child: Row(
                         children: [
@@ -125,8 +134,9 @@ class _CalendarDaysSectionState extends State<CalendarDaysSection> {
                           ),
                           Container(
                             height: height * 2,
-                            width: (MediaQuery.of(context).size.width / 7) -
-                                100 / 7 -
+                            width: (MediaQuery.of(context).size.width /
+                                    widget.viewDay) -
+                                100 / widget.viewDay -
                                 5,
                             decoration: BoxDecoration(
                               borderRadius: const BorderRadius.only(

@@ -1,5 +1,3 @@
-import 'dart:js_interop';
-
 import 'package:calendar/src/calendar_date_range_section.dart';
 import 'package:calendar/src/calendar_days_section.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +9,8 @@ class Calendar extends StatefulWidget {
   final int endHour;
   final double minutesGrid;
   final Map<DateTime, List<Lesson>>? lessons;
+  final int viewDay;
+  final bool startOfWeek;
   final void Function({required int start, required int end}) addLesson;
   final void Function({required String id}) deleteLesson;
 
@@ -22,6 +22,8 @@ class Calendar extends StatefulWidget {
     required this.minutesGrid,
     required this.addLesson,
     required this.deleteLesson,
+    required this.viewDay,
+    required this.startOfWeek,
   });
   @override
   _CalendarState createState() => _CalendarState();
@@ -35,6 +37,7 @@ class _CalendarState extends State<Calendar> {
   bool? isAnimated = true;
 
   DateTime currentTime = DateTime.now();
+  int viewDay = 7;
 
   void currentWeek() {
     setState(() {
@@ -44,20 +47,24 @@ class _CalendarState extends State<Calendar> {
 
   void prevWeek() {
     setState(() {
-      currentTime = currentTime.subtract(const Duration(days: 7));
+      currentTime = currentTime.subtract(
+          Duration(days: widget.startOfWeek ? viewDay : widget.viewDay));
     });
   }
 
   void nextWeek() {
     setState(() {
-      currentTime = currentTime.add(const Duration(days: 7));
+      currentTime = currentTime
+          .add(Duration(days: widget.startOfWeek ? viewDay : widget.viewDay));
     });
   }
 
   List<List<Lesson>> get lessonsData {
-    final startTime = currentTime.startOfCurrentWeek().startOfDay();
+    final startTime = widget.startOfWeek
+        ? currentTime.startOfCurrentWeek().startOfDay()
+        : currentTime.startOfDay();
     final result = <List<Lesson>>[[]];
-    for (int i = 0; i < 7; i++) {
+    for (int i = 0; i < (widget.startOfWeek ? viewDay : widget.viewDay); i++) {
       result.add(widget.lessons?[startTime.add(Duration(days: i))] ?? []);
     }
     return result;
@@ -70,17 +77,19 @@ class _CalendarState extends State<Calendar> {
 
   @override
   Widget build(BuildContext context) {
-    final startTime = currentTime.startOfCurrentWeek();
+    final startTime =
+        widget.startOfWeek ? currentTime.startOfCurrentWeek() : currentTime;
     return Column(
       children: [
         DateRangeSection(
-          nextDate: () {
-            nextWeek();
-          },
-          afterDate: () {
-            prevWeek();
-          },
-        ),
+            nextDate: () {
+              nextWeek();
+            },
+            afterDate: () {
+              prevWeek();
+            },
+            viewDay: widget.startOfWeek ? viewDay : widget.viewDay,
+            startOfWeek: widget.startOfWeek),
         // const SizedBox(
         //   height: 40,
         // ),
@@ -98,13 +107,23 @@ class _CalendarState extends State<Calendar> {
                   )),
             ),
           ),
-          ...List.generate(7, (index) {
-            final time = DateFormat('E dd.MM')
-                .format(startTime.add(Duration(days: index)));
+          ...List.generate(widget.startOfWeek ? viewDay : widget.viewDay,
+              (index) {
+            final time =
+                DateFormat(widget.viewDay > 10 ? 'E\ndd.MM' : 'E dd.MM')
+                    .format(startTime.add(Duration(days: index)));
             return Expanded(
                 child: Center(
-              child: Text(
-                time,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    time,
+                  ),
+                ),
               ),
             ));
           }),
@@ -125,9 +144,13 @@ class _CalendarState extends State<Calendar> {
                             minutesGrid: widget.minutesGrid),
                       ),
                       ...List.generate(
-                          7,
+                          widget.startOfWeek ? viewDay : widget.viewDay,
                           (index) => Expanded(
                                   child: CalendarDaysSection(
+                                startOfWeek: widget.startOfWeek,
+                                viewDay: widget.startOfWeek
+                                    ? viewDay
+                                    : widget.viewDay,
                                 currentTime: currentTime,
                                 dayIndex: index,
                                 lessons: lessonsData[index + 1],
