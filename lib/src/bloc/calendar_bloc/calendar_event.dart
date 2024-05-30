@@ -10,6 +10,14 @@ sealed class CalendarEvent {
   const factory CalendarEvent.update() = CalendarUpdateEvent;
 
   const factory CalendarEvent.delete(String id) = CalendarDeleteEvent;
+
+  const factory CalendarEvent.settings(
+    double minutesGrid,
+    int startHour,
+    int endHour,
+    int viewDay,
+    bool startOfWeek,
+  ) = CalendarSettingsEvent;
 }
 
 class CalendarCreateEvent extends CalendarEvent {
@@ -29,4 +37,14 @@ class CalendarUpdateEvent extends CalendarEvent {
 class CalendarDeleteEvent extends CalendarEvent {
   final String id;
   const CalendarDeleteEvent(this.id);
+}
+
+class CalendarSettingsEvent extends CalendarEvent {
+  final double minutesGrid;
+  final int startHour;
+  final int endHour;
+  final int viewDay;
+  final bool startOfWeek;
+  const CalendarSettingsEvent(this.minutesGrid, this.startHour, this.endHour,
+      this.viewDay, this.startOfWeek);
 }

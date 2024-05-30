@@ -1,9 +1,10 @@
 import 'package:calendar/calendar.dart';
+import 'package:calendar/src/show_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
 class CalendarDaysSection extends StatefulWidget {
-  final List<Lesson> lessons;
+  final List<LessonEntity> lessons;
   final int startHour;
   final int endHour;
   final double minutesGrid;
@@ -11,6 +12,7 @@ class CalendarDaysSection extends StatefulWidget {
   final DateTime currentTime;
   final int viewDay;
   final bool startOfWeek;
+  final double size;
   final void Function({required int start, required int end}) addLesson;
   final void Function({required String id}) deleteLesson;
 
@@ -26,6 +28,7 @@ class CalendarDaysSection extends StatefulWidget {
     required this.deleteLesson,
     required this.viewDay,
     required this.startOfWeek,
+    required this.size,
   });
 
   @override
@@ -118,8 +121,7 @@ class _CalendarDaysSectionState extends State<CalendarDaysSection> {
                     },
                     child: SizedBox(
                       width:
-                          (MediaQuery.of(context).size.width / widget.viewDay) -
-                              100 / widget.viewDay,
+                          (widget.size / widget.viewDay) - 100 / widget.viewDay,
                       height: height * 2,
                       child: Row(
                         children: [
@@ -134,8 +136,7 @@ class _CalendarDaysSectionState extends State<CalendarDaysSection> {
                           ),
                           Container(
                             height: height * 2,
-                            width: (MediaQuery.of(context).size.width /
-                                    widget.viewDay) -
+                            width: (widget.size / widget.viewDay) -
                                 100 / widget.viewDay -
                                 5,
                             decoration: BoxDecoration(

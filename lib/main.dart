@@ -4,7 +4,9 @@ import 'package:calendar/calendar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:teacher_mate/core/di/injector.dart';
 import 'package:teacher_mate/src/bloc/calendar_bloc/calendar_bloc.dart';
+import 'package:teacher_mate/src/bloc/student_bloc/student_bloc.dart';
 import 'package:teacher_mate/src/config/app_config.dart';
+import 'package:teacher_mate/src/entity/calendar_settings.dart';
 
 void main() async {
   await initInjector(AppConfig());
@@ -24,10 +26,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-        create: (context) =>
-            injector.get<CalendarBloc>()..add(const CalendarEvent.read()),
-        child: const MaterialApp(home: CalendarBaseWidget()));
+    return MultiBlocProvider(
+        providers: [
+          BlocProvider(
+              create: (context) => injector.get<CalendarBloc>()
+                ..add(const CalendarEvent.read())),
+          BlocProvider(
+              create: (context) =>
+                  injector.get<StudentBloc>()..add(const StudentEvent.read())),
+        ],
+        child: const MaterialApp(
+            debugShowCheckedModeBanner: false, home: CalendarBaseWidget()));
   }
 }
 
@@ -53,41 +62,133 @@ class CalendarBaseWidgetState extends State<CalendarBaseWidget> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CalendarBloc, CalendarState>(builder: (context, state) {
-      return Scaffold(
-        key: _scaffoldKey,
-        drawer: CalendarSettingsWidget(),
-        backgroundColor: Colors.white,
-        body: state.isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : Center(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 20, left: 20),
-                  child: Calendar(
-                      minutesGrid: 0.5,
-                      startHour: 1,
-                      endHour: 23,
-                      viewDay: 4,
-                      lessons: state.mapLessons,
-                      addLesson: addLesson,
-                      deleteLesson: deleteLesson,
-                      startOfWeek:
-                          false // если true -> viewDay = 7 (начало: понедельник)
+      return SafeArea(
+        child: Scaffold(
+          key: _scaffoldKey,
+          drawer: CalendarSettingsWidget(
+            calendarSettings: state.calendarSettings,
+          ),
+          backgroundColor: Colors.white,
+          body: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            // mainAxisSize: MainAxisSize.min,
+            children: [
+              state.isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : Expanded(
+                      flex: 2,
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 20, left: 20),
+                          child: Calendar(
+                              minutesGrid: state.calendarSettings.minutesGrid,
+                              startHour: state.calendarSettings.startHour,
+                              endHour: state.calendarSettings.endHour,
+                              viewDay: state.calendarSettings.viewDay,
+                              lessons: state.mapLessons,
+                              addLesson: addLesson,
+                              deleteLesson: deleteLesson,
+                              // если true -> viewDay = 7 (начало: понедельник)
+                              startOfWeek: state.calendarSettings.startOfWeek),
+                        ),
                       ),
-                ),
-              ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            _scaffoldKey.currentState?.openDrawer();
-            Scaffold.of(context).openDrawer();
-            // showBlurredDialog(
-            //     context,
-            //     DateTime.now().copyWith(minute: 0),
-            //     DateTime.now()
-            //         .copyWith(minute: 0)
-            //         .add(const Duration(hours: 1)),
-            //     addLesson);
-          },
-          child: const Icon(Icons.settings),
+                    ),
+              BlocBuilder<StudentBloc, StudentState>(
+                  builder: (context, stateStudent) {
+                return stateStudent.isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : Expanded(
+                        flex: 1,
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 2,
+                              height: double.infinity,
+                              color: Colors.grey[200],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(20),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  const SizedBox(
+                                    height: 55,
+                                  ),
+                                  const Text(
+                                    'List of students',
+                                    style: TextStyle(fontSize: 20),
+                                  ),
+                                  const SizedBox(
+                                    height: 40,
+                                  ),
+                                  SizedBox(
+                                    width: 250,
+                                    child: ListView.separated(
+                                      shrinkWrap: true,
+                                      separatorBuilder: (context, index) =>
+                                          const SizedBox(
+                                        height: 10,
+                                      ),
+                                      itemCount:
+                                          stateStudent.studentEntity.length,
+                                      itemBuilder: (context, i) {
+                                        return Expanded(
+                                          child: Container(
+                                            height: 40,
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(8),
+                                                color: Colors.amber),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Text(stateStudent
+                                                      .studentEntity[i].name),
+                                                  Text(
+                                                      'price: ${stateStudent.studentEntity[i].price}р'),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                          ),
+                                          overlayColor: Colors.amber,
+                                          minimumSize: const Size(250, 45)),
+                                      onPressed: () {},
+                                      child: const Icon(Icons.add))
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      );
+              })
+            ],
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              _scaffoldKey.currentState?.openDrawer();
+            },
+            child: const Icon(Icons.settings),
+          ),
         ),
       );
     });
@@ -95,6 +196,9 @@ class CalendarBaseWidgetState extends State<CalendarBaseWidget> {
 }
 
 class CalendarSettingsWidget extends StatefulWidget {
+  final CalendarSettingsEntity calendarSettings;
+
+  const CalendarSettingsWidget({super.key, required this.calendarSettings});
   @override
   _CalendarSettingsWidgetState createState() => _CalendarSettingsWidgetState();
 }
@@ -107,133 +211,146 @@ class _CalendarSettingsWidgetState extends State<CalendarSettingsWidget> {
   bool startOfWeek = true;
 
   @override
+  void initState() {
+    minutesGrid = widget.calendarSettings.minutesGrid;
+    startHour = widget.calendarSettings.startHour;
+    endHour = widget.calendarSettings.endHour;
+    viewDay = widget.calendarSettings.viewDay;
+    startOfWeek = widget.calendarSettings.startOfWeek;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: Row(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Градация сетки (минуты):'),
-                    DropdownButton<double>(
-                      value: minutesGrid,
-                      items: [
-                        DropdownMenuItem(
-                          child: Text('30 минут'),
-                          value: 0.5,
-                        ),
-                        DropdownMenuItem(
-                          child: Text('60 минут'),
-                          value: 1.0,
-                        ),
-                      ],
-                      onChanged: (value) {
-                        setState(() {
-                          minutesGrid = value!;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-                // Start Hour
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Начало дня:'),
-                    DropdownButton<int>(
-                      value: startHour,
-                      items: List.generate(16, (index) {
-                        return DropdownMenuItem(
-                          child: Text('${index}'),
-                          value: index,
-                        );
-                      }),
-                      onChanged: (value) {
-                        setState(() {
-                          startHour = value!;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-                // End Hour
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Конец дня:'),
-                    DropdownButton<int>(
-                      value: endHour,
-                      items: List.generate(8, (index) {
-                        return DropdownMenuItem(
-                          child: Text('${16 + index}'),
-                          value: 16 + index,
-                        );
-                      }),
-                      onChanged: (value) {
-                        setState(() {
-                          endHour = value!;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-                // View Day
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Количество дней:'),
-                    DropdownButton<int>(
-                      value: viewDay,
-                      items: List.generate(15, (index) {
-                        return DropdownMenuItem(
-                          child: Text('${index + 1}'),
-                          value: index + 1,
-                        );
-                      }),
-                      onChanged: (value) {
-                        setState(() {
-                          viewDay = value!;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-                // Start of Week
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('Начинать с понедельника:'),
-                    Switch(
-                      value: startOfWeek,
-                      onChanged: (value) {
-                        setState(() {
-                          startOfWeek = value;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    // Сохранение настроек
-                    print('Настройки сохранены:');
-                    print('Градация сетки: $minutesGrid');
-                    print('Начало дня: $startHour');
-                    print('Конец дня: $endHour');
-                    print('Количество дней: $viewDay');
-                    print('Начинать с понедельника: $startOfWeek');
-                  },
-                  child: Text('Сохранить настройки'),
-                ),
-              ],
-            ),
+      backgroundColor: Colors.white,
+      width: 350,
+      child: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const Text(
+                'Setting up a calendar',
+                style: TextStyle(fontSize: 20),
+              ),
+              const SizedBox(
+                height: 40,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Grid (minutes):'),
+                  DropdownButton<double>(
+                    value: minutesGrid,
+                    items: const [
+                      DropdownMenuItem(
+                        value: 0.5,
+                        child: Text('30 minutes'),
+                      ),
+                      DropdownMenuItem(
+                        value: 1.0,
+                        child: Text('60 minutes'),
+                      ),
+                    ],
+                    onChanged: (value) {
+                      setState(() {
+                        minutesGrid = value!;
+                      });
+                    },
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Start day:'),
+                  DropdownButton<int>(
+                    value: startHour,
+                    items: List.generate(16, (index) {
+                      return DropdownMenuItem(
+                        value: index,
+                        child: Text('$index'),
+                      );
+                    }),
+                    onChanged: (value) {
+                      setState(() {
+                        startHour = value!;
+                      });
+                    },
+                  ),
+                ],
+              ),
+              // End Hour
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('End day:'),
+                  DropdownButton<int>(
+                    value: endHour,
+                    items: List.generate(8, (index) {
+                      return DropdownMenuItem(
+                        value: 16 + index,
+                        child: Text('${16 + index}'),
+                      );
+                    }),
+                    onChanged: (value) {
+                      setState(() {
+                        endHour = value!;
+                      });
+                    },
+                  ),
+                ],
+              ),
+              // View Day
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Number of days:'),
+                  DropdownButton<int>(
+                    value: viewDay,
+                    items: List.generate(15, (index) {
+                      return DropdownMenuItem(
+                        value: index + 1,
+                        child: Text('${index + 1}'),
+                      );
+                    }),
+                    onChanged: (value) {
+                      setState(() {
+                        viewDay = value!;
+                      });
+                    },
+                  ),
+                ],
+              ),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Start on Monday:'),
+                  Switch(
+                    value: startOfWeek,
+                    onChanged: (value) {
+                      setState(() {
+                        startOfWeek = value;
+                      });
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  context.read<CalendarBloc>().add(CalendarEvent.settings(
+                      minutesGrid, startHour, endHour, viewDay, startOfWeek));
+                },
+                child: const Text('Save settings'),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

@@ -1,5 +1,5 @@
+import 'package:calendar/calendar.dart';
 import 'package:json_annotation/json_annotation.dart';
-import 'package:teacher_mate/src/entity/lesson.dart';
 
 part 'lesson_request.g.dart';
 
@@ -18,14 +18,6 @@ class LessonRequest {
     required this.userId,
     required this.type,
   });
-
-  factory LessonRequest.fromEntity({required LessonEntity lessonEntity}) =>
-      LessonRequest(
-          studentId: lessonEntity.studentId,
-          start: lessonEntity.start,
-          end: lessonEntity.end,
-          userId: lessonEntity.userId,
-          type: lessonEntity.type);
 
   factory LessonRequest.fromJson(Map<String, dynamic> json) =>
       _$LessonRequestFromJson(json);

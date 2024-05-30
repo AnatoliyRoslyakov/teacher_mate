@@ -1,5 +1,4 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:teacher_mate/src/entity/lesson.dart';
 
 part 'lesson_response.g.dart';
 
