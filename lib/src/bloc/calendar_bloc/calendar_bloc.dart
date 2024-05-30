@@ -22,11 +22,11 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
   Future<void> _create(
       CalendarCreateEvent event, Emitter<CalendarState> emitter) async {
     await calendarRepository.addLesson(LessonRequest(
-        studentId: 1,
+        studentId: event.studentId,
         start: event.start ~/ 1000,
         end: event.end ~/ 1000,
         userId: 1,
-        type: 1));
+        type: event.type - 1));
 // лучше не запрашивать повторно, а просто добавить в Map, но пока так
     add(const CalendarReadEvent());
   }

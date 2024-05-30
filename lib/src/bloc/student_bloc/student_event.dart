@@ -3,7 +3,10 @@ part of 'student_bloc.dart';
 sealed class StudentEvent {
   const StudentEvent();
 
-  const factory StudentEvent.create() = StudentCreateEvent;
+  const factory StudentEvent.create(
+    String name,
+    int price,
+  ) = StudentCreateEvent;
 
   const factory StudentEvent.read() = StudentReadEvent;
 
@@ -13,7 +16,9 @@ sealed class StudentEvent {
 }
 
 class StudentCreateEvent extends StudentEvent {
-  const StudentCreateEvent();
+  final String name;
+  final int price;
+  const StudentCreateEvent(this.name, this.price);
 }
 
 class StudentReadEvent extends StudentEvent {

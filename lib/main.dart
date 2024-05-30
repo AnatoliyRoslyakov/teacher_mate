@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:calendar/calendar.dart';
@@ -51,8 +52,14 @@ class CalendarBaseWidget extends StatefulWidget {
 
 class CalendarBaseWidgetState extends State<CalendarBaseWidget> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  void addLesson({required int start, required int end}) {
-    context.read<CalendarBloc>().add(CalendarEvent.create(start, end));
+  void addLesson(
+      {required int start,
+      required int end,
+      required int type,
+      required int studentId}) {
+    context
+        .read<CalendarBloc>()
+        .add(CalendarEvent.create(start, end, type, studentId));
   }
 
   void deleteLesson({required String id}) {
@@ -62,41 +69,43 @@ class CalendarBaseWidgetState extends State<CalendarBaseWidget> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CalendarBloc, CalendarState>(builder: (context, state) {
-      return SafeArea(
-        child: Scaffold(
-          key: _scaffoldKey,
-          drawer: CalendarSettingsWidget(
-            calendarSettings: state.calendarSettings,
-          ),
-          backgroundColor: Colors.white,
-          body: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            // mainAxisSize: MainAxisSize.min,
-            children: [
-              state.isLoading
-                  ? const Center(child: CircularProgressIndicator())
-                  : Expanded(
-                      flex: 2,
-                      child: Center(
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 20, left: 20),
-                          child: Calendar(
-                              minutesGrid: state.calendarSettings.minutesGrid,
-                              startHour: state.calendarSettings.startHour,
-                              endHour: state.calendarSettings.endHour,
-                              viewDay: state.calendarSettings.viewDay,
-                              lessons: state.mapLessons,
-                              addLesson: addLesson,
-                              deleteLesson: deleteLesson,
-                              // если true -> viewDay = 7 (начало: понедельник)
-                              startOfWeek: state.calendarSettings.startOfWeek),
+      return BlocBuilder<StudentBloc, StudentState>(
+          builder: (context, stateStudent) {
+        return SafeArea(
+          child: Scaffold(
+            key: _scaffoldKey,
+            drawer: CalendarSettingsWidget(
+              calendarSettings: state.calendarSettings,
+            ),
+            backgroundColor: Colors.white,
+            body: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              // mainAxisSize: MainAxisSize.min,
+              children: [
+                state.isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : Expanded(
+                        flex: 2,
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 20, left: 20),
+                            child: Calendar(
+                                minutesGrid: state.calendarSettings.minutesGrid,
+                                startHour: state.calendarSettings.startHour,
+                                endHour: state.calendarSettings.endHour,
+                                viewDay: state.calendarSettings.viewDay,
+                                lessons: state.mapLessons,
+                                addLesson: addLesson,
+                                deleteLesson: deleteLesson,
+                                student: stateStudent.studentEntity,
+                                // если true -> viewDay = 7 (начало: понедельник)
+                                startOfWeek:
+                                    state.calendarSettings.startOfWeek),
+                          ),
                         ),
                       ),
-                    ),
-              BlocBuilder<StudentBloc, StudentState>(
-                  builder: (context, stateStudent) {
-                return stateStudent.isLoading
+                stateStudent.isLoading
                     ? const Center(child: CircularProgressIndicator())
                     : Expanded(
                         flex: 1,
@@ -124,7 +133,9 @@ class CalendarBaseWidgetState extends State<CalendarBaseWidget> {
                                     height: 40,
                                   ),
                                   SizedBox(
-                                    width: 250,
+                                    width:
+                                        MediaQuery.of(context).size.width / 3 -
+                                            42,
                                     child: ListView.separated(
                                       shrinkWrap: true,
                                       separatorBuilder: (context, index) =>
@@ -134,27 +145,24 @@ class CalendarBaseWidgetState extends State<CalendarBaseWidget> {
                                       itemCount:
                                           stateStudent.studentEntity.length,
                                       itemBuilder: (context, i) {
-                                        return Expanded(
-                                          child: Container(
-                                            height: 40,
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(8),
-                                                color: Colors.amber),
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text(stateStudent
-                                                      .studentEntity[i].name),
-                                                  Text(
-                                                      'price: ${stateStudent.studentEntity[i].price}р'),
-                                                ],
-                                              ),
+                                        return Container(
+                                          height: 40,
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              color: Colors.amber),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Text(stateStudent
+                                                    .studentEntity[i].name),
+                                                Text(
+                                                    'price: ${stateStudent.studentEntity[i].price}р'),
+                                              ],
                                             ),
                                           ),
                                         );
@@ -171,28 +179,120 @@ class CalendarBaseWidgetState extends State<CalendarBaseWidget> {
                                                 BorderRadius.circular(8),
                                           ),
                                           overlayColor: Colors.amber,
-                                          minimumSize: const Size(250, 45)),
-                                      onPressed: () {},
+                                          minimumSize: Size(
+                                              MediaQuery.of(context)
+                                                          .size
+                                                          .width /
+                                                      3 -
+                                                  42,
+                                              45)),
+                                      onPressed: () {
+                                        showBlurredDialog(context);
+                                      },
                                       child: const Icon(Icons.add))
                                 ],
                               ),
                             )
                           ],
                         ),
-                      );
-              })
-            ],
+                      ),
+              ],
+            ),
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                _scaffoldKey.currentState?.openDrawer();
+              },
+              child: const Icon(Icons.settings),
+            ),
           ),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              _scaffoldKey.currentState?.openDrawer();
-            },
-            child: const Icon(Icons.settings),
-          ),
-        ),
-      );
+        );
+      });
     });
   }
+}
+
+void showBlurredDialog(
+  BuildContext context,
+) {
+  bool isValid = true;
+  String name = '';
+  int price = 0;
+
+  showDialog(
+    context: context,
+    barrierDismissible: true,
+    builder: (BuildContext context) {
+      return StatefulBuilder(
+        builder: (context, setState) {
+          isValid = name.isNotEmpty && price >= 0;
+          return Dialog(
+            insetAnimationCurve: Curves.linear,
+            insetAnimationDuration: const Duration(milliseconds: 500),
+            child: Center(
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text('Student', style: TextStyle(fontSize: 24)),
+                      SizedBox(height: 20),
+                      TextField(
+                        onChanged: (value) {
+                          setState(() {
+                            name = value;
+                          });
+                        },
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Enter a name',
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      Text('Lesson amount', style: TextStyle(fontSize: 24)),
+                      SizedBox(height: 20),
+                      TextField(
+                        onChanged: (value) {
+                          setState(() {
+                            price = int.tryParse(value) ?? 0;
+                          });
+                        },
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                          labelText: 'Enter the amount',
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      ElevatedButton(
+                        onPressed: () {
+                          if (isValid) {
+                            context
+                                .read<StudentBloc>()
+                                .add(StudentEvent.create(name, price));
+                            Navigator.of(context).pop();
+                          }
+                        },
+                        child: Text(
+                          'Сохранить',
+                          style: TextStyle(
+                              color: isValid ? Colors.deepPurple : Colors.grey),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      );
+    },
+  );
 }
 
 class CalendarSettingsWidget extends StatefulWidget {

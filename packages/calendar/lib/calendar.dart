@@ -8,22 +8,28 @@ class Calendar extends StatefulWidget {
   final int startHour;
   final int endHour;
   final double minutesGrid;
-  final Map<DateTime, List<LessonEntity>>? lessons;
+  final Map<DateTime, List<LessonEntity>> lessons;
+  final List<StudentEntity> student;
   final int viewDay;
   final bool startOfWeek;
-  final void Function({required int start, required int end}) addLesson;
+  final void Function(
+      {required int start,
+      required int end,
+      required int type,
+      required int studentId}) addLesson;
   final void Function({required String id}) deleteLesson;
 
   const Calendar({
     super.key,
     required this.startHour,
     required this.endHour,
-    this.lessons,
+    required this.lessons,
     required this.minutesGrid,
     required this.addLesson,
     required this.deleteLesson,
     required this.viewDay,
     required this.startOfWeek,
+    required this.student,
   });
   @override
   _CalendarState createState() => _CalendarState();
@@ -65,7 +71,7 @@ class _CalendarState extends State<Calendar> {
         : currentTime.startOfDay();
     final result = <List<LessonEntity>>[[]];
     for (int i = 0; i < (widget.startOfWeek ? viewDay : widget.viewDay); i++) {
-      result.add(widget.lessons?[startTime.add(Duration(days: i))] ?? []);
+      result.add(widget.lessons[startTime.add(Duration(days: i))] ?? []);
     }
     return result;
   }
@@ -149,6 +155,7 @@ class _CalendarState extends State<Calendar> {
                             widget.startOfWeek ? viewDay : widget.viewDay,
                             (index) => Expanded(
                                     child: CalendarDaysSection(
+                                  student: widget.student,
                                   size: constraints.maxWidth,
                                   startOfWeek: widget.startOfWeek,
                                   viewDay: widget.startOfWeek
@@ -189,6 +196,41 @@ class LessonEntity {
       required this.start,
       required this.end,
       required this.name});
+}
+
+class StudentEntity {
+  final int id;
+  final String name;
+  final int price;
+
+  StudentEntity({
+    required this.id,
+    required this.name,
+    required this.price,
+  });
+}
+
+enum ColorType {
+  blue(1, Colors.blue),
+  red(2, Colors.red),
+  green(3, Colors.green),
+  yellow(4, Colors.yellow),
+  purple(5, Colors.purple);
+
+  final int value;
+  final MaterialColor color;
+
+  const ColorType(this.value, this.color);
+
+  static ColorType? fromValue(int value) {
+    return ColorType.values.firstWhere(
+      (e) => e.value == value,
+    );
+  }
+
+  MaterialColor getColor(int value) {
+    return color;
+  }
 }
 
 extension DateTimeExt on DateTime {

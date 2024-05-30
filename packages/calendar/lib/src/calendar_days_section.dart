@@ -10,10 +10,15 @@ class CalendarDaysSection extends StatefulWidget {
   final double minutesGrid;
   final int dayIndex;
   final DateTime currentTime;
+  final List<StudentEntity> student;
   final int viewDay;
   final bool startOfWeek;
   final double size;
-  final void Function({required int start, required int end}) addLesson;
+  final void Function(
+      {required int start,
+      required int end,
+      required int type,
+      required int studentId}) addLesson;
   final void Function({required String id}) deleteLesson;
 
   const CalendarDaysSection({
@@ -29,6 +34,7 @@ class CalendarDaysSection extends StatefulWidget {
     required this.viewDay,
     required this.startOfWeek,
     required this.size,
+    required this.student,
   });
 
   @override
@@ -71,25 +77,27 @@ class _CalendarDaysSectionState extends State<CalendarDaysSection> {
                       hoverColor: Colors.amber,
                       onTap: () {
                         showBlurredDialog(
-                            context,
-                            start.add(Duration(days: widget.dayIndex)).copyWith(
-                                hour: widget.minutesGrid == 0.5
-                                    ? widget.startHour + index ~/ 2
-                                    : widget.startHour + index,
-                                minute:
-                                    widget.minutesGrid == 0.5 && index % 2 != 0
-                                        ? 30
-                                        : 00),
-                            end.add(Duration(days: widget.dayIndex)).copyWith(
-                                hour: widget.minutesGrid == 0.5
-                                    ? widget.startHour + (index + 1) ~/ 2
-                                    : widget.startHour + (index + 1),
-                                minute: widget.minutesGrid == 0.5 &&
-                                        (index + 1) % 2 != 0
-                                    ? 30
-                                    : 00),
-                            widget.addLesson);
-                        setState(() {});
+                          context,
+                          start.add(Duration(days: widget.dayIndex)).copyWith(
+                              hour: widget.minutesGrid == 0.5
+                                  ? widget.startHour + index ~/ 2
+                                  : widget.startHour + index,
+                              minute:
+                                  widget.minutesGrid == 0.5 && index % 2 != 0
+                                      ? 30
+                                      : 00),
+                          end.add(Duration(days: widget.dayIndex)).copyWith(
+                              hour: widget.minutesGrid == 0.5
+                                  ? widget.startHour + (index + 1) ~/ 2
+                                  : widget.startHour + (index + 1),
+                              minute: widget.minutesGrid == 0.5 &&
+                                      (index + 1) % 2 != 0
+                                  ? 30
+                                  : 00),
+                          widget.student,
+                          widget.addLesson,
+                        );
+                        // setState(() {});
                       },
                       child: Container(
                         width: double.infinity,
@@ -114,7 +122,8 @@ class _CalendarDaysSectionState extends State<CalendarDaysSection> {
                 top: top,
                 child: Center(
                   child: InkWell(
-                    hoverColor: Colors.blue,
+                    hoverColor:
+                        ColorType.values[widget.lessons[index].type].color,
                     borderRadius: BorderRadius.circular(8.0),
                     onTap: () {
                       widget.deleteLesson(id: lesson.name);
@@ -127,11 +136,12 @@ class _CalendarDaysSectionState extends State<CalendarDaysSection> {
                         children: [
                           Container(
                             width: 5,
-                            decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.only(
+                            decoration: BoxDecoration(
+                              borderRadius: const BorderRadius.only(
                                   topLeft: Radius.circular(7),
                                   bottomLeft: Radius.circular(7)),
-                              color: Colors.blue,
+                              color: ColorType
+                                  .values[widget.lessons[index].type].color,
                             ),
                           ),
                           Container(
@@ -143,17 +153,28 @@ class _CalendarDaysSectionState extends State<CalendarDaysSection> {
                               borderRadius: const BorderRadius.only(
                                   topRight: Radius.circular(7),
                                   bottomRight: Radius.circular(7)),
-                              color: Colors.blue.withOpacity(0.6),
+                              color: ColorType
+                                  .values[widget.lessons[index].type].color
+                                  .withOpacity(0.6),
                             ),
                             child: FittedBox(
                               fit: BoxFit.scaleDown,
                               child: Column(
                                 children: [
                                   Text(
-                                      '${lesson.start.hour}:${lesson.start.minute}-${lesson.end.hour}:${lesson.end.minute}'),
-                                  Text(
-                                    lesson.name,
+                                    widget.student
+                                        .firstWhere(
+                                            (e) => e.id == lesson.studentId,
+                                            orElse: () => StudentEntity(
+                                                id: 0,
+                                                name: 'unknown',
+                                                price: 0))
+                                        .name,
                                     style: const TextStyle(fontSize: 12.0),
+                                  ),
+                                  Text(
+                                    '${lesson.start.hour}:${lesson.start.minute < 10 ? '0${lesson.start.minute}' : lesson.start.minute}-${lesson.end.hour}:${lesson.end.minute}',
+                                    style: const TextStyle(fontSize: 10.0),
                                   ),
                                 ],
                               ),

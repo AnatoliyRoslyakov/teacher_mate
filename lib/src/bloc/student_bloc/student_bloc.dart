@@ -1,4 +1,6 @@
+import 'package:calendar/calendar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:teacher_mate/core/models/request/student_request.dart';
 import 'package:teacher_mate/src/entity/student_entity.dart';
 import 'package:teacher_mate/src/repository/user_repository/student_repository.dart';
 
@@ -17,7 +19,11 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
   }
 
   Future<void> _create(
-      StudentCreateEvent event, Emitter<StudentState> emitter) async {}
+      StudentCreateEvent event, Emitter<StudentState> emitter) async {
+    await studentRepository
+        .addStudent(StudentRequest(name: event.name, price: event.price));
+    add(const StudentReadEvent());
+  }
 
   Future<void> _read(
       StudentReadEvent event, Emitter<StudentState> emitter) async {
