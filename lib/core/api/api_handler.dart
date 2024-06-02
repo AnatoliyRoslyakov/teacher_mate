@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
+import 'package:teacher_mate/core/models/request/auth_request.dart';
 import 'package:teacher_mate/core/models/request/lesson_delete_request.dart';
 import 'package:teacher_mate/core/models/request/lesson_request.dart';
 import 'package:teacher_mate/core/models/request/student_request.dart';
@@ -29,4 +30,7 @@ abstract class ApiHandler {
 
   @GET('/student')
   Future<List<StudentResponse>> getListStudent();
+
+  @POST('/login')
+  Future<String> login(@Body() AuthRequest authRequest);
 }

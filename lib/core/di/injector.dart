@@ -1,6 +1,7 @@
 import 'package:get_it/get_it.dart';
 import 'package:teacher_mate/core/api/api_handler.dart';
 import 'package:teacher_mate/core/api/dio_helper.dart';
+import 'package:teacher_mate/src/bloc/auth_bloc/auth_bloc.dart';
 import 'package:teacher_mate/src/bloc/calendar_bloc/calendar_bloc.dart';
 import 'package:teacher_mate/src/bloc/student_bloc/student_bloc.dart';
 import 'package:teacher_mate/src/config/i_app_config.dart';
@@ -53,6 +54,12 @@ Future<void> _registerBloc() async {
 
   injector.registerSingleton<StudentBloc>(
     StudentBloc(
+      injector.get(),
+    ),
+  );
+
+  injector.registerSingleton<AuthBloc>(
+    AuthBloc(
       injector.get(),
     ),
   );
