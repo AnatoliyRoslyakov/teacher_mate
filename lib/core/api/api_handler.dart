@@ -4,6 +4,7 @@ import 'package:teacher_mate/core/models/request/auth_request.dart';
 import 'package:teacher_mate/core/models/request/lesson_delete_request.dart';
 import 'package:teacher_mate/core/models/request/lesson_request.dart';
 import 'package:teacher_mate/core/models/request/student_request.dart';
+import 'package:teacher_mate/core/models/response/auth_response.dart';
 import 'package:teacher_mate/core/models/response/lesson_response.dart';
 import 'package:teacher_mate/core/models/response/student_response.dart';
 
@@ -32,5 +33,5 @@ abstract class ApiHandler {
   Future<List<StudentResponse>> getListStudent();
 
   @POST('/login')
-  Future<String> login(@Body() AuthRequest authRequest);
+  Future<AuthResponse> login(@Body() AuthRequest authRequest);
 }

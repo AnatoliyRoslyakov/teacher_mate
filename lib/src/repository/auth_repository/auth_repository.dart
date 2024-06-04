@@ -1,6 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:teacher_mate/core/api/api_handler.dart';
 import 'package:teacher_mate/core/models/request/auth_request.dart';
+import 'package:teacher_mate/core/models/response/auth_response.dart';
 
 abstract class IAuthRepository {
   Future<String> checkAuth();
@@ -12,17 +13,17 @@ abstract class IAuthRepository {
 
 const tokenKey = 'tokenKey';
 
-class AuthRepositoryImpl implements IAuthRepository {
+class AuthRepository implements IAuthRepository {
   final ApiHandler apiHandler;
   final SharedPreferences preferences;
 
-  AuthRepositoryImpl(this.apiHandler, this.preferences);
+  AuthRepository(this.apiHandler, this.preferences);
 
   @override
   Future<String> login({required String code}) async {
-    final token = await apiHandler.login(AuthRequest(code: code));
-    await preferences.setString(tokenKey, token);
-    return token;
+    final AuthResponse token = await apiHandler.login(AuthRequest(code: code));
+    await preferences.setString(tokenKey, token.token);
+    return token.token;
   }
 
   @override

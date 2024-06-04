@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:teacher_mate/core/di/injector.dart';
+import 'package:teacher_mate/src/bloc/auth_bloc/auth_bloc.dart';
 import 'package:teacher_mate/src/bloc/calendar_bloc/calendar_bloc.dart';
 import 'package:teacher_mate/src/bloc/student_bloc/student_bloc.dart';
 import 'package:teacher_mate/src/config/app_config.dart';
@@ -27,20 +30,46 @@ class _AppState extends State<App> {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-            create: (context) =>
-                injector.get<CalendarBloc>()..add(const CalendarEvent.read())),
-        BlocProvider(
-            create: (context) =>
-                injector.get<StudentBloc>()..add(const StudentEvent.read())),
-      ],
-      child: MaterialApp.router(
-        routerConfig: router,
+      providers: _globalBlocs(),
+      child: MultiBlocListener(
+        listeners: _globalListeners(),
+        child: MaterialApp.router(
+          routerConfig: router,
+        ),
       ),
-
-      //  const MaterialApp(
-      //     debugShowCheckedModeBanner: false, home: CalendarBaseWidget()));
     );
   }
+}
+
+List<BlocProvider> _globalBlocs() {
+  return [
+    BlocProvider<AuthBloc>(
+      create: (context) =>
+          injector.get<AuthBloc>()..add(const AuthEvent.init()),
+    ),
+    BlocProvider<CalendarBloc>(
+        create: (context) =>
+            injector.get<CalendarBloc>()..add(const CalendarEvent.read())),
+    BlocProvider<StudentBloc>(
+        create: (context) =>
+            injector.get<StudentBloc>()..add(const StudentEvent.read())),
+  ];
+}
+
+List<BlocListener> _globalListeners() {
+  return [
+    BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+        log(state.token);
+        if (state.token.isNotEmpty) {
+          AppRouter.rootNavigatorKey.currentContext
+              ?.goNamed(MobileRoutes.home.name);
+        } else {
+          AppRouter.rootNavigatorKey.currentContext
+              ?.goNamed(MobileRoutes.login.name);
+        }
+      },
+      listenWhen: (previous, current) => previous != current,
+    ),
+  ];
 }
