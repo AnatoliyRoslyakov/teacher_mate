@@ -28,15 +28,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class LoginPage extends StatelessWidget {
-  const LoginPage();
+  const LoginPage({super.key});
   @override
   Widget build(BuildContext context) {
     final showKeyboard = MediaQuery.of(context).viewInsets.bottom > 0;
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
-        if (state.token.isNotEmpty) {
-          context.read<AuthBloc>().add(const AuthInitEvent());
-        }
+        // if (state.token.isNotEmpty) {
+        //   context.read<AuthBloc>().add(const AuthInitEvent());
+        // }
       },
       builder: (context, state) => Scaffold(
         body: GestureDetector(
@@ -55,7 +55,7 @@ class LoginPage extends StatelessWidget {
                   const SizedBox(
                     height: 76,
                   ),
-                  Text(
+                  const Text(
                     'Введи код',
                   ),
                   const SizedBox(
@@ -105,7 +105,7 @@ class LoginPage extends StatelessWidget {
                           onPressed: () {
                             UrlUtils.openBot();
                           },
-                          child: Text('go'))
+                          child: const Text('go'))
                       // SecondaryButton.normal(
                       //   label: context.localization.loginGetCode,
                       //   fontSize: 12,
@@ -123,9 +123,11 @@ class LoginPage extends StatelessWidget {
                         width: 208,
                         child: ElevatedButton(
                             onPressed: () {
-                              context.read<AuthBloc>().add(AuthGetTokenEvent());
+                              context
+                                  .read<AuthBloc>()
+                                  .add(const AuthGetTokenEvent());
                             },
-                            child: Text('next'))),
+                            child: const Text('next'))),
                   ]
                 ],
               ),

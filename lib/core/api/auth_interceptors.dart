@@ -29,8 +29,8 @@ class AuthInterceptor extends Interceptor {
   }
 
   RequestOptions _requestInterceptor(RequestOptions options) {
-    final token = authActions?.token;
-    if (token != null) {
+    final token = authActions?.token ?? '';
+    if (token.isNotEmpty) {
       options.headers.addAll(<String, String>{'authorization': token});
     } else {
       options.headers.remove('authorization');

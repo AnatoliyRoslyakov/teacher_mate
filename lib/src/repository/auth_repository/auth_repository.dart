@@ -22,7 +22,7 @@ class AuthRepository implements IAuthRepository {
   @override
   Future<String> login({required String code}) async {
     final AuthResponse token = await apiHandler.login(AuthRequest(code: code));
-    await preferences.setString(tokenKey, token.token);
+    preferences.setString(tokenKey, token.token);
     return token.token;
   }
 
