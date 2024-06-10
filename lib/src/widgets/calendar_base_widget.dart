@@ -5,6 +5,56 @@ import 'package:teacher_mate/src/bloc/calendar_bloc/calendar_bloc.dart';
 import 'package:teacher_mate/src/bloc/student_bloc/student_bloc.dart';
 import 'package:teacher_mate/src/entity/calendar_settings.dart';
 
+class DraggablePanel extends StatefulWidget {
+  @override
+  _DraggablePanelState createState() => _DraggablePanelState();
+}
+
+class _DraggablePanelState extends State<DraggablePanel> {
+  double _panelWidth = 100.0;
+  double _maxPanelWidth = 300.0;
+  double _minPanelWidth = 100.0;
+
+  void _onHorizontalDragUpdate(DragUpdateDetails details) {
+    setState(() {
+      _panelWidth -= details.delta.dx;
+      if (_panelWidth < _minPanelWidth) {
+        _panelWidth = _minPanelWidth;
+      } else if (_panelWidth > _maxPanelWidth) {
+        _panelWidth = _maxPanelWidth;
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            height: double.infinity,
+            color: Colors.grey[300],
+            child: Center(
+              child: Text('Content Area'),
+            ),
+          ),
+        ),
+        GestureDetector(
+          onHorizontalDragUpdate: _onHorizontalDragUpdate,
+          child: Container(
+            width: _panelWidth,
+            height: 200.0,
+            color: Colors.blue,
+            child: Center(
+              child: Text('Drag Me', style: TextStyle(color: Colors.white)),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class CalendarBaseWidget extends StatefulWidget {
   const CalendarBaseWidget({
     super.key,
