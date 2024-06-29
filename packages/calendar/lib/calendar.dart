@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:calendar/src/calendar_date_range_section.dart';
 import 'package:calendar/src/calendar_days_section.dart';
 import 'package:flutter/material.dart';
 import 'package:calendar/src/calendar_time_section.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:intl/intl.dart';
 
 class Calendar extends StatefulWidget {
@@ -89,90 +92,133 @@ class _CalendarState extends State<Calendar> {
         builder: (BuildContext context, BoxConstraints constraints) {
       return Column(
         children: [
-          DateRangeSection(
-              nextDate: () {
-                nextWeek();
-              },
-              afterDate: () {
-                prevWeek();
-              },
-              viewDay: widget.startOfWeek ? viewDay : widget.viewDay,
-              startOfWeek: widget.startOfWeek),
-          // const SizedBox(
-          //   height: 40,
-          // ),
-          Row(children: [
-            SizedBox(
-              width: 60,
-              height: 60,
-              child: Center(
-                child: IconButton(
-                    onPressed: () {
-                      currentWeek();
-                    },
-                    icon: const Icon(
-                      Icons.calendar_month,
-                    )),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const SizedBox(
+                width: 20,
               ),
+              DateRangeSection(
+                nextDate: () {
+                  nextWeek();
+                },
+                afterDate: () {
+                  prevWeek();
+                },
+                viewDay: widget.startOfWeek ? viewDay : widget.viewDay,
+                startOfWeek: widget.startOfWeek,
+                currentTime: currentTime,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(right: 15),
+                child: GestureDetector(
+                  onTap: () {
+                    currentWeek();
+                  },
+                  child: Container(
+                    width: 20,
+                    height: 20,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black87, width: 2),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Center(
+                      child: Text(
+                        DateTime.now().day.toString(),
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Row(children: [
+            const SizedBox(
+              height: 60,
+              width: 60,
             ),
             ...List.generate(widget.startOfWeek ? viewDay : widget.viewDay,
                 (index) {
               final time =
                   DateFormat(widget.viewDay > 10 ? 'E\ndd.MM' : 'E dd.MM')
                       .format(startTime.add(Duration(days: index)));
-              return Expanded(
-                  child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                      textAlign: TextAlign.center,
-                      maxLines: 2,
-                      time,
-                    ),
-                  ),
-                ),
-              ));
+              final current =
+                  startTime.add(Duration(days: index)).startOfDay() ==
+                      DateTime.now().startOfDay();
+
+              return current
+                  ? Expanded(
+                      child: Center(
+                          child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(7),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 5, vertical: 3),
+                            child: FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(
+                                textAlign: TextAlign.center,
+                                maxLines: 2,
+                                time,
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                            ),
+                          )),
+                    )))
+                  : Expanded(
+                      child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            textAlign: TextAlign.center,
+                            maxLines: 2,
+                            time,
+                          ),
+                        ),
+                      ),
+                    ));
             }),
           ]),
           Expanded(
             child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          width: 60,
-                          child: CalendarTimeSection(
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: 60,
+                      child: CalendarTimeSection(
+                          startHour: widget.startHour,
+                          endHour: widget.endHour,
+                          minutesGrid: widget.minutesGrid),
+                    ),
+                    ...List.generate(
+                        widget.startOfWeek ? viewDay : widget.viewDay,
+                        (index) => Expanded(
+                                child: CalendarDaysSection(
+                              student: widget.student,
+                              size: constraints.maxWidth,
+                              startOfWeek: widget.startOfWeek,
+                              viewDay:
+                                  widget.startOfWeek ? viewDay : widget.viewDay,
+                              currentTime: currentTime,
+                              dayIndex: index,
+                              lessons: lessonsData[index + 1],
                               startHour: widget.startHour,
                               endHour: widget.endHour,
-                              minutesGrid: widget.minutesGrid),
-                        ),
-                        ...List.generate(
-                            widget.startOfWeek ? viewDay : widget.viewDay,
-                            (index) => Expanded(
-                                    child: CalendarDaysSection(
-                                  student: widget.student,
-                                  size: constraints.maxWidth,
-                                  startOfWeek: widget.startOfWeek,
-                                  viewDay: widget.startOfWeek
-                                      ? viewDay
-                                      : widget.viewDay,
-                                  currentTime: currentTime,
-                                  dayIndex: index,
-                                  lessons: lessonsData[index + 1],
-                                  startHour: widget.startHour,
-                                  endHour: widget.endHour,
-                                  minutesGrid: widget.minutesGrid,
-                                  addLesson: widget.addLesson,
-                                  deleteLesson: widget.deleteLesson,
-                                ))),
-                      ]),
-                ],
-              ),
+                              minutesGrid: widget.minutesGrid,
+                              addLesson: widget.addLesson,
+                              deleteLesson: widget.deleteLesson,
+                            ))),
+                  ]),
             ),
           ),
         ],

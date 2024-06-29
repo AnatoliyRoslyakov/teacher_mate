@@ -35,6 +35,7 @@ class _AppState extends State<App> {
       child: MultiBlocListener(
         listeners: _globalListeners(),
         child: MaterialApp.router(
+          debugShowCheckedModeBanner: false,
           routerConfig: router,
         ),
       ),

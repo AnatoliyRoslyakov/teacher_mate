@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:calendar/calendar.dart';
 import 'package:calendar/src/show_dialog.dart';
 import 'package:flutter/material.dart';
@@ -73,6 +75,8 @@ class _CalendarDaysSectionState extends State<CalendarDaysSection> {
                     ),
                   ),
                   children: List.generate(count, (index) {
+                    int weekdayIndex =
+                        start.add(Duration(days: widget.dayIndex)).weekday;
                     return InkWell(
                       hoverColor: Colors.amber,
                       onTap: () {
@@ -97,12 +101,14 @@ class _CalendarDaysSectionState extends State<CalendarDaysSection> {
                           widget.student,
                           widget.addLesson,
                         );
-                        // setState(() {});
                       },
                       child: Container(
                         width: double.infinity,
                         height: widget.minutesGrid * 120,
                         decoration: BoxDecoration(
+                            color: weekdayIndex == 6 || weekdayIndex == 7
+                                ? const Color.fromARGB(11, 0, 0, 0)
+                                : Colors.transparent,
                             border:
                                 Border.all(color: Colors.black12, width: 0.5)),
                       ),
