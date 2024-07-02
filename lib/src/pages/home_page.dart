@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:calendar/calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -31,17 +33,15 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        key: _scaffoldKey,
-        drawer: const CalendarSettingsWidget(),
-        backgroundColor: Colors.white,
-        // виджеты -- сила, в зависимости от платформы будет меняться только компановка
-        body: WebHomePageContent(
-          addLesson: addLesson,
-          deleteLesson: deleteLesson,
-          scaffoldKey: _scaffoldKey,
-        ),
+    return Scaffold(
+      key: _scaffoldKey,
+      drawer: const CalendarSettingsWidget(),
+      backgroundColor: Colors.white,
+      // виджеты -- сила, в зависимости от платформы будет меняться только компановка
+      body: WebHomePageContent(
+        addLesson: addLesson,
+        deleteLesson: deleteLesson,
+        scaffoldKey: _scaffoldKey,
       ),
     );
   }
@@ -103,7 +103,7 @@ class _WebHomePageContentState extends State<WebHomePageContent>
     });
   }
 
-  double _panelWidth = 400.0;
+  double _panelWidth = 0.0;
   final double _maxPanelWidth = 400.0;
   final double _minPanelWidth = 0.0;
   final double _fadeThreshold = 200.0;
@@ -122,8 +122,10 @@ class _WebHomePageContentState extends State<WebHomePageContent>
   void _togglePanel() {
     if (_controller.status == AnimationStatus.completed) {
       _controller.reverse();
+      log('reverse');
     } else {
       _controller.forward();
+      log('forward');
     }
   }
 
@@ -139,97 +141,100 @@ class _WebHomePageContentState extends State<WebHomePageContent>
       return BlocBuilder<StudentBloc, StudentState>(
           builder: (context, stateStudent) {
         final CalendarSettingsEntity settings = state.calendarSettings;
-        return Stack(
-          children: [
-            Positioned(
-                top: 20,
-                left: 20,
-                child: IconButton(
-                    onPressed: () {
-                      widget.scaffoldKey.currentState?.openDrawer();
-                    },
-                    icon: const Icon(Icons.menu))),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                state.isLoading
-                    ? const Center(child: CircularProgressIndicator())
-                    : Expanded(
-                        flex: 2,
-                        child: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 20, left: 20),
-                            child: Calendar(
-                                minutesGrid: settings.minutesGrid,
-                                startHour: settings.startHour,
-                                endHour: settings.endHour,
-                                viewDay: settings.viewDay,
-                                lessons: state.mapLessons,
-                                addLesson: widget.addLesson,
-                                deleteLesson: widget.deleteLesson,
-                                student: stateStudent.studentEntity,
-                                startOfWeek: settings.startOfWeek),
+        return Padding(
+          padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+          child: Stack(
+            children: [
+              Positioned(
+                  top: 20,
+                  left: 15,
+                  child: IconButton(
+                      onPressed: () {
+                        widget.scaffoldKey.currentState?.openDrawer();
+                      },
+                      icon: const Icon(Icons.menu))),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  state.isLoading
+                      ? const Center(child: CircularProgressIndicator())
+                      : Expanded(
+                          flex: 2,
+                          child: Center(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 20, left: 20),
+                              child: Calendar(
+                                  minutesGrid: settings.minutesGrid,
+                                  startHour: settings.startHour,
+                                  endHour: settings.endHour,
+                                  viewDay: settings.viewDay,
+                                  lessons: state.mapLessons,
+                                  addLesson: widget.addLesson,
+                                  deleteLesson: widget.deleteLesson,
+                                  student: stateStudent.studentEntity,
+                                  startOfWeek: settings.startOfWeek),
+                            ),
                           ),
                         ),
-                      ),
-                GestureDetector(
-                  onHorizontalDragUpdate: _onHorizontalDragUpdate,
-                  onTap: _togglePanel,
-                  child: AnimatedBuilder(
-                      animation: _controller,
-                      builder: (context, child) {
-                        double fadeValue = 1.0;
-                        if (_panelWidth < _fadeThreshold) {
-                          fadeValue = (_panelWidth - _minPanelWidth - 100) /
-                              (_fadeThreshold - _minPanelWidth);
-                        }
-                        return Row(
-                          children: [
-                            Center(
-                              child: Container(
-                                width: 12,
-                                height: 70,
-                                decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(15),
-                                    bottomLeft: Radius.circular(15),
+                  GestureDetector(
+                    onHorizontalDragUpdate: _onHorizontalDragUpdate,
+                    onTap: _togglePanel,
+                    child: AnimatedBuilder(
+                        animation: _controller,
+                        builder: (context, child) {
+                          double fadeValue = 1.0;
+                          if (_panelWidth < _fadeThreshold) {
+                            fadeValue = (_panelWidth - _minPanelWidth - 100) /
+                                (_fadeThreshold - _minPanelWidth);
+                          }
+                          return Row(
+                            children: [
+                              Center(
+                                child: Container(
+                                  width: 12,
+                                  height: 70,
+                                  decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(15),
+                                      bottomLeft: Radius.circular(15),
+                                    ),
+                                    color: Colors.grey.withOpacity(0.3),
                                   ),
-                                  color: Colors.grey.withOpacity(0.3),
-                                ),
-                                child: const Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: Icon(
-                                    Icons.arrow_back_ios,
-                                    color: Colors.grey,
+                                  child: const Padding(
+                                    padding: const EdgeInsets.all(4.0),
+                                    child: Icon(
+                                      Icons.arrow_back_ios,
+                                      color: Colors.grey,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            Container(
-                              width: 10,
-                              height: double.infinity,
-                              color: Colors.grey.withOpacity(0.3),
-                            ),
-                            FadeTransition(
-                              opacity: AlwaysStoppedAnimation(fadeValue),
-                              child: Container(
-                                width: _panelWidth,
+                              Container(
+                                width: 10,
                                 height: double.infinity,
-                                color: Colors.white,
-                                child: const Padding(
-                                  padding: EdgeInsets.all(20),
-                                  child: StudentListWidget(),
+                                color: Colors.grey.withOpacity(0.3),
+                              ),
+                              FadeTransition(
+                                opacity: AlwaysStoppedAnimation(fadeValue),
+                                child: Container(
+                                  width: _panelWidth,
+                                  height: double.infinity,
+                                  color: Colors.white,
+                                  child: const Padding(
+                                    padding: EdgeInsets.all(20),
+                                    child: StudentListWidget(),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        );
-                      }),
-                ),
-              ],
-            ),
-          ],
+                            ],
+                          );
+                        }),
+                  ),
+                ],
+              ),
+            ],
+          ),
         );
       });
     });

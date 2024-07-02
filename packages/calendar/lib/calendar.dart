@@ -96,7 +96,7 @@ class _CalendarState extends State<Calendar> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const SizedBox(
-                width: 20,
+                width: 30,
               ),
               DateRangeSection(
                 nextDate: () {

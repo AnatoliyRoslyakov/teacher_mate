@@ -118,6 +118,35 @@ class _CalendarDaysSectionState extends State<CalendarDaysSection> {
               ),
             ),
           )),
+          start.add(Duration(days: widget.dayIndex)).startOfDay() ==
+                  DateTime.now().startOfDay()
+              ? Positioned(
+                  top: ((DateTime.now().hour - widget.startHour) *
+                          2 *
+                          widget.minutesGrid *
+                          (widget.minutesGrid == 1 ? 60 : 120)) +
+                      DateTime.now().minute,
+                  width:
+                      (widget.size / widget.viewDay) - 100 / widget.viewDay + 5,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          height: 1,
+                          color: Colors.red,
+                        ),
+                      ),
+                      Container(
+                        height: 5,
+                        width: 10,
+                        decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(2)),
+                      ),
+                    ],
+                  ),
+                )
+              : SizedBox(),
           ...List.generate(widget.lessons.length, (index) {
             final lesson = widget.lessons[index];
             final start = lesson.start.hour * 60 + lesson.start.minute;
