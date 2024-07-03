@@ -2,10 +2,9 @@ import 'dart:developer';
 
 import 'package:calendar/src/calendar_date_range_section.dart';
 import 'package:calendar/src/calendar_days_section.dart';
+import 'package:calendar/src/calendar_grid_section.dart';
 import 'package:flutter/material.dart';
 import 'package:calendar/src/calendar_time_section.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
-import 'package:intl/intl.dart';
 
 class Calendar extends StatefulWidget {
   final int startHour;
@@ -15,6 +14,7 @@ class Calendar extends StatefulWidget {
   final List<StudentEntity> student;
   final int viewDay;
   final bool startOfWeek;
+  final bool mobile;
   final void Function(
       {required int start,
       required int end,
@@ -23,6 +23,7 @@ class Calendar extends StatefulWidget {
   final void Function({required String id}) deleteLesson;
 
   const Calendar({
+    this.mobile = false,
     super.key,
     required this.startHour,
     required this.endHour,
@@ -47,6 +48,34 @@ class _CalendarState extends State<Calendar> {
 
   DateTime currentTime = DateTime.now();
   int viewDay = 7;
+
+  PageController _pageController = PageController();
+  int _currentPage = 10000;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: _currentPage);
+    _pageController.addListener(_onPageChanged);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  void _onPageChanged() {
+    if (_pageController.page?.round() != _currentPage) {
+      if ((_pageController.page?.round() ?? _currentPage) > _currentPage) {
+        nextWeek();
+        log('message');
+      } else {
+        prevWeek();
+      }
+      _currentPage = _pageController.page?.round() ?? _currentPage;
+    }
+  }
 
   void currentWeek() {
     setState(() {
@@ -80,11 +109,6 @@ class _CalendarState extends State<Calendar> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final startTime =
         widget.startOfWeek ? currentTime.startOfCurrentWeek() : currentTime;
@@ -96,7 +120,7 @@ class _CalendarState extends State<Calendar> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const SizedBox(
-                width: 30,
+                width: 35,
               ),
               DateRangeSection(
                 nextDate: () {
@@ -108,9 +132,12 @@ class _CalendarState extends State<Calendar> {
                 viewDay: widget.startOfWeek ? viewDay : widget.viewDay,
                 startOfWeek: widget.startOfWeek,
                 currentTime: currentTime,
+                mobile: widget.mobile,
               ),
               Padding(
-                padding: const EdgeInsets.only(right: 15),
+                padding: const EdgeInsets.only(
+                  right: 15,
+                ),
                 child: GestureDetector(
                   onTap: () {
                     currentWeek();
@@ -133,92 +160,63 @@ class _CalendarState extends State<Calendar> {
               ),
             ],
           ),
-          Row(children: [
-            const SizedBox(
-              height: 60,
-              width: 60,
-            ),
-            ...List.generate(widget.startOfWeek ? viewDay : widget.viewDay,
-                (index) {
-              final time =
-                  DateFormat(widget.viewDay > 10 ? 'E\ndd.MM' : 'E dd.MM')
-                      .format(startTime.add(Duration(days: index)));
-              final current =
-                  startTime.add(Duration(days: index)).startOfDay() ==
-                      DateTime.now().startOfDay();
-
-              return current
-                  ? Expanded(
-                      child: Center(
-                          child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.red,
-                            borderRadius: BorderRadius.circular(7),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 5, vertical: 3),
-                            child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text(
-                                textAlign: TextAlign.center,
-                                maxLines: 2,
-                                time,
-                                style: const TextStyle(color: Colors.white),
-                              ),
-                            ),
-                          )),
-                    )))
-                  : Expanded(
-                      child: Center(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8),
-                        child: FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Text(
-                            textAlign: TextAlign.center,
-                            maxLines: 2,
-                            time,
-                          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Expanded(
+            child: PageView.builder(
+              controller: _pageController,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.only(left: 15, top: 10),
+                  child: Column(
+                    children: [
+                      CalendarDaysSection(
+                          widget: widget,
+                          viewDay: viewDay,
+                          startTime: startTime),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  width: 60,
+                                  child: CalendarTimeSection(
+                                      startHour: widget.startHour,
+                                      endHour: widget.endHour,
+                                      minutesGrid: widget.minutesGrid),
+                                ),
+                                ...List.generate(
+                                    widget.startOfWeek
+                                        ? viewDay
+                                        : widget.viewDay,
+                                    (index) => Expanded(
+                                            child: CalendarGridSection(
+                                          mobile: widget.mobile,
+                                          student: widget.student,
+                                          size: constraints.maxWidth,
+                                          startOfWeek: widget.startOfWeek,
+                                          viewDay: widget.startOfWeek
+                                              ? viewDay
+                                              : widget.viewDay,
+                                          currentTime: currentTime,
+                                          dayIndex: index,
+                                          lessons: lessonsData[index + 1],
+                                          startHour: widget.startHour,
+                                          endHour: widget.endHour,
+                                          minutesGrid: widget.minutesGrid,
+                                          addLesson: widget.addLesson,
+                                          deleteLesson: widget.deleteLesson,
+                                        ))),
+                              ]),
                         ),
                       ),
-                    ));
-            }),
-          ]),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: 60,
-                      child: CalendarTimeSection(
-                          startHour: widget.startHour,
-                          endHour: widget.endHour,
-                          minutesGrid: widget.minutesGrid),
-                    ),
-                    ...List.generate(
-                        widget.startOfWeek ? viewDay : widget.viewDay,
-                        (index) => Expanded(
-                                child: CalendarDaysSection(
-                              student: widget.student,
-                              size: constraints.maxWidth,
-                              startOfWeek: widget.startOfWeek,
-                              viewDay:
-                                  widget.startOfWeek ? viewDay : widget.viewDay,
-                              currentTime: currentTime,
-                              dayIndex: index,
-                              lessons: lessonsData[index + 1],
-                              startHour: widget.startHour,
-                              endHour: widget.endHour,
-                              minutesGrid: widget.minutesGrid,
-                              addLesson: widget.addLesson,
-                              deleteLesson: widget.deleteLesson,
-                            ))),
-                  ]),
+                    ],
+                  ),
+                );
+              },
             ),
           ),
         ],

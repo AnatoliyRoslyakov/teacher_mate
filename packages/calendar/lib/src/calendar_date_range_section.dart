@@ -8,6 +8,7 @@ class DateRangeSection extends StatefulWidget {
   final int viewDay;
   final bool startOfWeek;
   final DateTime currentTime;
+  final bool mobile;
 
   const DateRangeSection(
       {super.key,
@@ -15,7 +16,8 @@ class DateRangeSection extends StatefulWidget {
       required this.afterDate,
       required this.viewDay,
       required this.startOfWeek,
-      required this.currentTime});
+      required this.currentTime,
+      required this.mobile});
   @override
   _DateRangeSectionState createState() => _DateRangeSectionState();
 }
