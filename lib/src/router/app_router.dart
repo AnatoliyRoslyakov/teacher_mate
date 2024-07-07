@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:teacher_mate/src/pages/home_page.dart';
+import 'package:teacher_mate/src/pages/mobile/cupertino_modal_sheet_page.dart';
+import 'package:teacher_mate/src/screen/create_lesson_screen.dart';
+import 'package:teacher_mate/src/screen/home_screen.dart';
 import 'package:collection/collection.dart';
-import 'package:teacher_mate/src/pages/login_page.dart';
+import 'package:teacher_mate/src/screen/login_screen.dart';
 
 class AppRouter {
   static final GlobalKey<NavigatorState> rootNavigatorKey =
@@ -17,17 +19,24 @@ class AppRouter {
       navigatorKey: rootNavigatorKey,
       routes: <RouteBase>[
         GoRoute(
+          name: MobileRoutes.create.name,
+          path: MobileRoutes.create.path,
+          pageBuilder: (context, state) => CupertinoModalSheetPage<void>(
+            builder: (context) => const CreateLessonScreen(),
+          ),
+        ),
+        GoRoute(
           name: MobileRoutes.home.name,
           path: MobileRoutes.home.path,
           builder: (BuildContext context, GoRouterState state) {
-            return const HomePage();
+            return const HomeScreen();
           },
         ),
         GoRoute(
           name: MobileRoutes.login.name,
           path: MobileRoutes.login.path,
           builder: (BuildContext context, GoRouterState state) {
-            return const LoginPage();
+            return const LoginScreen();
           },
         ),
       ],
@@ -37,6 +46,7 @@ class AppRouter {
 
 enum MobileRoutes {
   login,
+  create,
   home;
 
   static MobileRoutes? fromName(String? name) {

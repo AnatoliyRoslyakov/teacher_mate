@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:calendar/src/calendar_date_range_section.dart';
 import 'package:calendar/src/calendar_days_section.dart';
 import 'package:calendar/src/calendar_grid_section.dart';
@@ -15,12 +13,13 @@ class Calendar extends StatefulWidget {
   final int viewDay;
   final bool startOfWeek;
   final bool mobile;
-  final void Function(
-      {required int start,
-      required int end,
-      required int type,
-      required int studentId}) addLesson;
   final void Function({required String id}) deleteLesson;
+  final void Function(
+    BuildContext context,
+    DateTime initialStartTime,
+    DateTime initialEndTime,
+    List<StudentEntity> student,
+  ) createLesson;
 
   const Calendar({
     this.mobile = false,
@@ -29,11 +28,11 @@ class Calendar extends StatefulWidget {
     required this.endHour,
     required this.lessons,
     required this.minutesGrid,
-    required this.addLesson,
     required this.deleteLesson,
     required this.viewDay,
     required this.startOfWeek,
     required this.student,
+    required this.createLesson,
   });
   @override
   _CalendarState createState() => _CalendarState();
@@ -69,7 +68,6 @@ class _CalendarState extends State<Calendar> {
     if (_pageController.page?.round() != _currentPage) {
       if ((_pageController.page?.round() ?? _currentPage) > _currentPage) {
         nextWeek();
-        log('message');
       } else {
         prevWeek();
       }
@@ -165,6 +163,9 @@ class _CalendarState extends State<Calendar> {
           ),
           Expanded(
             child: PageView.builder(
+              physics: widget.mobile
+                  ? const BouncingScrollPhysics()
+                  : const NeverScrollableScrollPhysics(),
               controller: _pageController,
               itemBuilder: (context, index) {
                 return Padding(
@@ -194,6 +195,7 @@ class _CalendarState extends State<Calendar> {
                                         : widget.viewDay,
                                     (index) => Expanded(
                                             child: CalendarGridSection(
+                                          createLesson: widget.createLesson,
                                           mobile: widget.mobile,
                                           student: widget.student,
                                           size: constraints.maxWidth,
@@ -207,7 +209,6 @@ class _CalendarState extends State<Calendar> {
                                           startHour: widget.startHour,
                                           endHour: widget.endHour,
                                           minutesGrid: widget.minutesGrid,
-                                          addLesson: widget.addLesson,
                                           deleteLesson: widget.deleteLesson,
                                         ))),
                               ]),

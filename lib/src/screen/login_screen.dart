@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:teacher_mate/src/bloc/auth_bloc/auth_bloc.dart';
-import 'package:teacher_mate/src/router/app_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // class LoginPage extends StatefulWidget {
@@ -27,8 +25,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+class LoginScreen extends StatelessWidget {
+  const LoginScreen({super.key});
   @override
   Widget build(BuildContext context) {
     final showKeyboard = MediaQuery.of(context).viewInsets.bottom > 0;

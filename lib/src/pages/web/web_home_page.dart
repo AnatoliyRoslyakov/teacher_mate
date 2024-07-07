@@ -4,28 +4,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:teacher_mate/src/bloc/calendar_bloc/calendar_bloc.dart';
 import 'package:teacher_mate/src/bloc/student_bloc/student_bloc.dart';
 import 'package:teacher_mate/src/entity/calendar_settings.dart';
+import 'package:teacher_mate/src/pages/web/create_lesson_dialog.dart';
 import 'package:teacher_mate/src/widgets/shared/student_list_widget.dart';
 
-class WebHomeContent extends StatefulWidget {
+class WebHomePage extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
-  final void Function(
-      {required int start,
-      required int end,
-      required int type,
-      required int studentId}) addLesson;
+
   final void Function({required String id}) deleteLesson;
 
-  const WebHomeContent(
-      {super.key,
-      required this.addLesson,
-      required this.deleteLesson,
-      required this.scaffoldKey});
+  const WebHomePage(
+      {super.key, required this.deleteLesson, required this.scaffoldKey});
 
   @override
-  State<WebHomeContent> createState() => _WebHomeContentState();
+  State<WebHomePage> createState() => _WebHomePageState();
 }
 
-class _WebHomeContentState extends State<WebHomeContent>
+class _WebHomePageState extends State<WebHomePage>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> widthAnimation;
@@ -122,12 +116,12 @@ class _WebHomeContentState extends State<WebHomeContent>
                             child: Padding(
                               padding: const EdgeInsets.only(top: 20, left: 20),
                               child: Calendar(
+                                  createLesson: createLessonDialog,
                                   minutesGrid: settings.minutesGrid,
                                   startHour: settings.startHour,
                                   endHour: settings.endHour,
                                   viewDay: settings.viewDay,
                                   lessons: state.mapLessons,
-                                  addLesson: widget.addLesson,
                                   deleteLesson: widget.deleteLesson,
                                   student: stateStudent.studentEntity,
                                   startOfWeek: settings.startOfWeek),

@@ -1,5 +1,4 @@
 import 'package:calendar/calendar.dart';
-import 'package:calendar/src/show_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
@@ -15,12 +14,13 @@ class CalendarGridSection extends StatefulWidget {
   final bool startOfWeek;
   final double size;
   final bool mobile;
-  final void Function(
-      {required int start,
-      required int end,
-      required int type,
-      required int studentId}) addLesson;
   final void Function({required String id}) deleteLesson;
+  final void Function(
+    BuildContext context,
+    DateTime initialStartTime,
+    DateTime initialEndTime,
+    List<StudentEntity> student,
+  ) createLesson;
 
   const CalendarGridSection({
     super.key,
@@ -28,7 +28,6 @@ class CalendarGridSection extends StatefulWidget {
     required this.startHour,
     required this.endHour,
     required this.minutesGrid,
-    required this.addLesson,
     required this.dayIndex,
     required this.currentTime,
     required this.deleteLesson,
@@ -37,6 +36,7 @@ class CalendarGridSection extends StatefulWidget {
     required this.size,
     required this.student,
     required this.mobile,
+    required this.createLesson,
   });
 
   @override
@@ -80,7 +80,7 @@ class _CalendarGridSectionState extends State<CalendarGridSection> {
                     return InkWell(
                       hoverColor: Colors.amber,
                       onTap: () {
-                        showBlurredDialog(
+                        widget.createLesson(
                           context,
                           start.add(Duration(days: widget.dayIndex)).copyWith(
                               hour: widget.minutesGrid == 0.5
@@ -99,7 +99,6 @@ class _CalendarGridSectionState extends State<CalendarGridSection> {
                                   ? 30
                                   : 00),
                           widget.student,
-                          widget.addLesson,
                         );
                       },
                       child: Container(
@@ -126,8 +125,7 @@ class _CalendarGridSectionState extends State<CalendarGridSection> {
                           widget.minutesGrid *
                           (widget.minutesGrid == 1 ? 60 : 120)) +
                       DateTime.now().minute,
-                  width:
-                      (widget.size / widget.viewDay) - 100 / widget.viewDay + 5,
+                  width: (widget.size / widget.viewDay) - 100 / widget.viewDay,
                   child: Row(
                     children: [
                       Expanded(
@@ -168,13 +166,13 @@ class _CalendarGridSectionState extends State<CalendarGridSection> {
 
 class LessonCardWidget extends StatelessWidget {
   const LessonCardWidget({
-    super.key,
+    Key? key,
     required this.top,
     required this.widget,
     required this.lesson,
     required this.height,
     required this.index,
-  });
+  }) : super(key: key);
 
   final double top;
   final CalendarGridSection widget;
@@ -182,66 +180,79 @@ class LessonCardWidget extends StatelessWidget {
   final double height;
   final int index;
 
+//AnimatedPositioned  анимирует изменение ПОЛОЖЕНИЯ виджета,
+//AnimatedContainer анимирует изменение РАЗМЕРА контейнеров внутри LessonCardWidget
   @override
   Widget build(BuildContext context) {
-    return Positioned(
-        top: top,
-        child: Center(
-          child: InkWell(
-            hoverColor: ColorType.values[widget.lessons[index].type].color,
-            borderRadius: BorderRadius.circular(8.0),
-            onTap: () {
-              widget.deleteLesson(id: lesson.name);
-            },
-            child: SizedBox(
-              width: (widget.size / widget.viewDay) - 100 / widget.viewDay + 5,
-              height: height * 2,
-              child: Row(
-                children: [
-                  Container(
-                    width: 5,
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(7),
-                          bottomLeft: Radius.circular(7)),
-                      color: ColorType.values[widget.lessons[index].type].color,
+    return AnimatedPositioned(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+      top: top,
+      child: Center(
+        child: InkWell(
+          hoverColor: ColorType.values[widget.lessons[index].type].color,
+          borderRadius: BorderRadius.circular(8.0),
+          onTap: () {
+            widget.deleteLesson(id: lesson.name);
+          },
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeOut,
+            width: (widget.size / widget.viewDay) - 100 / widget.viewDay + 5,
+            height: height * 2,
+            child: Row(
+              children: [
+                Container(
+                  width: 5,
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(7),
+                      bottomLeft: Radius.circular(7),
+                    ),
+                    color: ColorType.values[widget.lessons[index].type].color,
+                  ),
+                ),
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeOut,
+                  height: height * 2,
+                  width:
+                      (widget.size / widget.viewDay) - 100 / widget.viewDay - 2,
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.only(
+                      topRight: Radius.circular(7),
+                      bottomRight: Radius.circular(7),
+                    ),
+                    color: ColorType.values[widget.lessons[index].type].color
+                        .withOpacity(0.6),
+                  ),
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Column(
+                      children: [
+                        Text(
+                          widget.student
+                              .firstWhere(
+                                (e) => e.id == lesson.studentId,
+                                orElse: () => StudentEntity(
+                                    id: 0, name: 'unknown', price: 0),
+                              )
+                              .name,
+                          style: const TextStyle(fontSize: 12.0),
+                        ),
+                        Text(
+                          '${lesson.start.hour}:${lesson.start.minute < 10 ? '0${lesson.start.minute}' : lesson.start.minute}-${lesson.end.hour}:${lesson.end.minute}',
+                          style: const TextStyle(fontSize: 10.0),
+                        ),
+                      ],
                     ),
                   ),
-                  Container(
-                    height: height * 2,
-                    width:
-                        (widget.size / widget.viewDay) - 100 / widget.viewDay,
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.only(
-                          topRight: Radius.circular(7),
-                          bottomRight: Radius.circular(7)),
-                      color: ColorType.values[widget.lessons[index].type].color
-                          .withOpacity(0.6),
-                    ),
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Column(
-                        children: [
-                          Text(
-                            widget.student
-                                .firstWhere((e) => e.id == lesson.studentId,
-                                    orElse: () => StudentEntity(
-                                        id: 0, name: 'unknown', price: 0))
-                                .name,
-                            style: const TextStyle(fontSize: 12.0),
-                          ),
-                          Text(
-                            '${lesson.start.hour}:${lesson.start.minute < 10 ? '0${lesson.start.minute}' : lesson.start.minute}-${lesson.end.hour}:${lesson.end.minute}',
-                            style: const TextStyle(fontSize: 10.0),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 }

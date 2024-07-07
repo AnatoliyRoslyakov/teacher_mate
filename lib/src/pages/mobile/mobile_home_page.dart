@@ -1,30 +1,26 @@
 import 'package:calendar/calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:teacher_mate/src/bloc/calendar_bloc/calendar_bloc.dart';
 import 'package:teacher_mate/src/bloc/student_bloc/student_bloc.dart';
 import 'package:teacher_mate/src/entity/calendar_settings.dart';
+import 'package:teacher_mate/src/pages/web/create_lesson_dialog.dart';
+import 'package:teacher_mate/src/router/app_router.dart';
 
-class MobileHomeContent extends StatefulWidget {
+class MobileHomePage extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
-  final void Function(
-      {required int start,
-      required int end,
-      required int type,
-      required int studentId}) addLesson;
+
   final void Function({required String id}) deleteLesson;
 
-  const MobileHomeContent(
-      {super.key,
-      required this.addLesson,
-      required this.deleteLesson,
-      required this.scaffoldKey});
+  const MobileHomePage(
+      {super.key, required this.deleteLesson, required this.scaffoldKey});
 
   @override
-  State<MobileHomeContent> createState() => _MobileHomeContentState();
+  State<MobileHomePage> createState() => _MobileHomePageState();
 }
 
-class _MobileHomeContentState extends State<MobileHomeContent>
+class _MobileHomePageState extends State<MobileHomePage>
     with SingleTickerProviderStateMixin {
   // late AnimationController _controller;
   // late Animation<double> widthAnimation;
@@ -91,6 +87,15 @@ class _MobileHomeContentState extends State<MobileHomeContent>
   //   super.dispose();
   // }
 
+  void createLessonPage(
+    BuildContext context,
+    DateTime initialStartTime,
+    DateTime initialEndTime,
+    final List<StudentEntity> student,
+  ) {
+    context.push(MobileRoutes.create.path);
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CalendarBloc, CalendarState>(builder: (context, state) {
@@ -117,13 +122,13 @@ class _MobileHomeContentState extends State<MobileHomeContent>
                       ? const Center(child: CircularProgressIndicator())
                       : Expanded(
                           child: Calendar(
+                              createLesson: createLessonPage,
                               mobile: true,
                               minutesGrid: settings.minutesGrid,
                               startHour: settings.startHour,
                               endHour: settings.endHour,
                               viewDay: settings.viewDay,
                               lessons: state.mapLessons,
-                              addLesson: widget.addLesson,
                               deleteLesson: widget.deleteLesson,
                               student: stateStudent.studentEntity,
                               startOfWeek: settings.startOfWeek),
