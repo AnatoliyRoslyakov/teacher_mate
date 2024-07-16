@@ -1,151 +1,51 @@
 import 'package:calendar/calendar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:teacher_mate/src/bloc/calendar_bloc/calendar_bloc.dart';
+import 'package:teacher_mate/src/widgets/shared/divider_title_widget.dart';
+import 'package:teacher_mate/src/widgets/shared/student_list_widget.dart';
+import 'package:teacher_mate/src/widgets/shared/text_form_field_widget.dart';
+import 'package:teacher_mate/src/widgets/shared/time_widget.dart';
 
 void createLessonDialog(
   BuildContext context,
   DateTime initialStartTime,
   DateTime initialEndTime,
-  final List<StudentEntity> student,
 ) {
-  String selectedTimeStart =
-      'Начальное время: \n ${DateFormat('HH:mm').format(initialStartTime)}';
-  String selectedTimeEnd =
-      'Время окончания: \n ${DateFormat('HH:mm').format(initialEndTime)}';
+  String selectedTimeStart = DateFormat('HH:mm').format(initialStartTime);
+  String selectedTimeEnd = DateFormat('HH:mm').format(initialEndTime);
+  int start = initialStartTime.millisecondsSinceEpoch;
+  int end = initialEndTime.millisecondsSinceEpoch;
 
   bool isValid = true;
   int selectedType = 1;
   int studentId = -1;
 
+  void selectStudent(int id) {
+    studentId = id;
+  }
+
   showDialog(
     context: context,
     barrierDismissible: true,
     builder: (BuildContext context) {
-      int start = initialStartTime.millisecondsSinceEpoch;
-      int end = initialEndTime.millisecondsSinceEpoch;
       return StatefulBuilder(
         builder: (context, setState) {
-          return Padding(
-            padding: const EdgeInsets.all(50.0),
-            child: Dialog(
-              insetAnimationCurve: Curves.linear,
-              insetAnimationDuration: const Duration(milliseconds: 500),
-              child: Center(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text('Create a lesson', style: TextStyle(fontSize: 24)),
-                        Row(
-                          children:
-                              List.generate(ColorType.values.length, (index) {
-                            final colorType = ColorType.values[index].value;
-                            return GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  selectedType = colorType;
-                                });
-                              },
-                              child: Container(
-                                margin: EdgeInsets.all(8.0),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: ColorType.values[index].color,
-                                  border: selectedType == colorType
-                                      ? Border.all(
-                                          color: Colors.amber, width: 5.0)
-                                      : null,
-                                ),
-                                width: 40,
-                                height: 40,
-                              ),
-                            );
-                          }),
-                        ),
-                        const SizedBox(height: 20),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'List of students',
-                              style: TextStyle(fontSize: 20),
-                            ),
-                            const SizedBox(
-                              height: 20,
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width / 3 - 42,
-                              child: ListView.separated(
-                                shrinkWrap: true,
-                                separatorBuilder: (context, index) =>
-                                    const SizedBox(
-                                  height: 10,
-                                ),
-                                itemCount: student.length,
-                                itemBuilder: (context, i) {
-                                  return InkWell(
-                                    hoverColor: Colors.amber,
-                                    onTap: () {
-                                      setState(() {
-                                        studentId = student[i].id;
-                                      });
-                                    },
-                                    child: Container(
-                                      height: 40,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          color: studentId == student[i].id
-                                              ? Colors.amber
-                                              : Colors.amber.withOpacity(0.3)),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(student[i].name),
-                                            Text('price: ${student[i].price}р'),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                            ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    overlayColor: Colors.amber,
-                                    minimumSize: Size(
-                                        MediaQuery.of(context).size.width / 3 -
-                                            42,
-                                        45)),
-                                onPressed: () {
-                                  // прокинуть воид колбэк
-                                  // showBlurredDialog(context);
-                                },
-                                child: const Icon(Icons.add))
-                          ],
-                        ),
-                        SizedBox(height: 20),
-                        ElevatedButton(
-                          onPressed: () async {
+          return Dialog(
+            child: SizedBox(
+              width: 600,
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: ListView(
+                  children: <Widget>[
+                    const DividerTitleWidget(title: 'Lesson time'),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        InkWell(
+                          onTap: () async {
                             final TimeOfDay? picked = await showTimePicker(
                               context: context,
                               initialTime: TimeOfDay(
@@ -163,8 +63,10 @@ void createLessonDialog(
                             );
                             if (picked != null) {
                               setState(() {
-                                selectedTimeStart =
-                                    'Start time: \n ${DateFormat('HH:mm').format(initialStartTime.copyWith(hour: picked.hour, minute: picked.minute))}';
+                                selectedTimeStart = DateFormat('HH:mm').format(
+                                    initialStartTime.copyWith(
+                                        hour: picked.hour,
+                                        minute: picked.minute));
                                 start = initialStartTime
                                     .copyWith(
                                         hour: picked.hour,
@@ -177,17 +79,23 @@ void createLessonDialog(
                               });
                             }
                           },
-                          child: Text(
-                            selectedTimeStart,
-                            style: TextStyle(
-                                color:
-                                    isValid ? Colors.deepPurple : Colors.red),
-                            textAlign: TextAlign.center,
+                          child: TimeWidget(
+                              helperText: 'Start time:',
+                              selectedTimeEnd: selectedTimeStart,
+                              isValid: isValid),
+                        ),
+                        const SizedBox(
+                          height: 60,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            child: VerticalDivider(
+                              width: 1,
+                              color: Colors.black12,
+                            ),
                           ),
                         ),
-                        const SizedBox(height: 10),
-                        ElevatedButton(
-                          onPressed: () async {
+                        InkWell(
+                          onTap: () async {
                             final TimeOfDay? picked = await showTimePicker(
                               context: context,
                               initialTime: TimeOfDay(
@@ -205,8 +113,10 @@ void createLessonDialog(
                             );
                             if (picked != null) {
                               setState(() {
-                                selectedTimeEnd =
-                                    'End time: \n ${DateFormat('HH:mm').format(initialEndTime.copyWith(hour: picked.hour, minute: picked.minute))}';
+                                selectedTimeEnd = DateFormat('HH:mm').format(
+                                    initialEndTime.copyWith(
+                                        hour: picked.hour,
+                                        minute: picked.minute));
                                 end = initialEndTime
                                     .copyWith(
                                         hour: picked.hour,
@@ -219,34 +129,88 @@ void createLessonDialog(
                               });
                             }
                           },
-                          child: Text(
-                            selectedTimeEnd,
-                            style: TextStyle(
-                                color:
-                                    isValid ? Colors.deepPurple : Colors.red),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                        const Spacer(),
-                        ElevatedButton(
-                          onPressed: () {
-                            if (isValid) {
-                              context.read<CalendarBloc>().add(
-                                  CalendarEvent.create(
-                                      start, end, selectedType, studentId));
-                              Navigator.of(context).pop();
-                            }
-                          },
-                          child: Text(
-                            'Save',
-                            style: TextStyle(
-                                color:
-                                    isValid ? Colors.deepPurple : Colors.grey),
-                          ),
+                          child: TimeWidget(
+                              helperText: 'End time:',
+                              selectedTimeEnd: selectedTimeEnd,
+                              isValid: isValid),
                         ),
                       ],
                     ),
-                  ),
+                    const DividerTitleWidget(title: 'The color of the lesson'),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: List.generate(ColorType.values.length, (index) {
+                        final colorType = ColorType.values[index].value;
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              selectedType = colorType;
+                            });
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.all(8.0),
+                            decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 1,
+                                  blurRadius: 1,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                              shape: BoxShape.circle,
+                              color: ColorType.values[index].color,
+                            ),
+                            width: 30,
+                            height: 30,
+                            child: selectedType == colorType
+                                ? Center(
+                                    child: Icon(
+                                    Icons.check,
+                                    color:
+                                        ColorType.values[index].color.shade900,
+                                  ))
+                                : null,
+                          ),
+                        );
+                      }),
+                    ),
+                    const DividerTitleWidget(
+                      title: 'List of students',
+                      height: 16,
+                    ),
+                    StudentListWidget(
+                      height: 200,
+                      // width: 400,
+                      selectStudent: selectStudent,
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    const DividerTitleWidget(
+                      title: 'Description',
+                      height: 16,
+                    ),
+                    const TextFormFieldWidget(),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (isValid) {
+                            context.read<CalendarBloc>().add(
+                                CalendarEvent.create(
+                                    start, end, selectedType, studentId));
+                            Navigator.of(context).pop();
+                          }
+                        },
+                        child: Text(
+                          'Save',
+                          style: TextStyle(
+                              color: isValid ? Colors.deepPurple : Colors.grey),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

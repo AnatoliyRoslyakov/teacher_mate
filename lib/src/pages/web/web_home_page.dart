@@ -153,7 +153,7 @@ class _WebHomePageState extends State<WebHomePage>
                                     color: Colors.grey.withOpacity(0.3),
                                   ),
                                   child: const Padding(
-                                    padding: const EdgeInsets.all(4.0),
+                                    padding: EdgeInsets.all(4.0),
                                     child: Icon(
                                       Icons.arrow_back_ios,
                                       color: Colors.grey,
@@ -174,7 +174,22 @@ class _WebHomePageState extends State<WebHomePage>
                                   color: Colors.white,
                                   child: const Padding(
                                     padding: EdgeInsets.all(20),
-                                    child: StudentListWidget(),
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          height: 55,
+                                        ),
+                                        Text(
+                                          'List of students',
+                                          overflow: TextOverflow.ellipsis,
+                                          style: TextStyle(fontSize: 20),
+                                        ),
+                                        SizedBox(
+                                          height: 40,
+                                        ),
+                                        Expanded(child: StudentListWidget()),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),

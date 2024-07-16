@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// {@template modal_bottom_sheet_wrapper}
-/// ModalBottomSheetScaffoldWrapper widget.
-/// {@endtemplate}
 class ModalBottomSheetScaffoldWrapper extends StatelessWidget {
-  /// {@macro modal_bottom_sheet_wrapper}
   const ModalBottomSheetScaffoldWrapper({
     super.key,
     required this.child,
@@ -22,6 +18,7 @@ class ModalBottomSheetScaffoldWrapper extends StatelessWidget {
   final VoidCallback? secondOnPressed;
   @override
   Widget build(BuildContext context) => Scaffold(
+        backgroundColor: Colors.white,
         body: Column(
           children: [
             Center(
@@ -49,6 +46,7 @@ class ModalBottomSheetScaffoldWrapper extends StatelessWidget {
                         children: [
                           if (firstIcon != null)
                             InkWell(
+                              onTap: firstOnPressed,
                               child: SizedBox(
                                 height: 24,
                                 width: 24,
@@ -57,7 +55,6 @@ class ModalBottomSheetScaffoldWrapper extends StatelessWidget {
                                   child: firstIcon,
                                 ),
                               ),
-                              onTap: firstOnPressed,
                             )
                           else
                             const SizedBox(
@@ -67,10 +64,13 @@ class ModalBottomSheetScaffoldWrapper extends StatelessWidget {
                           const Spacer(),
                           Text(
                             title,
+                            style: const TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.w600),
                           ),
                           const Spacer(),
                           if (secondIcon != null)
                             InkWell(
+                              onTap: secondOnPressed,
                               child: SizedBox(
                                 height: 24,
                                 width: 24,
@@ -79,7 +79,6 @@ class ModalBottomSheetScaffoldWrapper extends StatelessWidget {
                                   child: secondIcon,
                                 ),
                               ),
-                              onTap: secondOnPressed,
                             )
                           else
                             const SizedBox(

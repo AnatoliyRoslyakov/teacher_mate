@@ -19,7 +19,6 @@ class CalendarGridSection extends StatefulWidget {
     BuildContext context,
     DateTime initialStartTime,
     DateTime initialEndTime,
-    List<StudentEntity> student,
   ) createLesson;
 
   const CalendarGridSection({
@@ -98,7 +97,6 @@ class _CalendarGridSectionState extends State<CalendarGridSection> {
                                       (index + 1) % 2 != 0
                                   ? 30
                                   : 00),
-                          widget.student,
                         );
                       },
                       child: Container(

@@ -19,12 +19,19 @@ class AppRouter {
       navigatorKey: rootNavigatorKey,
       routes: <RouteBase>[
         GoRoute(
-          name: MobileRoutes.create.name,
-          path: MobileRoutes.create.path,
-          pageBuilder: (context, state) => CupertinoModalSheetPage<void>(
-            builder: (context) => const CreateLessonScreen(),
-          ),
-        ),
+            name: MobileRoutes.create.name,
+            path: MobileRoutes.create.path,
+            pageBuilder: (context, state) {
+              final initialStartTime =
+                  (state.extra as Map)['initialStartTime'] as DateTime;
+              final initialEndTime =
+                  (state.extra as Map)['initialEndTime'] as DateTime;
+              return CupertinoModalSheetPage<void>(
+                builder: (context) => CreateLessonScreen(
+                    initialStartTime: initialStartTime,
+                    initialEndTime: initialEndTime),
+              );
+            }),
         GoRoute(
           name: MobileRoutes.home.name,
           path: MobileRoutes.home.path,

@@ -2,85 +2,148 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:teacher_mate/src/bloc/student_bloc/student_bloc.dart';
 
-class StudentListWidget extends StatelessWidget {
+class StudentListWidget extends StatefulWidget {
+  final bool mobile;
+
+  final double? height;
+  final double? width;
+  final Function(int id)? selectStudent;
   const StudentListWidget({
     super.key,
+    this.mobile = false,
+    this.selectStudent,
+    this.height,
+    this.width,
   });
 
   @override
+  State<StudentListWidget> createState() => _StudentListWidgetState();
+}
+
+class _StudentListWidgetState extends State<StudentListWidget> {
+  int studentId = -1;
+  @override
   Widget build(BuildContext context) {
-    return BlocBuilder<StudentBloc, StudentState>(
-        builder: (context, stateStudent) {
-      return stateStudent.isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : Column(
-              children: [
-                const SizedBox(
-                  height: 55,
-                ),
-                const Text(
-                  'List of students',
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: 20),
-                ),
-                const SizedBox(
-                  height: 40,
-                ),
-                ListView.separated(
-                  shrinkWrap: true,
-                  separatorBuilder: (context, index) => const SizedBox(
-                    height: 10,
-                  ),
-                  itemCount: stateStudent.studentEntity.length,
-                  itemBuilder: (context, i) {
-                    return Container(
-                      height: 40,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color: Colors.amber),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                stateStudent.studentEntity[i].name,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            Expanded(
-                              child: Align(
-                                alignment: Alignment.centerRight,
-                                child: Text(
-                                  'price: ${stateStudent.studentEntity[i].price}р',
-                                  overflow: TextOverflow.ellipsis,
+    return Container(
+      height: widget.height,
+      width: widget.width,
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+          border: Border.all(color: Colors.black12),
+          borderRadius: BorderRadius.circular(12)),
+      child: Column(
+        children: [
+          Expanded(
+            child: BlocBuilder<StudentBloc, StudentState>(
+                builder: (context, stateStudent) {
+              return stateStudent.isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : ListView.separated(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 10, horizontal: 10),
+                      shrinkWrap: true,
+                      separatorBuilder: (context, index) => const SizedBox(
+                        height: 10,
+                      ),
+                      itemCount: stateStudent.studentEntity.length,
+                      itemBuilder: (context, i) {
+                        return widget.selectStudent != null
+                            ? InkWell(
+                                hoverColor: Colors.amber,
+                                borderRadius: BorderRadius.circular(8),
+                                onTap: () {
+                                  widget.selectStudent
+                                      ?.call(stateStudent.studentEntity[i].id);
+                                  setState(() {
+                                    studentId =
+                                        stateStudent.studentEntity[i].id;
+                                  });
+                                },
+                                child: Container(
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      color: studentId ==
+                                              stateStudent.studentEntity[i].id
+                                          ? Colors.amber
+                                          : Colors.black12),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Expanded(
+                                          child: Text(
+                                            stateStudent.studentEntity[i].name,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                        Expanded(
+                                          child: Align(
+                                            alignment: Alignment.centerRight,
+                                            child: Text(
+                                              'price: ${stateStudent.studentEntity[i].price}р',
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                              )
+                            : Container(
+                                height: 40,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: Colors.amber),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          stateStudent.studentEntity[i].name,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Align(
+                                          alignment: Alignment.centerRight,
+                                          child: Text(
+                                            'price: ${stateStudent.studentEntity[i].price}р',
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                      },
                     );
-                  },
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      overlayColor: Colors.amber,
-                    ),
-                    onPressed: () {
-                      showBlurredDialog(context);
-                    },
-                    child: const Icon(Icons.add))
-              ],
-            );
-    });
+            }),
+          ),
+          InkWell(
+              onTap: () {
+                showBlurredDialog(context);
+              },
+              child: Container(
+                  height: 40,
+                  decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                          bottomRight: Radius.circular(10),
+                          bottomLeft: Radius.circular(10)),
+                      color: Colors.grey),
+                  child: const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Center(child: Icon(Icons.add))))),
+        ],
+      ),
+    );
   }
 }
 

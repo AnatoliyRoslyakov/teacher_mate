@@ -18,7 +18,6 @@ class Calendar extends StatefulWidget {
     BuildContext context,
     DateTime initialStartTime,
     DateTime initialEndTime,
-    List<StudentEntity> student,
   ) createLesson;
 
   const Calendar({
@@ -121,12 +120,8 @@ class _CalendarState extends State<Calendar> {
                 width: 35,
               ),
               DateRangeSection(
-                nextDate: () {
-                  nextWeek();
-                },
-                afterDate: () {
-                  prevWeek();
-                },
+                nextDate: nextWeek,
+                afterDate: prevWeek,
                 viewDay: widget.startOfWeek ? viewDay : widget.viewDay,
                 startOfWeek: widget.startOfWeek,
                 currentTime: currentTime,
