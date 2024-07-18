@@ -16,7 +16,6 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     on<CalendarReadEvent>(_read);
     on<CalendarUpdateEvent>(_update);
     on<CalendarDeleteEvent>(_delete);
-    on<CalendarSettingsEvent>(_settings);
   }
 
   Future<void> _create(
@@ -60,17 +59,6 @@ class CalendarBloc extends Bloc<CalendarEvent, CalendarState> {
     await calendarRepository.deleteLesson(LessonDeleteRequest(id: event.id));
 // лучше не запрашивать повторно, а просто добавить в Map, но пока так
     add(const CalendarReadEvent());
-  }
-
-  Future<void> _settings(
-      CalendarSettingsEvent event, Emitter<CalendarState> emitter) async {
-    emitter(state.copyWith(
-        calendarSettings: CalendarSettingsEntity(
-            minutesGrid: event.minutesGrid,
-            startHour: event.startHour,
-            endHour: event.endHour,
-            viewDay: event.viewDay,
-            startOfWeek: event.startOfWeek)));
   }
 }
 

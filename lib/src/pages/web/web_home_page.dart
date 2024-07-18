@@ -2,6 +2,7 @@ import 'package:calendar/calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:teacher_mate/src/bloc/calendar_bloc/calendar_bloc.dart';
+import 'package:teacher_mate/src/bloc/settings_bloc/settings_bloc.dart';
 import 'package:teacher_mate/src/bloc/student_bloc/student_bloc.dart';
 import 'package:teacher_mate/src/entity/calendar_settings.dart';
 import 'package:teacher_mate/src/pages/web/create_lesson_dialog.dart';
@@ -89,119 +90,122 @@ class _WebHomePageState extends State<WebHomePage>
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CalendarBloc, CalendarState>(builder: (context, state) {
-      return BlocBuilder<StudentBloc, StudentState>(
-          builder: (context, stateStudent) {
-        final CalendarSettingsEntity settings = state.calendarSettings;
-        return Padding(
-          padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-          child: Stack(
-            children: [
-              Positioned(
-                  top: 20,
-                  left: 15,
-                  child: IconButton(
-                      onPressed: () {
-                        widget.scaffoldKey.currentState?.openDrawer();
-                      },
-                      icon: const Icon(Icons.menu))),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  state.isLoading
-                      ? const Center(child: CircularProgressIndicator())
-                      : Expanded(
-                          flex: 2,
-                          child: Center(
-                            child: Padding(
-                              padding: const EdgeInsets.only(top: 20, left: 20),
-                              child: Calendar(
-                                  createLesson: createLessonDialog,
-                                  minutesGrid: settings.minutesGrid,
-                                  startHour: settings.startHour,
-                                  endHour: settings.endHour,
-                                  viewDay: settings.viewDay,
-                                  lessons: state.mapLessons,
-                                  deleteLesson: widget.deleteLesson,
-                                  student: stateStudent.studentEntity,
-                                  startOfWeek: settings.startOfWeek),
+      return BlocBuilder<SettingsBloc, SettingsState>(
+          builder: (context, settings) {
+        return BlocBuilder<StudentBloc, StudentState>(
+            builder: (context, stateStudent) {
+          return Padding(
+            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+            child: Stack(
+              children: [
+                Positioned(
+                    top: 20,
+                    left: 15,
+                    child: IconButton(
+                        onPressed: () {
+                          widget.scaffoldKey.currentState?.openDrawer();
+                        },
+                        icon: const Icon(Icons.menu))),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    state.isLoading
+                        ? const Center(child: CircularProgressIndicator())
+                        : Expanded(
+                            flex: 2,
+                            child: Center(
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.only(top: 20, left: 20),
+                                child: Calendar(
+                                    createLesson: createLessonDialog,
+                                    minutesGrid: settings.minutesGrid,
+                                    startHour: settings.startDay,
+                                    endHour: settings.endDay,
+                                    viewDay: settings.viewDays,
+                                    lessons: state.mapLessons,
+                                    deleteLesson: widget.deleteLesson,
+                                    student: stateStudent.studentEntity,
+                                    startOfWeek: settings.week),
+                              ),
                             ),
                           ),
-                        ),
-                  GestureDetector(
-                    onHorizontalDragUpdate: _onHorizontalDragUpdate,
-                    onTap: _togglePanel,
-                    child: AnimatedBuilder(
-                        animation: _controller,
-                        builder: (context, child) {
-                          double fadeValue = 1.0;
-                          if (_panelWidth < _fadeThreshold) {
-                            fadeValue = (_panelWidth - _minPanelWidth - 100) /
-                                (_fadeThreshold - _minPanelWidth);
-                          }
-                          return Row(
-                            children: [
-                              Center(
-                                child: Container(
-                                  width: 12,
-                                  height: 70,
-                                  decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(15),
-                                      bottomLeft: Radius.circular(15),
+                    GestureDetector(
+                      onHorizontalDragUpdate: _onHorizontalDragUpdate,
+                      onTap: _togglePanel,
+                      child: AnimatedBuilder(
+                          animation: _controller,
+                          builder: (context, child) {
+                            double fadeValue = 1.0;
+                            if (_panelWidth < _fadeThreshold) {
+                              fadeValue = (_panelWidth - _minPanelWidth - 100) /
+                                  (_fadeThreshold - _minPanelWidth);
+                            }
+                            return Row(
+                              children: [
+                                Center(
+                                  child: Container(
+                                    width: 12,
+                                    height: 70,
+                                    decoration: BoxDecoration(
+                                      borderRadius: const BorderRadius.only(
+                                        topLeft: Radius.circular(15),
+                                        bottomLeft: Radius.circular(15),
+                                      ),
+                                      color: Colors.grey.withOpacity(0.3),
                                     ),
-                                    color: Colors.grey.withOpacity(0.3),
-                                  ),
-                                  child: const Padding(
-                                    padding: EdgeInsets.all(4.0),
-                                    child: Icon(
-                                      Icons.arrow_back_ios,
-                                      color: Colors.grey,
+                                    child: const Padding(
+                                      padding: EdgeInsets.all(4.0),
+                                      child: Icon(
+                                        Icons.arrow_back_ios,
+                                        color: Colors.grey,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              Container(
-                                width: 10,
-                                height: double.infinity,
-                                color: Colors.grey.withOpacity(0.3),
-                              ),
-                              FadeTransition(
-                                opacity: AlwaysStoppedAnimation(fadeValue),
-                                child: Container(
-                                  width: _panelWidth,
+                                Container(
+                                  width: 10,
                                   height: double.infinity,
-                                  color: Colors.white,
-                                  child: const Padding(
-                                    padding: EdgeInsets.all(20),
-                                    child: Column(
-                                      children: [
-                                        SizedBox(
-                                          height: 55,
-                                        ),
-                                        Text(
-                                          'List of students',
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(fontSize: 20),
-                                        ),
-                                        SizedBox(
-                                          height: 40,
-                                        ),
-                                        Expanded(child: StudentListWidget()),
-                                      ],
+                                  color: Colors.grey.withOpacity(0.3),
+                                ),
+                                FadeTransition(
+                                  opacity: AlwaysStoppedAnimation(fadeValue),
+                                  child: Container(
+                                    width: _panelWidth,
+                                    height: double.infinity,
+                                    color: Colors.white,
+                                    child: const Padding(
+                                      padding: EdgeInsets.all(20),
+                                      child: Column(
+                                        children: [
+                                          SizedBox(
+                                            height: 55,
+                                          ),
+                                          Text(
+                                            'List of students',
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(fontSize: 20),
+                                          ),
+                                          SizedBox(
+                                            height: 40,
+                                          ),
+                                          Expanded(child: StudentListWidget()),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          );
-                        }),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        );
+                              ],
+                            );
+                          }),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        });
       });
     });
   }

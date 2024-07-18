@@ -19,4 +19,20 @@ class CalendarSettingsEntity {
       endHour: 23,
       viewDay: 7,
       startOfWeek: true);
+
+  CalendarSettingsEntity copyWith({
+    double? minutesGrid,
+    int? startHour,
+    int? endHour,
+    int? viewDay,
+    bool? startOfWeek,
+  }) {
+    return CalendarSettingsEntity(
+      minutesGrid: minutesGrid ?? this.minutesGrid,
+      startHour: startHour ?? this.startHour,
+      endHour: endHour ?? this.endHour,
+      viewDay: viewDay ?? this.viewDay,
+      startOfWeek: startOfWeek ?? this.startOfWeek,
+    );
+  }
 }

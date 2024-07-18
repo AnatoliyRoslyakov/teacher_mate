@@ -74,7 +74,7 @@ class _DateRangeSectionState extends State<DateRangeSection> {
             ),
             Text(
               '$formattedStartDate - $formattedEndDate',
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w200),
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
             ),
             IconButton(
               icon: const Icon(Icons.arrow_forward),

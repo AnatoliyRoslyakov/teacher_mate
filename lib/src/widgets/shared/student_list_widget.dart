@@ -38,35 +38,68 @@ class _StudentListWidgetState extends State<StudentListWidget> {
                 builder: (context, stateStudent) {
               return stateStudent.isLoading
                   ? const Center(child: CircularProgressIndicator())
-                  : ListView.separated(
+                  : Padding(
                       padding: const EdgeInsets.symmetric(
                           vertical: 10, horizontal: 10),
-                      shrinkWrap: true,
-                      separatorBuilder: (context, index) => const SizedBox(
-                        height: 10,
-                      ),
-                      itemCount: stateStudent.studentEntity.length,
-                      itemBuilder: (context, i) {
-                        return widget.selectStudent != null
-                            ? InkWell(
-                                hoverColor: Colors.amber,
-                                borderRadius: BorderRadius.circular(8),
-                                onTap: () {
-                                  widget.selectStudent
-                                      ?.call(stateStudent.studentEntity[i].id);
-                                  setState(() {
-                                    studentId =
-                                        stateStudent.studentEntity[i].id;
-                                  });
-                                },
-                                child: Container(
+                      child: ListView.separated(
+                        shrinkWrap: true,
+                        separatorBuilder: (context, index) => const SizedBox(
+                          height: 10,
+                        ),
+                        itemCount: stateStudent.studentEntity.length,
+                        itemBuilder: (context, i) {
+                          return widget.selectStudent != null
+                              ? InkWell(
+                                  hoverColor: Colors.amber,
+                                  borderRadius: BorderRadius.circular(8),
+                                  onTap: () {
+                                    widget.selectStudent?.call(
+                                        stateStudent.studentEntity[i].id);
+                                    setState(() {
+                                      studentId =
+                                          stateStudent.studentEntity[i].id;
+                                    });
+                                  },
+                                  child: Container(
+                                    height: 40,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(8),
+                                        color: studentId ==
+                                                stateStudent.studentEntity[i].id
+                                            ? Colors.amber
+                                            : Colors.black12),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              stateStudent
+                                                  .studentEntity[i].name,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Align(
+                                              alignment: Alignment.centerRight,
+                                              child: Text(
+                                                'price: ${stateStudent.studentEntity[i].price}р',
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : Container(
                                   height: 40,
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(8),
-                                      color: studentId ==
-                                              stateStudent.studentEntity[i].id
-                                          ? Colors.amber
-                                          : Colors.black12),
+                                      color: Colors.amber),
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Row(
@@ -91,39 +124,9 @@ class _StudentListWidgetState extends State<StudentListWidget> {
                                       ],
                                     ),
                                   ),
-                                ),
-                              )
-                            : Container(
-                                height: 40,
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    color: Colors.amber),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          stateStudent.studentEntity[i].name,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Align(
-                                          alignment: Alignment.centerRight,
-                                          child: Text(
-                                            'price: ${stateStudent.studentEntity[i].price}р',
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                      },
+                                );
+                        },
+                      ),
                     );
             }),
           ),

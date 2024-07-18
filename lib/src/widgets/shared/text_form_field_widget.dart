@@ -36,6 +36,7 @@ class TextFormFieldWidget extends StatelessWidget {
         //   child: Icon(Icons.close),
         // ),
         hintText: 'Lesson plan',
+        hintStyle: const TextStyle(fontWeight: FontWeight.w400),
         isDense: true,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 14,

@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:teacher_mate/core/di/injector.dart';
 import 'package:teacher_mate/src/bloc/auth_bloc/auth_bloc.dart';
 import 'package:teacher_mate/src/bloc/calendar_bloc/calendar_bloc.dart';
+import 'package:teacher_mate/src/bloc/settings_bloc/settings_bloc.dart';
 import 'package:teacher_mate/src/bloc/student_bloc/student_bloc.dart';
 import 'package:teacher_mate/src/config/app_config.dart';
 import 'package:teacher_mate/src/router/app_router.dart';
@@ -55,6 +56,9 @@ List<BlocProvider> _globalBlocs() {
     BlocProvider<StudentBloc>(
         create: (context) =>
             injector.get<StudentBloc>()..add(const StudentEvent.read())),
+    BlocProvider<SettingsBloc>(
+        create: (context) =>
+            injector.get<SettingsBloc>()..add(const SettingsEvent.init())),
   ];
 }
 

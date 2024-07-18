@@ -5,6 +5,7 @@ import 'package:teacher_mate/core/api/auth_interceptors.dart';
 import 'package:teacher_mate/core/api/dio_helper.dart';
 import 'package:teacher_mate/src/bloc/auth_bloc/auth_bloc.dart';
 import 'package:teacher_mate/src/bloc/calendar_bloc/calendar_bloc.dart';
+import 'package:teacher_mate/src/bloc/settings_bloc/settings_bloc.dart';
 import 'package:teacher_mate/src/bloc/student_bloc/student_bloc.dart';
 import 'package:teacher_mate/src/config/i_app_config.dart';
 import 'package:teacher_mate/src/repository/auth_repository/auth_repository.dart';
@@ -67,14 +68,20 @@ Future<void> _registerRepositories() async {
 }
 
 Future<void> _registerBloc() async {
-  injector.registerSingleton<CalendarBloc>(
-    CalendarBloc(
+  injector.registerFactory<CalendarBloc>(
+    () => CalendarBloc(
       injector.get(),
     ),
   );
 
-  injector.registerSingleton<StudentBloc>(
-    StudentBloc(
+  injector.registerFactory<SettingsBloc>(
+    () => SettingsBloc(
+        // injector.get(),
+        ),
+  );
+
+  injector.registerFactory<StudentBloc>(
+    () => StudentBloc(
       injector.get(),
     ),
   );
