@@ -8,7 +8,8 @@ part of 'lesson_response.dart';
 
 LessonResponse _$LessonResponseFromJson(Map<String, dynamic> json) =>
     LessonResponse(
-      (json['id'] as num).toInt(),
+      id: (json['id'] as num).toInt(),
+      description: json['description'] as String,
       studentId: (json['studentId'] as num).toInt(),
       start: (json['start'] as num).toInt(),
       end: (json['end'] as num).toInt(),
@@ -24,4 +25,5 @@ Map<String, dynamic> _$LessonResponseToJson(LessonResponse instance) =>
       'userId': instance.userId,
       'type': instance.type,
       'id': instance.id,
+      'description': instance.description,
     };

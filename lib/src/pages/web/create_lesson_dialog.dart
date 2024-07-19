@@ -1,9 +1,8 @@
 import 'package:calendar/calendar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:teacher_mate/src/bloc/calendar_bloc/calendar_bloc.dart';
+import 'package:teacher_mate/src/bloc/lesson_bloc/lesson_bloc.dart';
 import 'package:teacher_mate/src/widgets/shared/divider_title_widget.dart';
 import 'package:teacher_mate/src/widgets/shared/student_list_widget.dart';
 import 'package:teacher_mate/src/widgets/shared/text_form_field_widget.dart';
@@ -21,6 +20,7 @@ void createLessonDialog(
 
   bool isValid = true;
   int selectedType = 1;
+  String description = '';
   int studentId = -1;
 
   void selectStudent(int id) {
@@ -197,9 +197,12 @@ void createLessonDialog(
                       child: ElevatedButton(
                         onPressed: () {
                           if (isValid) {
-                            context.read<CalendarBloc>().add(
-                                CalendarEvent.create(
-                                    start, end, selectedType, studentId));
+                            context.read<LessonBloc>().add(LessonEvent.create(
+                                start,
+                                end,
+                                selectedType,
+                                studentId,
+                                description));
                             Navigator.of(context).pop();
                           }
                         },

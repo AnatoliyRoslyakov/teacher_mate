@@ -19,12 +19,11 @@ class _ApiHandler implements ApiHandler {
   String? baseUrl;
 
   @override
-  Future<String> addLesson(LessonRequest lessonRequest) async {
+  Future<String> addLesson(List<LessonRequest> lessonRequest) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
-    final _data = <String, dynamic>{};
-    _data.addAll(lessonRequest.toJson());
+    final _data = lessonRequest.map((e) => e.toJson()).toList();
     final _result = await _dio.fetch<String>(_setStreamType<String>(Options(
       method: 'POST',
       headers: _headers,

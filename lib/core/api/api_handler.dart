@@ -17,7 +17,7 @@ abstract class ApiHandler {
   factory ApiHandler(Dio dio, {String baseUrl}) = _ApiHandler;
 
   @POST('/lesson')
-  Future<String> addLesson(@Body() LessonRequest lessonRequest);
+  Future<String> addLesson(@Body() List<LessonRequest> lessonRequest);
 
   @GET('/lesson')
   Future<List<LessonResponse>> getListLessons(

@@ -228,9 +228,11 @@ class LessonEntity {
   final int studentId;
   final int type;
   final int id;
+  final String description;
 
   LessonEntity(
-      {required this.studentId,
+      {required this.description,
+      required this.studentId,
       required this.type,
       required this.id,
       required this.start,

@@ -1,4 +1,3 @@
-import 'package:calendar/calendar.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'lesson_request.g.dart';
@@ -10,8 +9,10 @@ class LessonRequest {
   final int end;
   final int userId;
   final int type;
+  final String description;
 
   LessonRequest({
+    required this.description,
     required this.studentId,
     required this.start,
     required this.end,

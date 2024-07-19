@@ -3,19 +3,19 @@ import 'package:teacher_mate/core/models/request/lesson_delete_request.dart';
 import 'package:teacher_mate/core/models/request/lesson_request.dart';
 import 'package:teacher_mate/core/models/response/lesson_response.dart';
 
-abstract class ICalendarRepository {
-  Future<String> addLesson(LessonRequest lessonRequest);
+abstract class ILessonRepository {
+  Future<String> addLesson(List<LessonRequest> lessonRequest);
 
   Future<List<LessonResponse>> getListLessons(String start, String end);
   Future<String> deleteLesson(LessonDeleteRequest lessonDeleteRequest);
 }
 
-class CalendarRepository extends ICalendarRepository {
+class LessonRepository extends ILessonRepository {
   final ApiHandler apiHandler;
-  CalendarRepository(this.apiHandler);
+  LessonRepository(this.apiHandler);
 
   @override
-  Future<String> addLesson(LessonRequest lessonRequest) {
+  Future<String> addLesson(List<LessonRequest> lessonRequest) {
     return apiHandler.addLesson(lessonRequest);
   }
 

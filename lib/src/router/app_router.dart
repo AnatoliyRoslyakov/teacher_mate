@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:teacher_mate/src/pages/mobile/cupertino_modal_sheet_page.dart';
-import 'package:teacher_mate/src/pages/mobile/settings_page.dart';
 import 'package:teacher_mate/src/screen/create_lesson_screen.dart';
 import 'package:teacher_mate/src/screen/home_screen.dart';
 import 'package:collection/collection.dart';

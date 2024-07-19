@@ -2,7 +2,8 @@ import 'package:calendar/calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:teacher_mate/src/bloc/calendar_bloc/calendar_bloc.dart';
+import 'package:teacher_mate/src/bloc/config_bloc/config_bloc.dart';
+import 'package:teacher_mate/src/bloc/lesson_bloc/lesson_bloc.dart';
 import 'package:teacher_mate/src/bloc/settings_bloc/settings_bloc.dart';
 import 'package:teacher_mate/src/bloc/student_bloc/student_bloc.dart';
 import 'package:teacher_mate/src/entity/calendar_settings.dart';
@@ -35,49 +36,52 @@ class _MobileHomePageState extends State<MobileHomePage>
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CalendarBloc, CalendarState>(builder: (context, state) {
-      return BlocBuilder<SettingsBloc, SettingsState>(
-          builder: (context, settings) {
-        return BlocBuilder<StudentBloc, StudentState>(
-            builder: (context, stateStudent) {
-          return Padding(
-            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-            child: Stack(
-              children: [
-                Positioned(
-                    top: 0,
-                    left: 0,
-                    child: IconButton(
-                        onPressed: () {
-                          widget.scaffoldKey.currentState?.openDrawer();
-                        },
-                        icon: const Icon(Icons.menu))),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    state.isLoading
-                        ? const Center(child: CircularProgressIndicator())
-                        : Expanded(
-                            child: Calendar(
-                                createLesson: createLessonPage,
-                                mobile: true,
-                                minutesGrid: settings.minutesGrid,
-                                startHour: settings.startDay,
-                                endHour: settings.endDay,
-                                viewDay: settings.viewDays,
-                                lessons: state.mapLessons,
-                                deleteLesson: widget.deleteLesson,
-                                student: stateStudent.studentEntity,
-                                startOfWeek: settings.week),
-                          ),
-                  ],
-                ),
-              ],
-            ),
-          );
+    return BlocListener<ConfigBloc, ConfigState>(
+      listener: (context, state) {},
+      child: BlocBuilder<LessonBloc, LessonState>(builder: (context, state) {
+        return BlocBuilder<SettingsBloc, SettingsState>(
+            builder: (context, settings) {
+          return BlocBuilder<StudentBloc, StudentState>(
+              builder: (context, stateStudent) {
+            return Padding(
+              padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+              child: Stack(
+                children: [
+                  Positioned(
+                      top: 0,
+                      left: 0,
+                      child: IconButton(
+                          onPressed: () {
+                            widget.scaffoldKey.currentState?.openDrawer();
+                          },
+                          icon: const Icon(Icons.menu))),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      state.isLoading
+                          ? const Center(child: CircularProgressIndicator())
+                          : Expanded(
+                              child: Calendar(
+                                  createLesson: createLessonPage,
+                                  mobile: true,
+                                  minutesGrid: settings.minutesGrid,
+                                  startHour: settings.startDay,
+                                  endHour: settings.endDay,
+                                  viewDay: settings.viewDays,
+                                  lessons: state.mapLessons,
+                                  deleteLesson: widget.deleteLesson,
+                                  student: stateStudent.studentEntity,
+                                  startOfWeek: settings.week),
+                            ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          });
         });
-      });
-    });
+      }),
+    );
   }
 }

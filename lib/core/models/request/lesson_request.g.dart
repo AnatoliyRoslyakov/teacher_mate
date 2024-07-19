@@ -8,6 +8,7 @@ part of 'lesson_request.dart';
 
 LessonRequest _$LessonRequestFromJson(Map<String, dynamic> json) =>
     LessonRequest(
+      description: json['description'] as String,
       studentId: (json['studentId'] as num).toInt(),
       start: (json['start'] as num).toInt(),
       end: (json['end'] as num).toInt(),
@@ -22,4 +23,5 @@ Map<String, dynamic> _$LessonRequestToJson(LessonRequest instance) =>
       'end': instance.end,
       'userId': instance.userId,
       'type': instance.type,
+      'description': instance.description,
     };

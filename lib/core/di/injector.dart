@@ -4,13 +4,14 @@ import 'package:teacher_mate/core/api/api_handler.dart';
 import 'package:teacher_mate/core/api/auth_interceptors.dart';
 import 'package:teacher_mate/core/api/dio_helper.dart';
 import 'package:teacher_mate/src/bloc/auth_bloc/auth_bloc.dart';
-import 'package:teacher_mate/src/bloc/calendar_bloc/calendar_bloc.dart';
+import 'package:teacher_mate/src/bloc/config_bloc/config_bloc.dart';
+import 'package:teacher_mate/src/bloc/lesson_bloc/lesson_bloc.dart';
 import 'package:teacher_mate/src/bloc/settings_bloc/settings_bloc.dart';
 import 'package:teacher_mate/src/bloc/student_bloc/student_bloc.dart';
 import 'package:teacher_mate/src/config/i_app_config.dart';
 import 'package:teacher_mate/src/repository/auth_repository/auth_repository.dart';
-import 'package:teacher_mate/src/repository/calendar_repository/calendar_repository.dart';
-import 'package:teacher_mate/src/repository/user_repository/student_repository.dart';
+import 'package:teacher_mate/src/repository/lesson_repository/lesson_repository.dart';
+import 'package:teacher_mate/src/repository/student_repository/student_repository.dart';
 
 final injector = GetIt.instance;
 
@@ -47,8 +48,8 @@ Future<void> _registerApi(IAppConfig config) async {
 }
 
 Future<void> _registerRepositories() async {
-  injector.registerSingleton<ICalendarRepository>(
-    CalendarRepository(
+  injector.registerSingleton<ILessonRepository>(
+    LessonRepository(
       injector.get(),
     ),
   );
@@ -68,8 +69,8 @@ Future<void> _registerRepositories() async {
 }
 
 Future<void> _registerBloc() async {
-  injector.registerFactory<CalendarBloc>(
-    () => CalendarBloc(
+  injector.registerFactory<LessonBloc>(
+    () => LessonBloc(
       injector.get(),
     ),
   );
@@ -91,5 +92,9 @@ Future<void> _registerBloc() async {
       injector.get(),
       injector.get(),
     ),
+  );
+
+  injector.registerSingleton<ConfigBloc>(
+    ConfigBloc(),
   );
 }

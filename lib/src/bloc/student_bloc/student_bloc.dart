@@ -2,7 +2,7 @@ import 'package:calendar/calendar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:teacher_mate/core/models/request/student_request.dart';
 import 'package:teacher_mate/src/entity/student_entity.dart';
-import 'package:teacher_mate/src/repository/user_repository/student_repository.dart';
+import 'package:teacher_mate/src/repository/student_repository/student_repository.dart';
 
 part 'student_event.dart';
 part 'student_state.dart';

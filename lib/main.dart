@@ -5,7 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:teacher_mate/core/di/injector.dart';
 import 'package:teacher_mate/src/bloc/auth_bloc/auth_bloc.dart';
-import 'package:teacher_mate/src/bloc/calendar_bloc/calendar_bloc.dart';
+import 'package:teacher_mate/src/bloc/config_bloc/config_bloc.dart';
+import 'package:teacher_mate/src/bloc/lesson_bloc/lesson_bloc.dart';
 import 'package:teacher_mate/src/bloc/settings_bloc/settings_bloc.dart';
 import 'package:teacher_mate/src/bloc/student_bloc/student_bloc.dart';
 import 'package:teacher_mate/src/config/app_config.dart';
@@ -50,9 +51,13 @@ List<BlocProvider> _globalBlocs() {
       create: (context) =>
           injector.get<AuthBloc>()..add(const AuthEvent.init()),
     ),
-    BlocProvider<CalendarBloc>(
+    BlocProvider<ConfigBloc>(
+      create: (context) =>
+          injector.get<ConfigBloc>()..add(const ConfigEvent.inint()),
+    ),
+    BlocProvider<LessonBloc>(
         create: (context) =>
-            injector.get<CalendarBloc>()..add(const CalendarEvent.read())),
+            injector.get<LessonBloc>()..add(const LessonEvent.read())),
     BlocProvider<StudentBloc>(
         create: (context) =>
             injector.get<StudentBloc>()..add(const StudentEvent.read())),

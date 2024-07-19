@@ -39,94 +39,153 @@ class _StudentListWidgetState extends State<StudentListWidget> {
               return stateStudent.isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 10),
-                      child: ListView.separated(
-                        shrinkWrap: true,
-                        separatorBuilder: (context, index) => const SizedBox(
-                          height: 10,
-                        ),
-                        itemCount: stateStudent.studentEntity.length,
-                        itemBuilder: (context, i) {
-                          return widget.selectStudent != null
-                              ? InkWell(
-                                  hoverColor: Colors.amber,
-                                  borderRadius: BorderRadius.circular(8),
-                                  onTap: () {
-                                    widget.selectStudent?.call(
-                                        stateStudent.studentEntity[i].id);
-                                    setState(() {
-                                      studentId =
-                                          stateStudent.studentEntity[i].id;
-                                    });
-                                  },
-                                  child: Container(
-                                    height: 40,
-                                    decoration: BoxDecoration(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: stateStudent.studentEntity.isEmpty
+                          ? const Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'The list is empty, add a student',
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
+                                  Icon(
+                                    Icons.touch_app,
+                                    size: 100,
+                                    color: Colors.black12,
+                                  ),
+                                ],
+                              ),
+                            )
+                          : ListView.separated(
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              shrinkWrap: true,
+                              separatorBuilder: (context, index) =>
+                                  const SizedBox(
+                                height: 10,
+                              ),
+                              itemCount: stateStudent.studentEntity.length,
+                              itemBuilder: (context, i) {
+                                return widget.selectStudent != null
+                                    ? InkWell(
+                                        hoverColor: Colors.amber,
                                         borderRadius: BorderRadius.circular(8),
-                                        color: studentId ==
-                                                stateStudent.studentEntity[i].id
-                                            ? Colors.amber
-                                            : Colors.black12),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Expanded(
-                                            child: Text(
-                                              stateStudent
-                                                  .studentEntity[i].name,
-                                              overflow: TextOverflow.ellipsis,
+                                        onTap: () {
+                                          widget.selectStudent?.call(
+                                              stateStudent.studentEntity[i].id);
+                                          setState(() {
+                                            studentId = stateStudent
+                                                .studentEntity[i].id;
+                                          });
+                                        },
+                                        child: Container(
+                                          height: 40,
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              color: studentId ==
+                                                      stateStudent
+                                                          .studentEntity[i].id
+                                                  ? Colors.amber
+                                                  : Colors.black12),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Expanded(
+                                                  child: Row(
+                                                    children: [
+                                                      const Icon(
+                                                        Icons.person,
+                                                        color: Colors.white,
+                                                      ),
+                                                      const SizedBox(
+                                                        width: 5,
+                                                      ),
+                                                      Text(
+                                                        stateStudent
+                                                            .studentEntity[i]
+                                                            .name,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: Align(
+                                                    alignment:
+                                                        Alignment.centerRight,
+                                                    child: Text(
+                                                      'price: ${stateStudent.studentEntity[i].price}р',
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                          ),
-                                          Expanded(
-                                            child: Align(
-                                              alignment: Alignment.centerRight,
-                                              child: Text(
-                                                'price: ${stateStudent.studentEntity[i].price}р',
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                )
-                              : Container(
-                                  height: 40,
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(8),
-                                      color: Colors.amber),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Expanded(
-                                          child: Text(
-                                            stateStudent.studentEntity[i].name,
-                                            overflow: TextOverflow.ellipsis,
                                           ),
                                         ),
-                                        Expanded(
-                                          child: Align(
-                                            alignment: Alignment.centerRight,
-                                            child: Text(
-                                              'price: ${stateStudent.studentEntity[i].price}р',
-                                              overflow: TextOverflow.ellipsis,
+                                      )
+                                    : InkWell(
+                                        onLongPress: () {
+                                          showBlurredDialog(context);
+                                        },
+                                        child: Container(
+                                          height: 50,
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              color: Colors.amber),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                Expanded(
+                                                  child: Row(
+                                                    children: [
+                                                      const Icon(
+                                                        Icons.person,
+                                                        color: Colors.white,
+                                                      ),
+                                                      const SizedBox(
+                                                        width: 5,
+                                                      ),
+                                                      Text(
+                                                        stateStudent
+                                                            .studentEntity[i]
+                                                            .name,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  child: Align(
+                                                    alignment:
+                                                        Alignment.centerRight,
+                                                    child: Text(
+                                                      'price: ${stateStudent.studentEntity[i].price}р',
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                        },
-                      ),
+                                      );
+                              },
+                            ),
                     );
             }),
           ),
@@ -135,12 +194,12 @@ class _StudentListWidgetState extends State<StudentListWidget> {
                 showBlurredDialog(context);
               },
               child: Container(
-                  height: 40,
+                  height: widget.selectStudent == null ? 50 : 40,
                   decoration: const BoxDecoration(
                       borderRadius: BorderRadius.only(
                           bottomRight: Radius.circular(10),
                           bottomLeft: Radius.circular(10)),
-                      color: Colors.grey),
+                      color: Color.fromARGB(255, 233, 233, 233)),
                   child: const Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Center(child: Icon(Icons.add))))),

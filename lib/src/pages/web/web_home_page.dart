@@ -1,7 +1,7 @@
 import 'package:calendar/calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:teacher_mate/src/bloc/calendar_bloc/calendar_bloc.dart';
+import 'package:teacher_mate/src/bloc/lesson_bloc/lesson_bloc.dart';
 import 'package:teacher_mate/src/bloc/settings_bloc/settings_bloc.dart';
 import 'package:teacher_mate/src/bloc/student_bloc/student_bloc.dart';
 import 'package:teacher_mate/src/entity/calendar_settings.dart';
@@ -89,7 +89,7 @@ class _WebHomePageState extends State<WebHomePage>
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CalendarBloc, CalendarState>(builder: (context, state) {
+    return BlocBuilder<LessonBloc, LessonState>(builder: (context, state) {
       return BlocBuilder<SettingsBloc, SettingsState>(
           builder: (context, settings) {
         return BlocBuilder<StudentBloc, StudentState>(
