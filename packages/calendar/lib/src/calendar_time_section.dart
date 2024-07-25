@@ -4,11 +4,14 @@ class CalendarTimeSection extends StatelessWidget {
   final int startHour;
   final int endHour;
   final double minutesGrid;
+  final bool mobile;
 
-  CalendarTimeSection({
+  const CalendarTimeSection({
+    super.key,
     required this.startHour,
     required this.endHour,
     required this.minutesGrid,
+    required this.mobile,
   });
 
   List<String> generateTimeIntervals(
@@ -34,8 +37,10 @@ class CalendarTimeSection extends StatelessWidget {
         children: List.generate(timeIntervals.length - 1, (index) {
           return SizedBox(
             height: minutesGrid * 120,
-            width: 60,
-            child: Text(timeIntervals[index]),
+            child: Text(
+              timeIntervals[index],
+              style: TextStyle(fontSize: mobile ? 12 : 16),
+            ),
           );
         }),
       ),

@@ -22,8 +22,8 @@ class CalendarDaysSection extends StatelessWidget {
         ? Row(
             children: [
               SizedBox(
-                height: 60,
-                width: 60,
+                height: 40,
+                width: 40,
                 child: Padding(
                   padding: const EdgeInsets.only(right: 15),
                   child: FittedBox(
@@ -118,7 +118,7 @@ class CalendarDaysSection extends StatelessWidget {
                               ));
                       }),
                     ]),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     )
                   ],

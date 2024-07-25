@@ -42,6 +42,7 @@ class _CalendarState extends State<Calendar> {
   ScrollController mainVerticalController = ScrollController();
   ScrollController dayHorizontalController = ScrollController();
   ScrollController timeVerticalController = ScrollController();
+  ScrollController scrollController = ScrollController();
   bool? isAnimated = true;
 
   DateTime currentTime = DateTime.now();
@@ -49,17 +50,24 @@ class _CalendarState extends State<Calendar> {
 
   PageController _pageController = PageController();
   int _currentPage = 10000;
+  double width = 60;
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController(initialPage: _currentPage);
     _pageController.addListener(_onPageChanged);
+    width = widget.mobile ? 40 : 60;
   }
 
   @override
   void dispose() {
     _pageController.dispose();
+    scrollController.dispose();
+    timeVerticalController.dispose();
+    dayHorizontalController.dispose();
+    mainHorizontalController.dispose();
+    mainVerticalController.dispose();
     super.dispose();
   }
 
@@ -107,8 +115,18 @@ class _CalendarState extends State<Calendar> {
 
   @override
   Widget build(BuildContext context) {
+    // из-за этого идет задержка, пока виджеты полностью построятся
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      scrollController.jumpTo(((DateTime.now().hour - widget.startHour) *
+              2 *
+              widget.minutesGrid *
+              (widget.minutesGrid == 1 ? 60 : 120)) -
+          60);
+    });
+
     final startTime =
         widget.startOfWeek ? currentTime.startOfCurrentWeek() : currentTime;
+
     return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
       return Column(
@@ -164,7 +182,7 @@ class _CalendarState extends State<Calendar> {
               controller: _pageController,
               itemBuilder: (context, index) {
                 return Padding(
-                  padding: const EdgeInsets.only(left: 15, top: 10),
+                  padding: const EdgeInsets.only(left: 10, top: 10),
                   child: Column(
                     children: [
                       CalendarDaysSection(
@@ -173,13 +191,15 @@ class _CalendarState extends State<Calendar> {
                           startTime: startTime),
                       Expanded(
                         child: SingleChildScrollView(
+                          controller: scrollController,
                           child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 SizedBox(
-                                  width: 60,
+                                  width: width,
                                   child: CalendarTimeSection(
+                                      mobile: widget.mobile,
                                       startHour: widget.startHour,
                                       endHour: widget.endHour,
                                       minutesGrid: widget.minutesGrid),

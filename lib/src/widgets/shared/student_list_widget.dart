@@ -115,17 +115,17 @@ class _StudentListWidgetState extends State<StudentListWidget> {
                                                     ],
                                                   ),
                                                 ),
-                                                Expanded(
-                                                  child: Align(
-                                                    alignment:
-                                                        Alignment.centerRight,
-                                                    child: Text(
-                                                      'price: ${stateStudent.studentEntity[i].price}р',
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                    ),
-                                                  ),
-                                                ),
+                                                // Expanded(
+                                                //   child: Align(
+                                                //     alignment:
+                                                //         Alignment.centerRight,
+                                                //     child: Text(
+                                                //       'price: ${stateStudent.studentEntity[i].price}р',
+                                                //       overflow:
+                                                //           TextOverflow.ellipsis,
+                                                //     ),
+                                                //   ),
+                                                // ),
                                               ],
                                             ),
                                           ),
@@ -168,17 +168,17 @@ class _StudentListWidgetState extends State<StudentListWidget> {
                                                     ],
                                                   ),
                                                 ),
-                                                Expanded(
-                                                  child: Align(
-                                                    alignment:
-                                                        Alignment.centerRight,
-                                                    child: Text(
-                                                      'price: ${stateStudent.studentEntity[i].price}р',
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
-                                                    ),
-                                                  ),
-                                                ),
+                                                // Expanded(
+                                                //   child: Align(
+                                                //     alignment:
+                                                //         Alignment.centerRight,
+                                                //     child: Text(
+                                                //       'price: ${stateStudent.studentEntity[i].price}р',
+                                                //       overflow:
+                                                //           TextOverflow.ellipsis,
+                                                //     ),
+                                                //   ),
+                                                // ),
                                               ],
                                             ),
                                           ),
@@ -251,9 +251,10 @@ void showBlurredDialog(
                           labelText: 'Enter a name',
                         ),
                       ),
-                      SizedBox(height: 20),
-                      Text('Lesson amount', style: TextStyle(fontSize: 24)),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
+                      const Text('Lesson amount',
+                          style: TextStyle(fontSize: 24)),
+                      const SizedBox(height: 20),
                       TextField(
                         onChanged: (value) {
                           setState(() {
@@ -265,7 +266,7 @@ void showBlurredDialog(
                           labelText: 'Enter the amount',
                         ),
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: () {
                           if (isValid) {

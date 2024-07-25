@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:teacher_mate/src/bloc/lesson_bloc/lesson_bloc.dart';
 import 'package:teacher_mate/src/bloc/settings_bloc/settings_bloc.dart';
 import 'package:teacher_mate/src/bloc/student_bloc/student_bloc.dart';
-import 'package:teacher_mate/src/entity/calendar_settings.dart';
 import 'package:teacher_mate/src/pages/web/create_lesson_dialog.dart';
 import 'package:teacher_mate/src/widgets/shared/student_list_widget.dart';
 
@@ -155,10 +154,13 @@ class _WebHomePageState extends State<WebHomePage>
                                       ),
                                       color: Colors.grey.withOpacity(0.3),
                                     ),
-                                    child: const Padding(
-                                      padding: EdgeInsets.all(4.0),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(4.0),
                                       child: Icon(
-                                        Icons.arrow_back_ios,
+                                        _controller.status ==
+                                                AnimationStatus.completed
+                                            ? Icons.arrow_forward_ios
+                                            : Icons.arrow_back_ios,
                                         color: Colors.grey,
                                       ),
                                     ),
