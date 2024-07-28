@@ -7,6 +7,7 @@ class DateRangeSection extends StatefulWidget {
   final VoidCallback afterDate;
   final int viewDay;
   final bool startOfWeek;
+  final bool threeWeek;
   final DateTime currentTime;
   final bool mobile;
 
@@ -17,7 +18,8 @@ class DateRangeSection extends StatefulWidget {
       required this.viewDay,
       required this.startOfWeek,
       required this.currentTime,
-      required this.mobile});
+      required this.mobile,
+      required this.threeWeek});
   @override
   _DateRangeSectionState createState() => _DateRangeSectionState();
 }
@@ -26,13 +28,17 @@ class _DateRangeSectionState extends State<DateRangeSection> {
   DateTime _selectedDate = DateTime.now();
   int viewDay = 7;
 
+  @override
+  void initState() {
+    _selectedDate.subtract(Duration(days: widget.threeWeek ? 1 : 0));
+    super.initState();
+  }
+
   void _updateDate(bool isForward) {
     setState(() {
       _selectedDate = isForward
-          ? widget.currentTime.add(
-              Duration(days: widget.startOfWeek ? viewDay : widget.viewDay))
-          : widget.currentTime.subtract(
-              Duration(days: widget.startOfWeek ? viewDay : widget.viewDay));
+          ? widget.currentTime.add(Duration(days: widget.viewDay))
+          : widget.currentTime.subtract(Duration(days: widget.viewDay));
     });
   }
 

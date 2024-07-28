@@ -26,8 +26,7 @@ class LessonBloc extends Bloc<LessonEvent, LessonState> {
           studentId: event.studentId,
           start: event.start ~/ 1000,
           end: event.end ~/ 1000,
-          userId: 1, // можно не передавать
-          type: event.type - 1)
+          type: event.type)
     ]);
     add(const LessonReadEvent());
   }
@@ -56,8 +55,20 @@ class LessonBloc extends Bloc<LessonEvent, LessonState> {
     );
   }
 
+//редактирование урока
   Future<void> _update(
-      LessonUpdateEvent event, Emitter<LessonState> emitter) async {}
+      LessonUpdateEvent event, Emitter<LessonState> emitter) async {
+    await lessonRepository.updateLesson([
+      LessonRequest(
+          id: event.id,
+          description: event.description,
+          studentId: event.studentId,
+          start: event.start ~/ 1000,
+          end: event.end ~/ 1000,
+          type: event.type)
+    ]);
+    add(const LessonReadEvent());
+  }
 
   // удаление урока
   Future<void> _delete(

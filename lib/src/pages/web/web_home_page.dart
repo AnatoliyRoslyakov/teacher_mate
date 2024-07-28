@@ -10,10 +10,7 @@ import 'package:teacher_mate/src/widgets/shared/student_list_widget.dart';
 class WebHomePage extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
 
-  final void Function({required String id}) deleteLesson;
-
-  const WebHomePage(
-      {super.key, required this.deleteLesson, required this.scaffoldKey});
+  const WebHomePage({super.key, required this.scaffoldKey});
 
   @override
   State<WebHomePage> createState() => _WebHomePageState();
@@ -118,13 +115,13 @@ class _WebHomePageState extends State<WebHomePage>
                                 padding:
                                     const EdgeInsets.only(top: 20, left: 20),
                                 child: Calendar(
+                                    threeDays: settings.three,
                                     createLesson: createLessonDialog,
                                     minutesGrid: settings.minutesGrid,
                                     startHour: settings.startDay,
                                     endHour: settings.endDay,
                                     viewDay: settings.viewDays,
                                     lessons: state.mapLessons,
-                                    deleteLesson: widget.deleteLesson,
                                     student: stateStudent.studentEntity,
                                     startOfWeek: settings.week),
                               ),

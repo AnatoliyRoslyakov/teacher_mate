@@ -9,10 +9,14 @@ import 'package:teacher_mate/src/widgets/shared/text_form_field_widget.dart';
 import 'package:teacher_mate/src/widgets/shared/time_widget.dart';
 
 void createLessonDialog(
-  BuildContext context,
-  DateTime initialStartTime,
-  DateTime initialEndTime,
-) {
+    {required BuildContext context,
+    required DateTime initialStartTime,
+    required DateTime initialEndTime,
+    bool edit = false,
+    String description = '',
+    int selectedType = 0,
+    int studentId = -1,
+    int lessonId = -1}) {
   String selectedTimeStart = DateFormat('HH:mm').format(initialStartTime);
   String selectedTimeEnd = DateFormat('HH:mm').format(initialEndTime);
   int start = initialStartTime.millisecondsSinceEpoch;
@@ -191,18 +195,20 @@ void createLessonDialog(
                       title: 'Description',
                       height: 16,
                     ),
-                    const TextFormFieldWidget(),
+                    TextFormFieldWidget(
+                      onChange: (text) => description = text,
+                    ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 20),
                       child: ElevatedButton(
                         onPressed: () {
                           if (isValid) {
                             context.read<LessonBloc>().add(LessonEvent.create(
-                                start,
-                                end,
-                                selectedType,
-                                studentId,
-                                description));
+                                start: start,
+                                end: end,
+                                type: selectedType,
+                                studentId: studentId,
+                                description: description));
                             Navigator.of(context).pop();
                           }
                         },

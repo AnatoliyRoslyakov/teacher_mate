@@ -11,10 +11,7 @@ import 'package:teacher_mate/src/router/app_router.dart';
 class MobileHomePage extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
 
-  final void Function({required String id}) deleteLesson;
-
-  const MobileHomePage(
-      {super.key, required this.deleteLesson, required this.scaffoldKey});
+  const MobileHomePage({super.key, required this.scaffoldKey});
 
   @override
   State<MobileHomePage> createState() => _MobileHomePageState();
@@ -23,13 +20,22 @@ class MobileHomePage extends StatefulWidget {
 class _MobileHomePageState extends State<MobileHomePage>
     with SingleTickerProviderStateMixin {
   void createLessonPage(
-    BuildContext context,
-    DateTime initialStartTime,
-    DateTime initialEndTime,
-  ) {
+      {required BuildContext context,
+      required DateTime initialStartTime,
+      required DateTime initialEndTime,
+      bool edit = false,
+      String description = '',
+      int selectedType = 0,
+      int studentId = -1,
+      int lessonId = -1}) {
     context.push(MobileRoutes.create.path, extra: {
       'initialStartTime': initialStartTime,
-      'initialEndTime': initialEndTime
+      'initialEndTime': initialEndTime,
+      'edit': edit,
+      'description': description,
+      'selectedType': selectedType,
+      'studentId': studentId,
+      'lessonId': lessonId
     });
   }
 
@@ -69,9 +75,9 @@ class _MobileHomePageState extends State<MobileHomePage>
                                   endHour: settings.endDay,
                                   viewDay: settings.viewDays,
                                   lessons: state.mapLessons,
-                                  deleteLesson: widget.deleteLesson,
                                   student: stateStudent.studentEntity,
-                                  startOfWeek: settings.week),
+                                  startOfWeek: settings.week,
+                                  threeDays: settings.three),
                             ),
                     ],
                   ),

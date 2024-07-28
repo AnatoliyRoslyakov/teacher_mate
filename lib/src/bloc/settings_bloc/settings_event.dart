@@ -20,6 +20,9 @@ sealed class SettingsEvent {
 
   const factory SettingsEvent.week({required bool week}) = SettingsWeekEvent;
 
+  const factory SettingsEvent.threeDays({required bool threeDays}) =
+      SettingsThreeDaysEvent;
+
   const factory SettingsEvent.save() = SettingsSaveEvent;
 }
 
@@ -54,6 +57,11 @@ class SettingsViewDaysEvent extends SettingsEvent {
 class SettingsWeekEvent extends SettingsEvent {
   final bool week;
   const SettingsWeekEvent({required this.week});
+}
+
+class SettingsThreeDaysEvent extends SettingsEvent {
+  final bool threeDays;
+  const SettingsThreeDaysEvent({required this.threeDays});
 }
 
 class SettingsSaveEvent extends SettingsEvent {

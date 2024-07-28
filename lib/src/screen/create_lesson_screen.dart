@@ -5,17 +5,33 @@ import 'package:teacher_mate/src/widgets/mobile/wrapper/modal_bottom_sheet_wrapp
 class CreateLessonScreen extends StatelessWidget {
   final DateTime initialStartTime;
   final DateTime initialEndTime;
+  final bool edit;
+  final String description;
+  final int selectedType;
+  final int studentId;
+  final int lessonId;
   const CreateLessonScreen(
       {super.key,
       required this.initialStartTime,
-      required this.initialEndTime});
+      required this.initialEndTime,
+      required this.edit,
+      required this.description,
+      required this.selectedType,
+      required this.studentId,
+      required this.lessonId});
 
   @override
   Widget build(BuildContext context) {
     return ModalBottomSheetScaffoldWrapper(
-        title: 'Create a lesson',
+        title: edit ? 'Edit lesson' : 'Create lesson',
         child: CreateLessonPage(
-            initialStartTime: initialStartTime,
-            initialEndTime: initialEndTime));
+          initialStartTime: initialStartTime,
+          initialEndTime: initialEndTime,
+          edit: edit,
+          description: description,
+          selectedType: selectedType,
+          studentId: studentId,
+          lessonId: lessonId,
+        ));
   }
 }

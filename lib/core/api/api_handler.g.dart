@@ -45,6 +45,32 @@ class _ApiHandler implements ApiHandler {
   }
 
   @override
+  Future<String> updateLesson(List<LessonRequest> lessonRequest) async {
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = lessonRequest.map((e) => e.toJson()).toList();
+    final _result = await _dio.fetch<String>(_setStreamType<String>(Options(
+      method: 'PUT',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/lesson',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        ))));
+    final value = _result.data!;
+    return value;
+  }
+
+  @override
   Future<List<LessonResponse>> getListLessons(
     String start,
     String end,

@@ -1,6 +1,7 @@
+import 'dart:developer';
+
 import 'package:calendar/calendar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:teacher_mate/src/bloc/lesson_bloc/lesson_bloc.dart';
@@ -12,10 +13,20 @@ import 'package:teacher_mate/src/widgets/shared/time_widget.dart';
 class CreateLessonPage extends StatefulWidget {
   final DateTime initialStartTime;
   final DateTime initialEndTime;
+  final bool edit;
+  final String description;
+  final int selectedType;
+  final int studentId;
+  final int lessonId;
   const CreateLessonPage(
       {super.key,
       required this.initialStartTime,
-      required this.initialEndTime});
+      required this.initialEndTime,
+      required this.edit,
+      required this.description,
+      required this.selectedType,
+      required this.studentId,
+      required this.lessonId});
 
   @override
   State<CreateLessonPage> createState() => _CreateLessonPageState();
@@ -23,13 +34,14 @@ class CreateLessonPage extends StatefulWidget {
 
 class _CreateLessonPageState extends State<CreateLessonPage> {
   bool isValid = true;
-  String selectedTimeStart = '';
-  String selectedTimeEnd = '';
-  int start = 0;
-  int end = 0;
-  int selectedType = 1;
-  int studentId = -1;
-  String description = '';
+  late String selectedTimeStart;
+  late String selectedTimeEnd;
+  late int start;
+  late int end;
+  late int selectedType;
+  late int studentId;
+  late String description;
+  late int lessonId;
 
   void selectStudent(int id) {
     studentId = id;
@@ -41,9 +53,20 @@ class _CreateLessonPageState extends State<CreateLessonPage> {
     selectedTimeEnd = DateFormat('HH:mm').format(widget.initialEndTime);
     start = widget.initialStartTime.millisecondsSinceEpoch;
     end = widget.initialEndTime.millisecondsSinceEpoch;
+    description = widget.description;
+    selectedType = widget.selectedType;
+    studentId = widget.studentId;
+    lessonId = widget.lessonId;
+
     super.initState();
   }
 
+  // добавить кнопку удаления
+
+  // отправка нового эвента на редактирования
+  //
+
+  bool _customTileExpanded = false;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -186,30 +209,97 @@ class _CreateLessonPageState extends State<CreateLessonPage> {
             height: 200,
             width: 400,
             selectStudent: selectStudent,
+            studentId: studentId,
           ),
           const SizedBox(
-            height: 8,
-          ),
-          const DividerTitleWidget(
-            title: 'Description',
             height: 16,
           ),
-          const TextFormFieldWidget(),
+          // const Divider(),
+          DecoratedBox(
+            decoration: const BoxDecoration(
+                border: Border(top: BorderSide(color: Colors.black12))),
+            child: Theme(
+              data:
+                  Theme.of(context).copyWith(dividerColor: Colors.transparent),
+              child: ExpansionTile(
+                enableFeedback: true,
+                dense: true,
+                tilePadding: EdgeInsets.zero,
+                title: const Text(
+                  'Description',
+                  style: TextStyle(fontSize: 14),
+                ),
+                trailing: Icon(
+                  _customTileExpanded
+                      ? Icons.keyboard_arrow_up
+                      : Icons.keyboard_arrow_down,
+                ),
+                children: [
+                  TextFormFieldWidget(
+                    description: description,
+                    onChange: (text) => description = text,
+                  )
+                ],
+                onExpansionChanged: (bool expanded) {
+                  setState(() {
+                    _customTileExpanded = expanded;
+                  });
+                },
+              ),
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 20),
-            child: ElevatedButton(
-              onPressed: () {
-                if (isValid) {
-                  context.read<LessonBloc>().add(LessonEvent.create(
-                      start, end, selectedType, studentId, description));
-                  Navigator.of(context).pop();
-                }
-              },
-              child: Text(
-                'Save',
-                style:
-                    TextStyle(color: isValid ? Colors.deepPurple : Colors.grey),
-              ),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 3,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (isValid) {
+                        widget.edit
+                            ? context.read<LessonBloc>().add(LessonEvent.update(
+                                id: lessonId,
+                                start: start,
+                                end: end,
+                                type: selectedType,
+                                studentId: studentId,
+                                description: description))
+                            : context.read<LessonBloc>().add(LessonEvent.create(
+                                start: start,
+                                end: end,
+                                type: selectedType,
+                                studentId: studentId,
+                                description: description));
+                        Navigator.of(context).pop();
+                      }
+                    },
+                    child: Text(
+                      widget.edit ? 'Edit' : 'Save',
+                      style: TextStyle(
+                          color: isValid ? Colors.deepPurple : Colors.grey),
+                    ),
+                  ),
+                ),
+                widget.edit
+                    ? const SizedBox(
+                        width: 10,
+                      )
+                    : const SizedBox.shrink(),
+                widget.edit
+                    ? Expanded(
+                        flex: 1,
+                        child: ElevatedButton(
+                            onPressed: () {
+                              context
+                                  .read<LessonBloc>()
+                                  .add(LessonEvent.delete(lessonId.toString()));
+
+                              Navigator.of(context).pop();
+                            },
+                            child: const Icon(Icons.delete)))
+                    : const SizedBox.shrink(),
+              ],
             ),
           ),
         ],

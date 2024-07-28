@@ -24,14 +24,26 @@ class AppRouter {
             name: MobileRoutes.create.name,
             path: MobileRoutes.create.path,
             pageBuilder: (context, state) {
-              final initialStartTime =
-                  (state.extra as Map)['initialStartTime'] as DateTime;
-              final initialEndTime =
-                  (state.extra as Map)['initialEndTime'] as DateTime;
+              final DateTime initialStartTime =
+                  (state.extra as Map)['initialStartTime'];
+              final DateTime initialEndTime =
+                  (state.extra as Map)['initialEndTime'];
+              final bool edit = (state.extra as Map)['edit'];
+              final String description = (state.extra as Map)['description'];
+              final int selectedType = (state.extra as Map)['selectedType'];
+              final int studentId = (state.extra as Map)['studentId'];
+              final int lessonId = (state.extra as Map)['lessonId'];
+
               return CupertinoModalSheetPage<void>(
                 builder: (context) => CreateLessonScreen(
-                    initialStartTime: initialStartTime,
-                    initialEndTime: initialEndTime),
+                  initialStartTime: initialStartTime,
+                  initialEndTime: initialEndTime,
+                  edit: edit,
+                  description: description,
+                  selectedType: selectedType,
+                  studentId: studentId,
+                  lessonId: lessonId,
+                ),
               );
             }),
         GoRoute(

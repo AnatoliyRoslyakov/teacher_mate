@@ -12,13 +12,17 @@ class Calendar extends StatefulWidget {
   final List<StudentEntity> student;
   final int viewDay;
   final bool startOfWeek;
+  final bool threeDays;
   final bool mobile;
-  final void Function({required String id}) deleteLesson;
   final void Function(
-    BuildContext context,
-    DateTime initialStartTime,
-    DateTime initialEndTime,
-  ) createLesson;
+      {required BuildContext context,
+      required DateTime initialStartTime,
+      required DateTime initialEndTime,
+      bool edit,
+      String description,
+      int selectedType,
+      int studentId,
+      int lessonId}) createLesson;
 
   const Calendar({
     this.mobile = false,
@@ -27,11 +31,11 @@ class Calendar extends StatefulWidget {
     required this.endHour,
     required this.lessons,
     required this.minutesGrid,
-    required this.deleteLesson,
     required this.viewDay,
     required this.startOfWeek,
     required this.student,
     required this.createLesson,
+    required this.threeDays,
   });
   @override
   _CalendarState createState() => _CalendarState();
@@ -46,7 +50,6 @@ class _CalendarState extends State<Calendar> {
   bool? isAnimated = true;
 
   DateTime currentTime = DateTime.now();
-  int viewDay = 7;
 
   PageController _pageController = PageController();
   int _currentPage = 10000;
@@ -55,6 +58,7 @@ class _CalendarState extends State<Calendar> {
   @override
   void initState() {
     super.initState();
+
     _pageController = PageController(initialPage: _currentPage);
     _pageController.addListener(_onPageChanged);
     width = widget.mobile ? 40 : 60;
@@ -90,15 +94,13 @@ class _CalendarState extends State<Calendar> {
 
   void prevWeek() {
     setState(() {
-      currentTime = currentTime.subtract(
-          Duration(days: widget.startOfWeek ? viewDay : widget.viewDay));
+      currentTime = currentTime.subtract(Duration(days: widget.viewDay));
     });
   }
 
   void nextWeek() {
     setState(() {
-      currentTime = currentTime
-          .add(Duration(days: widget.startOfWeek ? viewDay : widget.viewDay));
+      currentTime = currentTime.add(Duration(days: widget.viewDay));
     });
   }
 
@@ -107,7 +109,7 @@ class _CalendarState extends State<Calendar> {
         ? currentTime.startOfCurrentWeek().startOfDay()
         : currentTime.startOfDay();
     final result = <List<LessonEntity>>[[]];
-    for (int i = 0; i < (widget.startOfWeek ? viewDay : widget.viewDay); i++) {
+    for (int i = 0; i < (widget.viewDay); i++) {
       result.add(widget.lessons[startTime.add(Duration(days: i))] ?? []);
     }
     return result;
@@ -117,15 +119,18 @@ class _CalendarState extends State<Calendar> {
   Widget build(BuildContext context) {
     // из-за этого идет задержка, пока виджеты полностью построятся
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      scrollController.jumpTo(((DateTime.now().hour - widget.startHour) *
-              2 *
-              widget.minutesGrid *
-              (widget.minutesGrid == 1 ? 60 : 120)) -
-          60);
+      if (DateTime.now().hour > 13) {
+        scrollController.jumpTo(((DateTime.now().hour - widget.startHour) *
+                2 *
+                widget.minutesGrid *
+                (widget.minutesGrid == 1 ? 60 : 120)) -
+            60);
+      }
     });
 
-    final startTime =
-        widget.startOfWeek ? currentTime.startOfCurrentWeek() : currentTime;
+    final startTime = widget.startOfWeek
+        ? currentTime.startOfCurrentWeek()
+        : currentTime.subtract(Duration(days: widget.threeDays ? 1 : 0));
 
     return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
@@ -138,9 +143,10 @@ class _CalendarState extends State<Calendar> {
                 width: 35,
               ),
               DateRangeSection(
+                threeWeek: widget.threeDays,
                 nextDate: nextWeek,
                 afterDate: prevWeek,
-                viewDay: widget.startOfWeek ? viewDay : widget.viewDay,
+                viewDay: widget.viewDay,
                 startOfWeek: widget.startOfWeek,
                 currentTime: currentTime,
                 mobile: widget.mobile,
@@ -187,7 +193,7 @@ class _CalendarState extends State<Calendar> {
                     children: [
                       CalendarDaysSection(
                           widget: widget,
-                          viewDay: viewDay,
+                          viewDay: widget.viewDay,
                           startTime: startTime),
                       Expanded(
                         child: SingleChildScrollView(
@@ -205,9 +211,7 @@ class _CalendarState extends State<Calendar> {
                                       minutesGrid: widget.minutesGrid),
                                 ),
                                 ...List.generate(
-                                    widget.startOfWeek
-                                        ? viewDay
-                                        : widget.viewDay,
+                                    widget.viewDay,
                                     (index) => Expanded(
                                             child: CalendarGridSection(
                                           createLesson: widget.createLesson,
@@ -215,16 +219,14 @@ class _CalendarState extends State<Calendar> {
                                           student: widget.student,
                                           size: constraints.maxWidth,
                                           startOfWeek: widget.startOfWeek,
-                                          viewDay: widget.startOfWeek
-                                              ? viewDay
-                                              : widget.viewDay,
+                                          threeDays: widget.threeDays,
+                                          viewDay: widget.viewDay,
                                           currentTime: currentTime,
                                           dayIndex: index,
                                           lessons: lessonsData[index + 1],
                                           startHour: widget.startHour,
                                           endHour: widget.endHour,
                                           minutesGrid: widget.minutesGrid,
-                                          deleteLesson: widget.deleteLesson,
                                         ))),
                               ]),
                         ),
@@ -273,11 +275,11 @@ class StudentEntity {
 }
 
 enum ColorType {
-  blue(1, Colors.blue),
-  red(2, Colors.red),
-  green(3, Colors.green),
-  yellow(4, Colors.yellow),
-  purple(5, Colors.purple);
+  blue(0, Colors.blue),
+  red(1, Colors.red),
+  green(2, Colors.green),
+  yellow(3, Colors.yellow),
+  purple(4, Colors.purple);
 
   final int value;
   final MaterialColor color;

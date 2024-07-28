@@ -1,7 +1,9 @@
+import 'dart:async';
+
 import 'package:calendar/calendar.dart';
 import 'package:calendar/src/event_card_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+//import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
 class CalendarGridSection extends StatefulWidget {
   final List<LessonEntity> lessons;
@@ -13,14 +15,18 @@ class CalendarGridSection extends StatefulWidget {
   final List<StudentEntity> student;
   final int viewDay;
   final bool startOfWeek;
+  final bool threeDays;
   final double size;
   final bool mobile;
-  final void Function({required String id}) deleteLesson;
   final void Function(
-    BuildContext context,
-    DateTime initialStartTime,
-    DateTime initialEndTime,
-  ) createLesson;
+      {required BuildContext context,
+      required DateTime initialStartTime,
+      required DateTime initialEndTime,
+      bool edit,
+      String description,
+      int selectedType,
+      int studentId,
+      int lessonId}) createLesson;
 
   const CalendarGridSection({
     super.key,
@@ -30,13 +36,13 @@ class CalendarGridSection extends StatefulWidget {
     required this.minutesGrid,
     required this.dayIndex,
     required this.currentTime,
-    required this.deleteLesson,
     required this.viewDay,
     required this.startOfWeek,
     required this.size,
     required this.student,
     required this.mobile,
     required this.createLesson,
+    required this.threeDays,
   });
 
   @override
@@ -44,6 +50,42 @@ class CalendarGridSection extends StatefulWidget {
 }
 
 class _CalendarGridSectionState extends State<CalendarGridSection> {
+  double top = 0;
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _calculateTop();
+    _startTimer();
+  }
+
+  void _calculateTop() {
+    top = ((DateTime.now().hour - widget.startHour) *
+            2 *
+            widget.minutesGrid *
+            (widget.minutesGrid == 1 ? 60 : 120)) +
+        DateTime.now().minute * 2;
+  }
+
+  void _startTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 120), (timer) {
+      if (!mounted) {
+        timer.cancel();
+        return;
+      }
+      setState(() {
+        _calculateTop();
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final start = widget.startOfWeek
@@ -91,9 +133,9 @@ class _CalendarGridSectionState extends State<CalendarGridSection> {
                   hoverColor: Colors.amber,
                   onTap: () {
                     widget.createLesson(
-                      context,
-                      startEvent,
-                      endEvent,
+                      context: context,
+                      initialStartTime: startEvent,
+                      initialEndTime: endEvent,
                     );
                   },
                   child: Container(
@@ -115,14 +157,23 @@ class _CalendarGridSectionState extends State<CalendarGridSection> {
               }),
             ),
           )),
+          ...List.generate(widget.lessons.length, (index) {
+            final lesson = widget.lessons[index];
+            final start = lesson.start.hour * 60 + lesson.start.minute;
+            final end = lesson.end.hour * 60 + lesson.end.minute;
+            final top = (start - widget.startHour * 60.0) * 2;
+            final height = (end - start).toDouble();
+            return EventCardWidget(
+                index: index,
+                top: top,
+                widget: widget,
+                lesson: lesson,
+                height: height);
+          }),
           start.add(Duration(days: widget.dayIndex)).startOfDay() ==
                   DateTime.now().startOfDay()
               ? Positioned(
-                  top: ((DateTime.now().hour - widget.startHour) *
-                          2 *
-                          widget.minutesGrid *
-                          (widget.minutesGrid == 1 ? 60 : 120)) +
-                      DateTime.now().minute,
+                  top: top - 2.5,
                   width: (widget.size / widget.viewDay) - 100 / widget.viewDay,
                   child: Row(
                     children: [
@@ -143,19 +194,6 @@ class _CalendarGridSectionState extends State<CalendarGridSection> {
                   ),
                 )
               : const SizedBox.shrink(),
-          ...List.generate(widget.lessons.length, (index) {
-            final lesson = widget.lessons[index];
-            final start = lesson.start.hour * 60 + lesson.start.minute;
-            final end = lesson.end.hour * 60 + lesson.end.minute;
-            final top = (start - widget.startHour * 60.0) * 2;
-            final height = (end - start).toDouble();
-            return EventCardWidget(
-                index: index,
-                top: top,
-                widget: widget,
-                lesson: lesson,
-                height: height);
-          }),
         ],
       ),
     );
@@ -163,7 +201,7 @@ class _CalendarGridSectionState extends State<CalendarGridSection> {
 }
 
 
-
+//========================Анимация=================================
 // [ Positioned.fill(
 //               child: SizedBox(
 //             height: widget.minutesGrid * 120 * count,

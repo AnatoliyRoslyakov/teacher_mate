@@ -92,14 +92,31 @@ class _CalendarSettingsWidgetState extends State<CalendarSettingsWidget> {
                       child: Column(
                         children: [
                           SettingsCardWidget2(
-                            week: state.week,
+                              title: '3 Days',
+                              icon: Icons.event,
+                              select: state.three,
+                              onChanged: (bool value) {
+                                context.read<SettingsBloc>().add(
+                                    SettingsEvent.threeDays(threeDays: value));
+                              }),
+                          const SizedBox(
+                            height: 8,
                           ),
+                          SettingsCardWidget2(
+                              title: 'Week',
+                              icon: Icons.date_range,
+                              select: state.week,
+                              onChanged: (bool value) {
+                                context
+                                    .read<SettingsBloc>()
+                                    .add(SettingsEvent.week(week: value));
+                              }),
                           Padding(
                             padding: const EdgeInsets.only(left: 8, top: 12),
                             child: SettingsCardWidget(
-                                inactive: state.week,
+                                inactive: state.week || state.three,
                                 title: 'Date range',
-                                icon: Icons.date_range,
+                                icon: Icons.event_note,
                                 initialValue: state.viewDays,
                                 valueList:
                                     List.generate(15, (index) => index + 1),
@@ -148,10 +165,16 @@ class _CalendarSettingsWidgetState extends State<CalendarSettingsWidget> {
 }
 
 class SettingsCardWidget2 extends StatelessWidget {
-  final bool week;
+  final bool select;
+  final String title;
+  final IconData icon;
+  final void Function(bool) onChanged;
   const SettingsCardWidget2({
     super.key,
-    required this.week,
+    required this.select,
+    required this.title,
+    required this.icon,
+    required this.onChanged,
   });
 
   @override
@@ -164,15 +187,13 @@ class SettingsCardWidget2 extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(children: [
-          const Icon(Icons.event_note),
+          Icon(icon),
           const SizedBox(width: 5),
-          const Text('Week', style: TextStyle(fontSize: 16)),
+          Text(title, style: const TextStyle(fontSize: 16)),
           const Spacer(),
           Switch(
-            value: week,
-            onChanged: (value) {
-              context.read<SettingsBloc>().add(SettingsEvent.week(week: value));
-            },
+            value: select,
+            onChanged: onChanged,
           ),
         ]),
       ),

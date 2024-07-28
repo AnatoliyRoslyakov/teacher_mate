@@ -19,6 +19,9 @@ abstract class ApiHandler {
   @POST('/lesson')
   Future<String> addLesson(@Body() List<LessonRequest> lessonRequest);
 
+  @PUT('/lesson')
+  Future<String> updateLesson(@Body() List<LessonRequest> lessonRequest);
+
   @GET('/lesson')
   Future<List<LessonResponse>> getListLessons(
       @Query('start') String start, @Query('end') String end);

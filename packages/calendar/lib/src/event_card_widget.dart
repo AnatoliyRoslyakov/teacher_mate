@@ -28,10 +28,20 @@ class EventCardWidget extends StatelessWidget {
       top: top,
       child: Center(
         child: InkWell(
-          hoverColor: ColorType.values[widget.lessons[index].type].color,
+          hoverColor: widget.lessons[index].type >= 0
+              ? ColorType.values[widget.lessons[index].type].color
+              : Colors.grey,
           borderRadius: BorderRadius.circular(8.0),
           onTap: () {
-            widget.deleteLesson(id: lesson.name);
+            widget.createLesson(
+                context: context,
+                initialStartTime: lesson.start,
+                initialEndTime: lesson.end,
+                edit: true,
+                description: lesson.description,
+                selectedType: lesson.type,
+                studentId: lesson.studentId,
+                lessonId: lesson.id);
           },
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 300),
@@ -47,7 +57,9 @@ class EventCardWidget extends StatelessWidget {
                       topLeft: Radius.circular(7),
                       bottomLeft: Radius.circular(7),
                     ),
-                    color: ColorType.values[widget.lessons[index].type].color,
+                    color: widget.lessons[index].type >= 0
+                        ? ColorType.values[widget.lessons[index].type].color
+                        : Colors.grey,
                   ),
                 ),
                 AnimatedContainer(
@@ -60,8 +72,10 @@ class EventCardWidget extends StatelessWidget {
                       topRight: Radius.circular(7),
                       bottomRight: Radius.circular(7),
                     ),
-                    color: ColorType.values[widget.lessons[index].type].color
-                        .withOpacity(0.6),
+                    color: widget.lessons[index].type >= 0
+                        ? ColorType.values[widget.lessons[index].type].color
+                            .withOpacity(0.6)
+                        : Colors.grey.withOpacity(0.6),
                   ),
                   child: FittedBox(
                     fit: BoxFit.scaleDown,
@@ -82,7 +96,7 @@ class EventCardWidget extends StatelessWidget {
                           ),
                         ),
                         FittedBox(
-                          fit: BoxFit.scaleDown,
+                          // fit: BoxFit.scaleDown,
                           child: Text(
                             maxLines: 2,
                             '${lesson.start.hour}:${lesson.start.minute < 10 ? '0${lesson.start.minute}' : lesson.start.minute}\n${lesson.end.hour}:${lesson.end.minute < 10 ? '0${lesson.end.minute}' : lesson.end.minute}',

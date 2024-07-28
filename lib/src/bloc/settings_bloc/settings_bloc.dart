@@ -12,6 +12,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     on<SettingsEndDayEvent>(_endDay);
     on<SettingsViewDaysEvent>(_viewDays);
     on<SettingsWeekEvent>(_week);
+    on<SettingsThreeDaysEvent>(_threeDays);
     on<SettingsSaveEvent>(_save);
   }
 
@@ -23,8 +24,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
 
   Future<void> _defaultSettings(
       SettingsDefaultEvent event, Emitter<SettingsState> emitter) async {
-    emitter(state.copyWith(
-        minutesGrid: 0.5, endDay: 23, startDay: 9, week: true, viewDays: 7));
+    emitter(SettingsState.initial());
   }
 
   Future<void> _grid(
@@ -49,7 +49,12 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
 
   Future<void> _week(
       SettingsWeekEvent event, Emitter<SettingsState> emitter) async {
-    emitter(state.copyWith(week: event.week));
+    emitter(state.copyWith(week: event.week, three: false, viewDays: 7));
+  }
+
+  Future<void> _threeDays(
+      SettingsThreeDaysEvent event, Emitter<SettingsState> emitter) async {
+    emitter(state.copyWith(three: event.threeDays, week: false, viewDays: 3));
   }
 
   Future<void> _save(

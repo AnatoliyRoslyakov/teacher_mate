@@ -5,6 +5,7 @@ import 'package:teacher_mate/core/models/response/lesson_response.dart';
 
 abstract class ILessonRepository {
   Future<String> addLesson(List<LessonRequest> lessonRequest);
+  Future<String> updateLesson(List<LessonRequest> lessonRequest);
 
   Future<List<LessonResponse>> getListLessons(String start, String end);
   Future<String> deleteLesson(LessonDeleteRequest lessonDeleteRequest);
@@ -27,5 +28,10 @@ class LessonRepository extends ILessonRepository {
   @override
   Future<String> deleteLesson(LessonDeleteRequest lessonDeleteRequest) {
     return apiHandler.deleteLesson(lessonDeleteRequest);
+  }
+
+  @override
+  Future<String> updateLesson(List<LessonRequest> lessonRequest) {
+    return apiHandler.updateLesson(lessonRequest);
   }
 }

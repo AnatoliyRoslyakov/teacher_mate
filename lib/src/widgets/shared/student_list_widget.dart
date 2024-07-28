@@ -4,7 +4,7 @@ import 'package:teacher_mate/src/bloc/student_bloc/student_bloc.dart';
 
 class StudentListWidget extends StatefulWidget {
   final bool mobile;
-
+  final int studentId;
   final double? height;
   final double? width;
   final Function(int id)? selectStudent;
@@ -14,6 +14,7 @@ class StudentListWidget extends StatefulWidget {
     this.selectStudent,
     this.height,
     this.width,
+    this.studentId = -1,
   });
 
   @override
@@ -21,7 +22,13 @@ class StudentListWidget extends StatefulWidget {
 }
 
 class _StudentListWidgetState extends State<StudentListWidget> {
-  int studentId = -1;
+  late int studentId;
+  @override
+  void initState() {
+    studentId = widget.studentId;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
