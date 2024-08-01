@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:calendar/calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,7 +8,7 @@ import 'package:teacher_mate/src/widgets/shared/student_list_widget.dart';
 import 'package:teacher_mate/src/widgets/shared/text_form_field_widget.dart';
 import 'package:teacher_mate/src/widgets/shared/time_widget.dart';
 
-class CreateLessonPage extends StatefulWidget {
+class CreateLessonWidget extends StatefulWidget {
   final DateTime initialStartTime;
   final DateTime initialEndTime;
   final bool edit;
@@ -18,7 +16,7 @@ class CreateLessonPage extends StatefulWidget {
   final int selectedType;
   final int studentId;
   final int lessonId;
-  const CreateLessonPage(
+  const CreateLessonWidget(
       {super.key,
       required this.initialStartTime,
       required this.initialEndTime,
@@ -29,10 +27,10 @@ class CreateLessonPage extends StatefulWidget {
       required this.lessonId});
 
   @override
-  State<CreateLessonPage> createState() => _CreateLessonPageState();
+  State<CreateLessonWidget> createState() => _CreateLessonWidgetState();
 }
 
-class _CreateLessonPageState extends State<CreateLessonPage> {
+class _CreateLessonWidgetState extends State<CreateLessonWidget> {
   bool isValid = true;
   late String selectedTimeStart;
   late String selectedTimeEnd;
@@ -60,11 +58,6 @@ class _CreateLessonPageState extends State<CreateLessonPage> {
 
     super.initState();
   }
-
-  // добавить кнопку удаления
-
-  // отправка нового эвента на редактирования
-  //
 
   bool _customTileExpanded = false;
   @override

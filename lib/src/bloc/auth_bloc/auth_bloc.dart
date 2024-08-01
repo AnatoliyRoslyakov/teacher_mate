@@ -109,7 +109,3 @@ class AuthBloc extends Bloc<AuthEvent, AuthState>
   @override
   String? get token => state.token;
 }
-
-// понять что такое AbstractDioAuthActions 
-// понять зачем и почему dioHelper?.dioAuthActions = this;
-// посмотреть в di

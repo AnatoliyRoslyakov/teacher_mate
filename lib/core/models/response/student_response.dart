@@ -16,6 +16,4 @@ class StudentResponse {
 
   factory StudentResponse.fromJson(Map<String, dynamic> json) =>
       _$StudentResponseFromJson(json);
-
-  Map<String, dynamic> toJson() => _$StudentResponseToJson(this);
 }

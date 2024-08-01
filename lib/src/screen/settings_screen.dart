@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:teacher_mate/src/pages/mobile/settings_page.dart';
 import 'package:teacher_mate/src/widgets/mobile/wrapper/modal_bottom_sheet_wrapper.dart';
+import 'package:teacher_mate/src/widgets/shared/calendar_settings_widget.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({
@@ -9,7 +9,7 @@ class SettingsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ModalBottomSheetScaffoldWrapper(
-        title: 'Calendar settings', child: SettingsPage());
+    return const ModalBottomSheetScaffoldWrapper(
+        title: 'Calendar settings', child: CalendarSettingsWidget());
   }
 }

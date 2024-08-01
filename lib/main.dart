@@ -9,6 +9,7 @@ import 'package:teacher_mate/src/bloc/config_bloc/config_bloc.dart';
 import 'package:teacher_mate/src/bloc/lesson_bloc/lesson_bloc.dart';
 import 'package:teacher_mate/src/bloc/settings_bloc/settings_bloc.dart';
 import 'package:teacher_mate/src/bloc/student_bloc/student_bloc.dart';
+import 'package:teacher_mate/src/bloc/user_details_bloc/user_details_bloc.dart';
 import 'package:teacher_mate/src/config/app_config.dart';
 import 'package:teacher_mate/src/router/app_router.dart';
 import 'package:url_strategy/url_strategy.dart';
@@ -64,6 +65,9 @@ List<BlocProvider> _globalBlocs() {
     BlocProvider<SettingsBloc>(
         create: (context) =>
             injector.get<SettingsBloc>()..add(const SettingsEvent.init())),
+    BlocProvider<UserDetailsBloc>(
+        create: (context) => injector.get<UserDetailsBloc>()
+          ..add(const UserDetailsEvent.init())),
   ];
 }
 
@@ -71,7 +75,6 @@ List<BlocListener> _globalListeners() {
   return [
     BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
-        log(state.token);
         if (state.token.isNotEmpty) {
           AppRouter.rootNavigatorKey.currentContext
               ?.goNamed(MobileRoutes.home.name);

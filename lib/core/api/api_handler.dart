@@ -7,6 +7,7 @@ import 'package:teacher_mate/core/models/request/student_request.dart';
 import 'package:teacher_mate/core/models/response/auth_response.dart';
 import 'package:teacher_mate/core/models/response/lesson_response.dart';
 import 'package:teacher_mate/core/models/response/student_response.dart';
+import 'package:teacher_mate/core/models/response/user_details_response.dart';
 
 part 'api_handler.g.dart';
 
@@ -37,4 +38,7 @@ abstract class ApiHandler {
 
   @POST('/login')
   Future<AuthResponse> login(@Body() AuthRequest authRequest);
+
+  @GET('/user')
+  Future<UserDetailsResponse> getUserDetails();
 }

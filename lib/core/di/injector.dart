@@ -8,10 +8,12 @@ import 'package:teacher_mate/src/bloc/config_bloc/config_bloc.dart';
 import 'package:teacher_mate/src/bloc/lesson_bloc/lesson_bloc.dart';
 import 'package:teacher_mate/src/bloc/settings_bloc/settings_bloc.dart';
 import 'package:teacher_mate/src/bloc/student_bloc/student_bloc.dart';
+import 'package:teacher_mate/src/bloc/user_details_bloc/user_details_bloc.dart';
 import 'package:teacher_mate/src/config/i_app_config.dart';
 import 'package:teacher_mate/src/repository/auth_repository/auth_repository.dart';
 import 'package:teacher_mate/src/repository/lesson_repository/lesson_repository.dart';
 import 'package:teacher_mate/src/repository/student_repository/student_repository.dart';
+import 'package:teacher_mate/src/repository/user_details_repository/user_details_repository.dart';
 
 final injector = GetIt.instance;
 
@@ -66,6 +68,12 @@ Future<void> _registerRepositories() async {
       injector.get(),
     ),
   );
+
+  injector.registerSingleton<IUserDetailsRepository>(
+    UserDetailsRepository(
+      injector.get(),
+    ),
+  );
 }
 
 Future<void> _registerBloc() async {
@@ -83,6 +91,12 @@ Future<void> _registerBloc() async {
 
   injector.registerFactory<StudentBloc>(
     () => StudentBloc(
+      injector.get(),
+    ),
+  );
+
+  injector.registerSingleton<UserDetailsBloc>(
+    UserDetailsBloc(
       injector.get(),
     ),
   );
