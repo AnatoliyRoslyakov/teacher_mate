@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:teacher_mate/src/bloc/settings_bloc/settings_bloc.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:teacher_mate/src/widgets/shared/app_button.dart';
 
 class CalendarSettingsWidget extends StatefulWidget {
   const CalendarSettingsWidget({
@@ -136,24 +137,22 @@ class _CalendarSettingsWidgetState extends State<CalendarSettingsWidget> {
                   Row(
                     children: [
                       Expanded(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Text('Save settings'),
-                        ),
-                      ),
+                          child: AppButton.base(
+                        label: 'Save settings',
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                      )),
                       const SizedBox(
                         width: 12,
                       ),
-                      ElevatedButton(
-                        onPressed: () {
-                          context
-                              .read<SettingsBloc>()
-                              .add(const SettingsEvent.defaultSettings());
-                        },
-                        child: const Icon(Icons.repeat),
-                      ),
+                      AppButton.icon(
+                          icon: Icons.repeat,
+                          onTap: () {
+                            context
+                                .read<SettingsBloc>()
+                                .add(const SettingsEvent.defaultSettings());
+                          })
                     ],
                   ),
                 ],

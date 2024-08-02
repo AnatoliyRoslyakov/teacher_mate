@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:teacher_mate/src/bloc/lesson_bloc/lesson_bloc.dart';
+import 'package:teacher_mate/src/widgets/shared/app_button.dart';
 import 'package:teacher_mate/src/widgets/shared/divider_title_widget.dart';
 import 'package:teacher_mate/src/widgets/shared/student_list_widget.dart';
 import 'package:teacher_mate/src/widgets/shared/text_form_field_widget.dart';
@@ -246,34 +247,31 @@ class _CreateLessonWidgetState extends State<CreateLessonWidget> {
             child: Row(
               children: [
                 Expanded(
-                  flex: 3,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (isValid) {
-                        widget.edit
-                            ? context.read<LessonBloc>().add(LessonEvent.update(
-                                id: lessonId,
-                                start: start,
-                                end: end,
-                                type: selectedType,
-                                studentId: studentId,
-                                description: description))
-                            : context.read<LessonBloc>().add(LessonEvent.create(
-                                start: start,
-                                end: end,
-                                type: selectedType,
-                                studentId: studentId,
-                                description: description));
-                        Navigator.of(context).pop();
-                      }
-                    },
-                    child: Text(
-                      widget.edit ? 'Edit' : 'Save',
-                      style: TextStyle(
-                          color: isValid ? Colors.deepPurple : Colors.grey),
-                    ),
-                  ),
-                ),
+                    flex: 3,
+                    child: AppButton.base(
+                      label: widget.edit ? 'Edit' : 'Save',
+                      onTap: isValid
+                          ? () {
+                              widget.edit
+                                  ? context.read<LessonBloc>().add(
+                                      LessonEvent.update(
+                                          id: lessonId,
+                                          start: start,
+                                          end: end,
+                                          type: selectedType,
+                                          studentId: studentId,
+                                          description: description))
+                                  : context.read<LessonBloc>().add(
+                                      LessonEvent.create(
+                                          start: start,
+                                          end: end,
+                                          type: selectedType,
+                                          studentId: studentId,
+                                          description: description));
+                              Navigator.of(context).pop();
+                            }
+                          : null,
+                    )),
                 widget.edit
                     ? const SizedBox(
                         width: 10,

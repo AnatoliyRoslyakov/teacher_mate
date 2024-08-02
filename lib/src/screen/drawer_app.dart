@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:teacher_mate/src/bloc/auth_bloc/auth_bloc.dart';
 import 'package:teacher_mate/src/bloc/user_details_bloc/user_details_bloc.dart';
 import 'package:teacher_mate/src/router/app_router.dart';
+import 'package:teacher_mate/src/widgets/shared/app_button.dart';
 import 'package:teacher_mate/src/widgets/shared/calendar_settings_widget.dart';
 
 class DrawerApp extends StatelessWidget {
@@ -13,7 +14,7 @@ class DrawerApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color.fromARGB(255, 237, 237, 242),
         width: mobile ? null : 400,
         child: mobile
             ? Column(
@@ -24,70 +25,37 @@ class DrawerApp extends StatelessWidget {
                     padding: const EdgeInsets.all(20),
                     child: Column(
                       children: [
-                        InkWell(
-                          onTap: () {
-                            Navigator.pop(context);
-                            context.push(MobileRoutes.settings.path);
-                          },
-                          child: const Padding(
-                            padding: EdgeInsets.symmetric(
-                              vertical: 10,
-                            ),
-                            child: Row(
-                              children: [
-                                Icon(Icons.settings),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Text('Calendar settings'),
-                              ],
-                            ),
-                          ),
+                        AppButton.settings(
+                            label: 'Calendar settings',
+                            icon: Icons.settings,
+                            onTap: () {
+                              Navigator.pop(context);
+                              context.push(MobileRoutes.settings.path);
+                            }),
+                        const SizedBox(
+                          height: 10,
                         ),
-                        InkWell(
+                        AppButton.settings(
+                          label: 'My students list',
+                          icon: Icons.group,
                           onTap: () {
                             Navigator.pop(context);
                             context.push(MobileRoutes.students.path);
                           },
-                          child: const Padding(
-                            padding: EdgeInsets.symmetric(
-                              vertical: 10,
-                            ),
-                            child: Row(
-                              children: [
-                                Icon(Icons.group),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Text('My students list'),
-                              ],
-                            ),
-                          ),
                         ),
-                        InkWell(
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        AppButton.settings(
+                          iconColor: Colors.red,
+                          label: 'Logout',
+                          icon: Icons.logout,
                           onTap: () {
                             context
                                 .read<AuthBloc>()
                                 .add(const AuthEvent.logout());
                           },
-                          child: const Padding(
-                            padding: EdgeInsets.symmetric(
-                              vertical: 10,
-                            ),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.logout,
-                                  color: Colors.red,
-                                ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Text('Logout'),
-                              ],
-                            ),
-                          ),
-                        )
+                        ),
                       ],
                     ),
                   ),
