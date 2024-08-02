@@ -15,6 +15,7 @@ void createLessonDialog(
     barrierDismissible: true,
     builder: (BuildContext context) {
       return Dialog(
+        backgroundColor: Colors.white,
         child: SizedBox(
           width: 600,
           child: CreateLessonWidget(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:teacher_mate/src/widgets/mobile/wrapper/modal_bottom_sheet_wrapper.dart';
+import 'package:teacher_mate/src/widgets/mobile/modal_bottom_sheet_wrapper.dart';
 import 'package:teacher_mate/src/widgets/shared/student_list_widget.dart';
 
 class StudentScreen extends StatelessWidget {

@@ -65,233 +65,237 @@ class _CreateLessonWidgetState extends State<CreateLessonWidget> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(20.0),
-      child: ListView(
-        children: <Widget>[
-          const DividerTitleWidget(title: 'Lesson time'),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              InkWell(
-                onTap: () async {
-                  final TimeOfDay? picked = await showTimePicker(
-                    context: context,
-                    initialTime: TimeOfDay(
-                        hour: widget.initialStartTime.hour,
-                        minute: widget.initialStartTime.minute),
-                    initialEntryMode: TimePickerEntryMode.inputOnly,
-                    builder: (BuildContext context, Widget? child) {
-                      return MediaQuery(
-                        data: MediaQuery.of(context).copyWith(
-                          alwaysUse24HourFormat: true,
-                        ),
-                        child: child!,
-                      );
-                    },
-                  );
-                  if (picked != null) {
-                    setState(() {
-                      selectedTimeStart = DateFormat('HH:mm').format(widget
-                          .initialStartTime
-                          .copyWith(hour: picked.hour, minute: picked.minute));
-                      start = widget.initialStartTime
-                          .copyWith(hour: picked.hour, minute: picked.minute)
-                          .millisecondsSinceEpoch;
-                      isValid = true;
-                      if (start >= end) {
-                        isValid = false;
-                      }
-                    });
-                  }
-                },
-                child: TimeWidget(
-                    helperText: 'Start time:',
-                    selectedTimeEnd: selectedTimeStart,
-                    isValid: isValid),
-              ),
-              const SizedBox(
-                height: 60,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: VerticalDivider(
-                    width: 1,
-                    color: Colors.black12,
-                  ),
-                ),
-              ),
-              InkWell(
-                onTap: () async {
-                  final TimeOfDay? picked = await showTimePicker(
-                    context: context,
-                    initialTime: TimeOfDay(
-                        hour: widget.initialEndTime.hour,
-                        minute: widget.initialEndTime.minute),
-                    initialEntryMode: TimePickerEntryMode.inputOnly,
-                    builder: (BuildContext context, Widget? child) {
-                      return MediaQuery(
-                        data: MediaQuery.of(context).copyWith(
-                          alwaysUse24HourFormat: true,
-                        ),
-                        child: child!,
-                      );
-                    },
-                  );
-                  if (picked != null) {
-                    setState(() {
-                      selectedTimeEnd = DateFormat('HH:mm').format(widget
-                          .initialEndTime
-                          .copyWith(hour: picked.hour, minute: picked.minute));
-                      end = widget.initialEndTime
-                          .copyWith(hour: picked.hour, minute: picked.minute)
-                          .millisecondsSinceEpoch;
-                      isValid = true;
-                      if (start >= end) {
-                        isValid = false;
-                      }
-                    });
-                  }
-                },
-                child: TimeWidget(
-                    helperText: 'End time:',
-                    selectedTimeEnd: selectedTimeEnd,
-                    isValid: isValid),
-              ),
-            ],
-          ),
-          const DividerTitleWidget(title: 'The color of the lesson'),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: List.generate(ColorType.values.length, (index) {
-              final colorType = ColorType.values[index].value;
-              return GestureDetector(
-                onTap: () {
-                  setState(() {
-                    selectedType = colorType;
-                  });
-                },
-                child: Container(
-                  margin: const EdgeInsets.all(8.0),
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 1,
-                        blurRadius: 1,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                    shape: BoxShape.circle,
-                    color: ColorType.values[index].color,
-                  ),
-                  width: 30,
-                  height: 30,
-                  child: selectedType == colorType
-                      ? Center(
-                          child: Icon(
-                          Icons.check,
-                          color: ColorType.values[index].color.shade900,
-                        ))
-                      : null,
-                ),
-              );
-            }),
-          ),
-          const DividerTitleWidget(
-            title: 'List of students',
-            height: 16,
-          ),
-          StudentListWidget(
-            height: 200,
-            width: 400,
-            selectStudent: selectStudent,
-            studentId: studentId,
-          ),
-          const SizedBox(
-            height: 16,
-          ),
-          // const Divider(),
-          DecoratedBox(
-            decoration: const BoxDecoration(
-                border: Border(top: BorderSide(color: Colors.black12))),
-            child: Theme(
-              data:
-                  Theme.of(context).copyWith(dividerColor: Colors.transparent),
-              child: ExpansionTile(
-                enableFeedback: true,
-                dense: true,
-                tilePadding: EdgeInsets.zero,
-                title: const Text(
-                  'Description',
-                  style: TextStyle(fontSize: 14),
-                ),
-                trailing: Icon(
-                  _customTileExpanded
-                      ? Icons.keyboard_arrow_up
-                      : Icons.keyboard_arrow_down,
-                ),
-                children: [
-                  TextFormFieldWidget(
-                    description: description,
-                    onChange: (text) => description = text,
-                  )
-                ],
-                onExpansionChanged: (bool expanded) {
-                  setState(() {
-                    _customTileExpanded = expanded;
-                  });
-                },
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            child: Row(
-              children: [
-                Expanded(
-                    flex: 3,
-                    child: AppButton.base(
-                      label: widget.edit ? 'Edit' : 'Save',
-                      onTap: isValid
-                          ? () {
-                              widget.edit
-                                  ? context.read<LessonBloc>().add(
-                                      LessonEvent.update(
-                                          id: lessonId,
-                                          start: start,
-                                          end: end,
-                                          type: selectedType,
-                                          studentId: studentId,
-                                          description: description))
-                                  : context.read<LessonBloc>().add(
-                                      LessonEvent.create(
-                                          start: start,
-                                          end: end,
-                                          type: selectedType,
-                                          studentId: studentId,
-                                          description: description));
-                              Navigator.of(context).pop();
+      child: Column(
+        children: [
+          Expanded(
+            child: ListView(
+              children: <Widget>[
+                const DividerTitleWidget(title: 'Lesson time'),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    InkWell(
+                      onTap: () async {
+                        final TimeOfDay? picked = await showTimePicker(
+                          context: context,
+                          initialTime: TimeOfDay(
+                              hour: widget.initialStartTime.hour,
+                              minute: widget.initialStartTime.minute),
+                          initialEntryMode: TimePickerEntryMode.inputOnly,
+                          builder: (BuildContext context, Widget? child) {
+                            return MediaQuery(
+                              data: MediaQuery.of(context).copyWith(
+                                alwaysUse24HourFormat: true,
+                              ),
+                              child: child!,
+                            );
+                          },
+                        );
+                        if (picked != null) {
+                          setState(() {
+                            selectedTimeStart = DateFormat('HH:mm').format(
+                                widget.initialStartTime.copyWith(
+                                    hour: picked.hour, minute: picked.minute));
+                            start = widget.initialStartTime
+                                .copyWith(
+                                    hour: picked.hour, minute: picked.minute)
+                                .millisecondsSinceEpoch;
+                            isValid = true;
+                            if (start >= end) {
+                              isValid = false;
                             }
-                          : null,
-                    )),
-                widget.edit
-                    ? const SizedBox(
-                        width: 10,
-                      )
-                    : const SizedBox.shrink(),
-                widget.edit
-                    ? Expanded(
-                        flex: 1,
-                        child: ElevatedButton(
-                            onPressed: () {
-                              context
-                                  .read<LessonBloc>()
-                                  .add(LessonEvent.delete(lessonId.toString()));
-
-                              Navigator.of(context).pop();
-                            },
-                            child: const Icon(Icons.delete)))
-                    : const SizedBox.shrink(),
+                          });
+                        }
+                      },
+                      child: TimeWidget(
+                          helperText: 'Start time:',
+                          selectedTimeEnd: selectedTimeStart,
+                          isValid: isValid),
+                    ),
+                    const SizedBox(
+                      height: 60,
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        child: VerticalDivider(
+                          width: 1,
+                          color: Colors.black12,
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () async {
+                        final TimeOfDay? picked = await showTimePicker(
+                          context: context,
+                          initialTime: TimeOfDay(
+                              hour: widget.initialEndTime.hour,
+                              minute: widget.initialEndTime.minute),
+                          initialEntryMode: TimePickerEntryMode.inputOnly,
+                          builder: (BuildContext context, Widget? child) {
+                            return MediaQuery(
+                              data: MediaQuery.of(context).copyWith(
+                                alwaysUse24HourFormat: true,
+                              ),
+                              child: child!,
+                            );
+                          },
+                        );
+                        if (picked != null) {
+                          setState(() {
+                            selectedTimeEnd = DateFormat('HH:mm').format(
+                                widget.initialEndTime.copyWith(
+                                    hour: picked.hour, minute: picked.minute));
+                            end = widget.initialEndTime
+                                .copyWith(
+                                    hour: picked.hour, minute: picked.minute)
+                                .millisecondsSinceEpoch;
+                            isValid = true;
+                            if (start >= end) {
+                              isValid = false;
+                            }
+                          });
+                        }
+                      },
+                      child: TimeWidget(
+                          helperText: 'End time:',
+                          selectedTimeEnd: selectedTimeEnd,
+                          isValid: isValid),
+                    ),
+                  ],
+                ),
+                const DividerTitleWidget(title: 'The color of the lesson'),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(ColorType.values.length, (index) {
+                    final colorType = ColorType.values[index].value;
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectedType = colorType;
+                        });
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.5),
+                              spreadRadius: 1,
+                              blurRadius: 1,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                          shape: BoxShape.circle,
+                          color: ColorType.values[index].color,
+                        ),
+                        width: 30,
+                        height: 30,
+                        child: selectedType == colorType
+                            ? Center(
+                                child: Icon(
+                                Icons.check,
+                                color: ColorType.values[index].color.shade900,
+                              ))
+                            : null,
+                      ),
+                    );
+                  }),
+                ),
+                const DividerTitleWidget(
+                  title: 'List of students',
+                  height: 16,
+                ),
+                StudentListWidget(
+                  height: 200,
+                  width: 400,
+                  selectStudent: selectStudent,
+                  studentId: studentId,
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                // const Divider(),
+                DecoratedBox(
+                  decoration: const BoxDecoration(
+                      border: Border(top: BorderSide(color: Colors.black12))),
+                  child: Theme(
+                    data: Theme.of(context)
+                        .copyWith(dividerColor: Colors.transparent),
+                    child: ExpansionTile(
+                      enableFeedback: true,
+                      dense: true,
+                      tilePadding: EdgeInsets.zero,
+                      title: const Text(
+                        'Description',
+                        style: TextStyle(fontSize: 14),
+                      ),
+                      children: [
+                        TextFormFieldWidget(
+                          description: description,
+                          onChange: (text) => description = text,
+                        )
+                      ],
+                      onExpansionChanged: (bool expanded) {
+                        setState(() {
+                          _customTileExpanded = expanded;
+                        });
+                      },
+                    ),
+                  ),
+                ),
               ],
             ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          Row(
+            children: [
+              Expanded(
+                // flex: 3,
+                child: AppButton.base(
+                  label: widget.edit ? 'Edit' : 'Save',
+                  onTap: isValid
+                      ? () {
+                          widget.edit
+                              ? context.read<LessonBloc>().add(
+                                  LessonEvent.update(
+                                      id: lessonId,
+                                      start: start,
+                                      end: end,
+                                      type: selectedType,
+                                      studentId: studentId,
+                                      description: description))
+                              : context.read<LessonBloc>().add(
+                                  LessonEvent.create(
+                                      start: start,
+                                      end: end,
+                                      type: selectedType,
+                                      studentId: studentId,
+                                      description: description));
+                          Navigator.of(context).pop();
+                        }
+                      : null,
+                ),
+              ),
+              widget.edit
+                  ? const SizedBox(
+                      width: 10,
+                    )
+                  : const SizedBox.shrink(),
+              widget.edit
+                  ? AppButton.icon(
+                      icon: Icons.delete,
+                      iconColor: Colors.red,
+                      onTap: () {
+                        context
+                            .read<LessonBloc>()
+                            .add(LessonEvent.delete(lessonId.toString()));
+
+                        Navigator.of(context).pop();
+                      },
+                    )
+                  : const SizedBox.shrink(),
+            ],
           ),
         ],
       ),

@@ -24,7 +24,7 @@ class _CalendarSettingsWidgetState extends State<CalendarSettingsWidget> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: AnimationConfiguration.toStaggeredList(
-                duration: const Duration(milliseconds: 500),
+                duration: const Duration(milliseconds: 300),
                 childAnimationBuilder: (widget) => SlideAnimation(
                   verticalOffset: 200,
                   child: FadeInAnimation(
@@ -191,6 +191,8 @@ class SettingsCardWidget2 extends StatelessWidget {
           Text(title, style: const TextStyle(fontSize: 16)),
           const Spacer(),
           Switch(
+            activeColor: Colors.white,
+            activeTrackColor: Colors.amber,
             value: select,
             onChanged: onChanged,
           ),

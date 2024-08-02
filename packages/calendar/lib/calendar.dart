@@ -46,7 +46,7 @@ class _CalendarState extends State<Calendar> {
   ScrollController mainVerticalController = ScrollController();
   ScrollController dayHorizontalController = ScrollController();
   ScrollController timeVerticalController = ScrollController();
-  ScrollController scrollController = ScrollController();
+  late ScrollController scrollController;
   bool? isAnimated = true;
 
   DateTime currentTime = DateTime.now();
@@ -58,7 +58,12 @@ class _CalendarState extends State<Calendar> {
   @override
   void initState() {
     super.initState();
-
+    final double initPosition = (DateTime.now().hour - widget.startHour) *
+            2 *
+            widget.minutesGrid *
+            (widget.minutesGrid == 1 ? 60 : 120) -
+        60;
+    scrollController = ScrollController(initialScrollOffset: initPosition);
     _pageController = PageController(initialPage: _currentPage);
     _pageController.addListener(_onPageChanged);
     width = widget.mobile ? 40 : 60;
@@ -118,19 +123,19 @@ class _CalendarState extends State<Calendar> {
   @override
   Widget build(BuildContext context) {
     // из-за этого идет задержка, пока виджеты полностью построятся
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (DateTime.now().hour > 13) {
-        scrollController.jumpTo(((DateTime.now().hour - widget.startHour) *
-                2 *
-                widget.minutesGrid *
-                (widget.minutesGrid == 1 ? 60 : 120)) -
-            60);
-      }
-    });
 
-    final startTime = widget.startOfWeek
-        ? currentTime.startOfCurrentWeek()
-        : currentTime.subtract(Duration(days: widget.threeDays ? 1 : 0));
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   if (DateTime.now().hour > 13) {
+    //     scrollController.jumpTo(((DateTime.now().hour - widget.startHour) *
+    //             2 *
+    //             widget.minutesGrid *
+    //             (widget.minutesGrid == 1 ? 60 : 120)) -
+    //         60);
+    //   }
+    // });
+
+    final startTime =
+        widget.startOfWeek ? currentTime.startOfCurrentWeek() : currentTime;
 
     return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {

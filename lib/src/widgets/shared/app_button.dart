@@ -1,62 +1,3 @@
-// import 'package:flutter/material.dart';
-
-// class AppButton extends StatelessWidget {
-//   final String label;
-//   final IconData icon;
-//   final Color iconColor;
-//   final void Function()? onTap;
-//   const AppButton({
-//     super.key,
-//     required this.label,
-//     required this.icon,
-//     required this.onTap,
-//     this.iconColor = Colors.amber,
-//   });
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return ElevatedButton.icon(
-//       iconAlignment: IconAlignment.start,
-//       label: Row(
-//         children: [
-//           const SizedBox(
-//             width: 6,
-//           ),
-//           DecoratedBox(
-//               decoration: BoxDecoration(
-//                   color: const Color.fromARGB(255, 232, 232, 238),
-//                   borderRadius: BorderRadius.circular(6)),
-//               child: Padding(
-//                 padding: const EdgeInsets.all(5.0),
-//                 child: Icon(
-//                   icon,
-//                   size: 20,
-//                   color: iconColor,
-//                 ),
-//               )),
-//           const SizedBox(
-//             width: 10,
-//           ),
-//           Text(
-//             label,
-//             style: const TextStyle(
-//                 color: Colors.black87, fontWeight: FontWeight.w500),
-//           ),
-//         ],
-//       ),
-//       onPressed: onTap,
-//       style: ElevatedButton.styleFrom(
-//         padding: EdgeInsets.zero,
-//         minimumSize: const Size(double.infinity, 40),
-//         elevation: 0,
-//         shape: RoundedRectangleBorder(
-//           borderRadius: BorderRadius.circular(10.0),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 import 'package:flutter/material.dart';
 
 class AppButton extends StatelessWidget {
@@ -79,6 +20,8 @@ class AppButton extends StatelessWidget {
     required String label,
     required IconData icon,
     required void Function()? onTap,
+    bool mobile = true,
+    Color backgroundColor = Colors.white,
     Color iconColor = Colors.amber,
   }) {
     return AppButton(
@@ -87,8 +30,9 @@ class AppButton extends StatelessWidget {
       onTap: onTap,
       iconColor: iconColor,
       buttonStyle: ElevatedButton.styleFrom(
+        backgroundColor: backgroundColor,
         padding: EdgeInsets.zero,
-        minimumSize: const Size(double.infinity, 50),
+        minimumSize: Size(double.infinity, mobile ? 50 : 70),
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
@@ -120,12 +64,13 @@ class AppButton extends StatelessWidget {
   factory AppButton.icon({
     required IconData icon,
     required void Function()? onTap,
+    Color iconColor = Colors.amber,
   }) {
     return AppButton(
       label: '',
       icon: icon,
       onTap: onTap,
-      iconColor: Colors.amber,
+      iconColor: iconColor,
       buttonStyle: ElevatedButton.styleFrom(
         backgroundColor: Colors.white,
         padding: EdgeInsets.zero,

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -38,6 +36,8 @@ class _AppState extends State<App> {
       child: MultiBlocListener(
         listeners: _globalListeners(),
         child: MaterialApp.router(
+          scrollBehavior:
+              ScrollConfiguration.of(context).copyWith(scrollbars: false),
           debugShowCheckedModeBanner: false,
           routerConfig: router,
         ),

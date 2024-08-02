@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:teacher_mate/src/widgets/shared/create_lesson_widget.dart';
-import 'package:teacher_mate/src/widgets/mobile/wrapper/modal_bottom_sheet_wrapper.dart';
+import 'package:teacher_mate/src/widgets/mobile/modal_bottom_sheet_wrapper.dart';
 
 class CreateLessonScreen extends StatelessWidget {
   final DateTime initialStartTime;

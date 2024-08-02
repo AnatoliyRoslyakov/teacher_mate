@@ -59,7 +59,7 @@ class _StudentListWidgetState extends State<StudentListWidget> {
                                   Icon(
                                     Icons.touch_app,
                                     size: 100,
-                                    color: Colors.black12,
+                                    color: Colors.grey,
                                   ),
                                 ],
                               ),
@@ -94,7 +94,8 @@ class _StudentListWidgetState extends State<StudentListWidget> {
                                                       stateStudent
                                                           .studentEntity[i].id
                                                   ? Colors.amber
-                                                  : Colors.black12),
+                                                  : Colors.grey
+                                                      .withOpacity(0.2)),
                                           child: Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: Row(
@@ -202,11 +203,11 @@ class _StudentListWidgetState extends State<StudentListWidget> {
               },
               child: Container(
                   height: widget.selectStudent == null ? 50 : 40,
-                  decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.only(
+                  decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.only(
                           bottomRight: Radius.circular(10),
                           bottomLeft: Radius.circular(10)),
-                      color: Color.fromARGB(255, 233, 233, 233)),
+                      color: Colors.grey.withOpacity(0.3)),
                   child: const Padding(
                       padding: EdgeInsets.all(8.0),
                       child: Center(child: Icon(Icons.add))))),
@@ -245,8 +246,8 @@ void showBlurredDialog(
                     mainAxisSize: MainAxisSize.max,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text('Student', style: TextStyle(fontSize: 24)),
-                      SizedBox(height: 20),
+                      const Text('Student', style: TextStyle(fontSize: 24)),
+                      const SizedBox(height: 20),
                       TextField(
                         onChanged: (value) {
                           setState(() {
