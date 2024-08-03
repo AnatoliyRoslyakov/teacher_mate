@@ -20,7 +20,7 @@ sealed class LessonEvent {
       required int studentId,
       required String description}) = LessonUpdateEvent;
 
-  const factory LessonEvent.delete(String id) = LessonDeleteEvent;
+  const factory LessonEvent.delete(int id) = LessonDeleteEvent;
 }
 
 class LessonCreateEvent extends LessonEvent {
@@ -59,6 +59,6 @@ class LessonUpdateEvent extends LessonEvent {
 }
 
 class LessonDeleteEvent extends LessonEvent {
-  final String id;
+  final int id;
   const LessonDeleteEvent(this.id);
 }

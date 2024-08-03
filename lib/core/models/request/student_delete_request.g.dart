@@ -1,18 +1,19 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'lesson_delete_request.dart';
+part of 'student_delete_request.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-LessonDeleteRequest _$LessonDeleteRequestFromJson(Map<String, dynamic> json) =>
-    LessonDeleteRequest(
+StudentDeleteRequest _$StudentDeleteRequestFromJson(
+        Map<String, dynamic> json) =>
+    StudentDeleteRequest(
       id: (json['id'] as num).toInt(),
     );
 
-Map<String, dynamic> _$LessonDeleteRequestToJson(
-        LessonDeleteRequest instance) =>
+Map<String, dynamic> _$StudentDeleteRequestToJson(
+        StudentDeleteRequest instance) =>
     <String, dynamic>{
       'id': instance.id,
     };

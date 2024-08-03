@@ -4,7 +4,7 @@ part 'lesson_delete_request.g.dart';
 
 @JsonSerializable()
 class LessonDeleteRequest {
-  final String id;
+  final int id;
 
   LessonDeleteRequest({
     required this.id,

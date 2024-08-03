@@ -10,9 +10,15 @@ sealed class StudentEvent {
 
   const factory StudentEvent.read() = StudentReadEvent;
 
-  const factory StudentEvent.update() = StudentUpdateEvent;
+  const factory StudentEvent.update(
+    int id,
+    String name,
+    int price,
+  ) = StudentUpdateEvent;
 
-  const factory StudentEvent.delete() = StudentDeleteEvent;
+  const factory StudentEvent.delete(
+    int id,
+  ) = StudentDeleteEvent;
 }
 
 class StudentCreateEvent extends StudentEvent {
@@ -26,9 +32,15 @@ class StudentReadEvent extends StudentEvent {
 }
 
 class StudentUpdateEvent extends StudentEvent {
-  const StudentUpdateEvent();
+  final int id;
+  final String name;
+  final int price;
+  const StudentUpdateEvent(this.id, this.name, this.price);
 }
 
 class StudentDeleteEvent extends StudentEvent {
-  const StudentDeleteEvent();
+  final int id;
+  const StudentDeleteEvent(
+    this.id,
+  );
 }

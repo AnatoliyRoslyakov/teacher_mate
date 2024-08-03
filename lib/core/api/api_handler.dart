@@ -3,6 +3,7 @@ import 'package:retrofit/retrofit.dart';
 import 'package:teacher_mate/core/models/request/auth_request.dart';
 import 'package:teacher_mate/core/models/request/lesson_delete_request.dart';
 import 'package:teacher_mate/core/models/request/lesson_request.dart';
+import 'package:teacher_mate/core/models/request/student_delete_request.dart';
 import 'package:teacher_mate/core/models/request/student_request.dart';
 import 'package:teacher_mate/core/models/response/auth_response.dart';
 import 'package:teacher_mate/core/models/response/lesson_response.dart';
@@ -32,6 +33,13 @@ abstract class ApiHandler {
 
   @POST('/student')
   Future<String> addStudent(@Body() StudentRequest studentRequest);
+
+  @PUT('/student')
+  Future<String> updateStudent(@Body() List<StudentRequest> studentRequest);
+
+  @DELETE('/student')
+  Future<String> deleteStudent(
+      @Body() StudentDeleteRequest studentDeleteRequest);
 
   @GET('/student')
   Future<List<StudentResponse>> getListStudent();

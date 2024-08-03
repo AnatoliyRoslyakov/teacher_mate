@@ -60,7 +60,7 @@ class _CreateLessonWidgetState extends State<CreateLessonWidget> {
     super.initState();
   }
 
-  bool _customTileExpanded = false;
+  bool customTileExpanded = false;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -230,13 +230,15 @@ class _CreateLessonWidgetState extends State<CreateLessonWidget> {
                       ),
                       children: [
                         TextFormFieldWidget(
-                          description: description,
+                          lines: (5, 20),
+                          hintText: 'Lesson plan',
+                          initValue: description,
                           onChange: (text) => description = text,
                         )
                       ],
                       onExpansionChanged: (bool expanded) {
                         setState(() {
-                          _customTileExpanded = expanded;
+                          customTileExpanded = expanded;
                         });
                       },
                     ),
@@ -289,13 +291,16 @@ class _CreateLessonWidgetState extends State<CreateLessonWidget> {
                       onTap: () {
                         context
                             .read<LessonBloc>()
-                            .add(LessonEvent.delete(lessonId.toString()));
+                            .add(LessonEvent.delete(lessonId));
 
                         Navigator.of(context).pop();
                       },
                     )
                   : const SizedBox.shrink(),
             ],
+          ),
+          const SizedBox(
+            height: 10,
           ),
         ],
       ),

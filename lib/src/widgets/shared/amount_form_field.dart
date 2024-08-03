@@ -1,45 +1,40 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class TextFormFieldWidget extends StatelessWidget {
-  final String Function(String text) onChange;
+class AmountFormFieldWidget extends StatelessWidget {
+  final int Function(int text) onChange;
   final String initValue;
-  final (int minLines, int maxLines) lines;
-  final int maxSym;
   final String hintText;
   final IconData? prefixIcon;
-  final TextAlign textAlign;
-  const TextFormFieldWidget({
+  final Color iconColor;
+  const AmountFormFieldWidget({
     super.key,
     required this.onChange,
     this.initValue = '',
-    this.lines = (1, 1),
-    this.maxSym = 1000,
     required this.hintText,
     this.prefixIcon,
-    this.textAlign = TextAlign.center,
+    this.iconColor = Colors.grey,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      textAlign: textAlign,
       initialValue: initValue,
       inputFormatters: [
-        LengthLimitingTextInputFormatter(maxSym),
+        LengthLimitingTextInputFormatter(5),
+        FilteringTextInputFormatter.allow(
+          RegExp(r'^[0-9]*'),
+        ),
       ],
       onTapOutside: (event) {
         FocusManager.instance.primaryFocus?.unfocus();
       },
-      minLines: lines.$1,
-      maxLines: lines.$2,
-      keyboardType: TextInputType.multiline,
       onChanged: (text) {
-        onChange.call(text);
+        onChange.call(int.tryParse(text) ?? 0);
       },
       decoration: InputDecoration(
         prefixIcon:
-            prefixIcon != null ? Icon(prefixIcon, color: Colors.grey) : null,
+            prefixIcon != null ? Icon(prefixIcon, color: iconColor) : null,
         hintText: hintText,
         hintStyle: const TextStyle(fontWeight: FontWeight.w400),
         isDense: true,

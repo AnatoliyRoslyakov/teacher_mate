@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:teacher_mate/src/pages/mobile/cupertino_modal_sheet_page.dart';
 import 'package:teacher_mate/src/screen/create_lesson_screen.dart';
+import 'package:teacher_mate/src/screen/create_student_screen.dart';
 import 'package:teacher_mate/src/screen/home_screen.dart';
 import 'package:collection/collection.dart';
 import 'package:teacher_mate/src/screen/login_screen.dart';
@@ -63,6 +64,22 @@ class AppRouter {
               );
             }),
         GoRoute(
+            name: MobileRoutes.createStudent.name,
+            path: MobileRoutes.createStudent.path,
+            pageBuilder: (context, state) {
+              return CupertinoModalSheetPage<void>(
+                builder: (context) {
+                  final bool edit = (state.extra as Map)['edit'];
+                  final int id = (state.extra as Map)['id'];
+                  final String name = (state.extra as Map)['name'];
+                  final int price = (state.extra as Map)['price'];
+
+                  return CreateStudentScreen(
+                      id: id, name: name, edit: edit, price: price);
+                },
+              );
+            }),
+        GoRoute(
           name: MobileRoutes.home.name,
           path: MobileRoutes.home.path,
           builder: (BuildContext context, GoRouterState state) {
@@ -86,6 +103,7 @@ enum MobileRoutes {
   create,
   settings,
   students,
+  createStudent,
   home;
 
   static MobileRoutes? fromName(String? name) {

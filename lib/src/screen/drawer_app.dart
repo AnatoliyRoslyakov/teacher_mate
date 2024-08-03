@@ -9,7 +9,7 @@ class DrawerApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-        backgroundColor: const Color.fromARGB(255, 237, 237, 242),
+        backgroundColor: const Color.fromARGB(255, 242, 242, 242),
         width: mobile ? null : 400,
         child: mobile
             ? const DrawerMobileWidget()

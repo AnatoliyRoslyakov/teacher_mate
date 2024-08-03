@@ -18,7 +18,7 @@ class UserInfoWidget extends StatelessWidget {
         height: mobile ? 170 : 100,
         decoration: const BoxDecoration(color: Colors.amber),
         child: Padding(
-          padding: const EdgeInsets.only(top: 30, left: 20),
+          padding: EdgeInsets.only(top: mobile ? 100 : 30, left: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -48,7 +48,7 @@ class UserInfoWidget extends StatelessWidget {
                             width: 5,
                           ),
                           const Icon(
-                            Icons.send,
+                            Icons.telegram,
                             size: 15,
                             color: Colors.white,
                           ),

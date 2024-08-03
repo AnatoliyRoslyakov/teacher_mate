@@ -1,5 +1,6 @@
 import 'package:calendar/calendar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:teacher_mate/core/models/request/student_delete_request.dart';
 import 'package:teacher_mate/core/models/request/student_request.dart';
 import 'package:teacher_mate/src/repository/student_repository/student_repository.dart';
 
@@ -36,7 +37,15 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
   }
 
   Future<void> _update(
-      StudentUpdateEvent event, Emitter<StudentState> emitter) async {}
+      StudentUpdateEvent event, Emitter<StudentState> emitter) async {
+    await studentRepository.updateStudent(
+        [StudentRequest(id: event.id, name: event.name, price: event.price)]);
+    add(const StudentReadEvent());
+  }
+
   Future<void> _delete(
-      StudentDeleteEvent event, Emitter<StudentState> emitter) async {}
+      StudentDeleteEvent event, Emitter<StudentState> emitter) async {
+    await studentRepository.deleteStudent(StudentDeleteRequest(id: event.id));
+    add(const StudentReadEvent());
+  }
 }

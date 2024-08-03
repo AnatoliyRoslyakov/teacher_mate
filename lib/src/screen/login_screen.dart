@@ -3,16 +3,23 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:teacher_mate/src/bloc/auth_bloc/auth_bloc.dart';
 import 'package:teacher_mate/src/bloc/config_bloc/config_bloc.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:teacher_mate/src/util/url_util.dart';
+import 'package:teacher_mate/src/widgets/shared/app_button.dart';
 
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:teacher_mate/src/widgets/shared/text_form_field_widget.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
+
   @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  @override
+  String code = '';
   Widget build(BuildContext context) {
-    final showKeyboard = MediaQuery.of(context).viewInsets.bottom > 0;
     return BlocListener<ConfigBloc, ConfigState>(
       listener: (context, state) {
         log(state.isConnected.toString());
@@ -28,93 +35,94 @@ class LoginScreen extends StatelessWidget {
             onTap: () {
               FocusScope.of(context).unfocus();
             },
-            child: Center(
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const SizedBox(
-                      height: 126,
-                    ),
-                    const SizedBox(
-                      height: 76,
-                    ),
-                    const Text(
-                      'Введи код',
-                    ),
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    SizedBox(
-                      height: 40,
-                      width: 240,
-                      child: TextFormField(
-                        onChanged: (value) {
-                          context
-                              .read<AuthBloc>()
-                              .add(AuthUpdateCodeEvent(value));
-                        },
-                        keyboardType: TextInputType.text,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.singleLineFormatter
-                        ],
-                        decoration: InputDecoration(
-                          filled: true,
-                          // fillColor: context.colors.secondaryElement,
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          contentPadding:
-                              const EdgeInsets.only(left: 15, right: 15),
-                          // hintText: context.localization.loginField,
-                          // hintStyle: AppTextStyle.appButton1.copyWith(
-                          //   color: context.colors.white,
-                          //   fontSize: 15,
-                          // ),
-                          enabledBorder: const OutlineInputBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
-                            borderSide: BorderSide.none,
-                          ),
+            child: Scaffold(
+              backgroundColor: Colors.white,
+              body: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 400),
+                    child: Center(
+                      child: SingleChildScrollView(
+                        physics: const BouncingScrollPhysics(),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            RichText(
+                                textDirection: TextDirection.ltr,
+                                text: const TextSpan(
+                                  text: 'Teacher',
+                                  style: TextStyle(
+                                      color: Colors.amber,
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.w700),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text: 'Mate',
+                                      style: TextStyle(
+                                          color: Colors.black54,
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.w700),
+                                    ),
+                                  ],
+                                )),
+                            const SizedBox(
+                              height: 40,
+                            ),
+                            const Text(
+                              'Enter the code',
+                              style: TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.w600),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            SizedBox(
+                                child: TextFormFieldWidget(
+                                    textAlign: TextAlign.center,
+                                    lines: (1, 1),
+                                    onChange: (text) {
+                                      setState(() {
+                                        code = text;
+                                      });
+                                      context
+                                          .read<AuthBloc>()
+                                          .add(AuthUpdateCodeEvent(text));
+                                      return code;
+                                    },
+                                    hintText: 'code')),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            SizedBox(
+                              width: 150,
+                              child: AppButton.settings(
+                                label: 'Get the code',
+                                iconColor: Colors.blue,
+                                icon: Icons.telegram,
+                                onTap: () {
+                                  UrlUtils.openBot();
+                                },
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            AppButton.base(
+                              label: 'Continue',
+                              onTap: code.isNotEmpty
+                                  ? () {
+                                      context
+                                          .read<AuthBloc>()
+                                          .add(const AuthGetTokenEvent());
+                                    }
+                                  : null,
+                            ),
+                          ],
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    SizedBox(
-                        height: 32,
-                        width: 120,
-                        child: ElevatedButton(
-                            onPressed: () {
-                              UrlUtils.openBot();
-                            },
-                            child: const Text('go'))
-                        // SecondaryButton.normal(
-                        //   label: context.localization.loginGetCode,
-                        //   fontSize: 12,
-                        //   onTap: () {
-                        //     UrlUtils.openBot();
-                        //   },
-                        // ),
-                        ),
-                    if (!showKeyboard) ...[
-                      const SizedBox(
-                        height: 108,
-                      ),
-                      SizedBox(
-                          height: 40,
-                          width: 208,
-                          child: ElevatedButton(
-                              onPressed: () {
-                                context
-                                    .read<AuthBloc>()
-                                    .add(const AuthGetTokenEvent());
-                              },
-                              child: const Text('next'))),
-                    ]
-                  ],
+                  ),
                 ),
               ),
             ),
@@ -186,16 +194,4 @@ class NoInternetConnectionDialog extends StatelessWidget {
           ),
         ),
       );
-}
-
-class UrlUtils {
-  // tgBot: tg:resolve?domain=finance_auth_bot
-// tgDownload: https://play.google.com/store/apps/details?id=org.telegram.messenger
-
-  static Future<void> openBot() async {
-    final Uri url = Uri.parse('tg://resolve?domain=teacher_mate_bot');
-    if (!await launchUrl(url)) {
-      throw Exception('Could not launch $url');
-    }
-  }
 }

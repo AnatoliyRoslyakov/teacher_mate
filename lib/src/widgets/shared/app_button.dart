@@ -108,7 +108,7 @@ class AppButton extends StatelessWidget {
                     ),
                     DecoratedBox(
                       decoration: BoxDecoration(
-                        color: const Color.fromARGB(255, 237, 237, 242),
+                        color: const Color.fromARGB(255, 242, 242, 242),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Padding(

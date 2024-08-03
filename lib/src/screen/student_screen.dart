@@ -13,7 +13,9 @@ class StudentScreen extends StatelessWidget {
         title: 'My students list',
         child: Padding(
           padding: EdgeInsets.only(top: 20, right: 20, left: 20, bottom: 40),
-          child: StudentListWidget(),
+          child: StudentListWidget(
+            mobile: true,
+          ),
         ));
   }
 }

@@ -33,36 +33,40 @@ class _DrawerWebWidgetState extends State<DrawerWebWidget> {
                 onTap: () {
                   context.read<AuthBloc>().add(const AuthEvent.logout());
                 },
-                child: SizedBox(
-                  height: 50,
-                  child: Row(
-                    children: [
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 237, 237, 242),
-                          borderRadius: BorderRadius.circular(6),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: SizedBox(
+                    height: 50,
+                    child: Row(
+                      children: [
+                        const SizedBox(
+                          width: 10,
                         ),
-                        child: const Padding(
-                          padding: EdgeInsets.all(5.0),
-                          child: Icon(
-                            Icons.logout,
-                            size: 20,
-                            color: Colors.red,
+                        DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 242, 242, 242),
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: const Padding(
+                            padding: EdgeInsets.all(5.0),
+                            child: Icon(
+                              Icons.logout,
+                              size: 20,
+                              color: Colors.red,
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      const Text(
-                        'Logout',
-                        style: const TextStyle(
-                            color: Colors.black87, fontWeight: FontWeight.w500),
-                      ),
-                    ],
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        const Text(
+                          'Logout',
+                          style: TextStyle(
+                              color: Colors.black87,
+                              fontWeight: FontWeight.w500),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -71,7 +75,7 @@ class _DrawerWebWidgetState extends State<DrawerWebWidget> {
                     .copyWith(dividerColor: Colors.transparent),
                 child: ExpansionTile(
                   initiallyExpanded: true,
-                  tilePadding: EdgeInsets.zero,
+                  tilePadding: const EdgeInsets.symmetric(horizontal: 10),
                   title: Row(
                     children: [
                       const SizedBox(
@@ -79,7 +83,7 @@ class _DrawerWebWidgetState extends State<DrawerWebWidget> {
                       ),
                       DecoratedBox(
                         decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 237, 237, 242),
+                          color: const Color.fromARGB(255, 242, 242, 242),
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: const Padding(
@@ -96,7 +100,7 @@ class _DrawerWebWidgetState extends State<DrawerWebWidget> {
                       ),
                       const Text(
                         'Settings',
-                        style: const TextStyle(
+                        style: TextStyle(
                             color: Colors.black87, fontWeight: FontWeight.w500),
                       ),
                     ],
@@ -117,7 +121,7 @@ class _DrawerWebWidgetState extends State<DrawerWebWidget> {
         Theme(
           data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
           child: ExpansionTile(
-            tilePadding: EdgeInsets.zero,
+            tilePadding: const EdgeInsets.symmetric(horizontal: 10),
             title: Row(
               children: [
                 const SizedBox(
@@ -125,7 +129,7 @@ class _DrawerWebWidgetState extends State<DrawerWebWidget> {
                 ),
                 DecoratedBox(
                   decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 237, 237, 242),
+                    color: const Color.fromARGB(255, 242, 242, 242),
                     borderRadius: BorderRadius.circular(6),
                   ),
                   child: const Padding(

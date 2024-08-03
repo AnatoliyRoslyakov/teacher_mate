@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:teacher_mate/src/bloc/student_bloc/student_bloc.dart';
+import 'package:teacher_mate/src/pages/web/create_student_dialog.dart';
+import 'package:teacher_mate/src/router/app_router.dart';
 
 class StudentListWidget extends StatefulWidget {
   final bool mobile;
@@ -140,8 +143,31 @@ class _StudentListWidgetState extends State<StudentListWidget> {
                                         ),
                                       )
                                     : InkWell(
-                                        onLongPress: () {
-                                          showBlurredDialog(context);
+                                        onTap: () {
+                                          widget.mobile
+                                              ? context.push(
+                                                  MobileRoutes
+                                                      .createStudent.path,
+                                                  extra: {
+                                                      'edit': true,
+                                                      'id': stateStudent
+                                                          .studentEntity[i].id,
+                                                      'name': stateStudent
+                                                          .studentEntity[i]
+                                                          .name,
+                                                      'price': stateStudent
+                                                          .studentEntity[i]
+                                                          .price
+                                                    })
+                                              : createStudentDialog(
+                                                  context: context,
+                                                  edit: true,
+                                                  id: stateStudent
+                                                      .studentEntity[i].id,
+                                                  name: stateStudent
+                                                      .studentEntity[i].name,
+                                                  price: stateStudent
+                                                      .studentEntity[i].price);
                                         },
                                         child: Container(
                                           height: 50,
@@ -199,7 +225,10 @@ class _StudentListWidgetState extends State<StudentListWidget> {
           ),
           InkWell(
               onTap: () {
-                showBlurredDialog(context);
+                widget.mobile
+                    ? context.push(MobileRoutes.createStudent.path,
+                        extra: {'edit': false, 'id': 0, 'name': '', 'price': 0})
+                    : createStudentDialog(context: context);
               },
               child: Container(
                   height: widget.selectStudent == null ? 50 : 40,
@@ -215,89 +244,4 @@ class _StudentListWidgetState extends State<StudentListWidget> {
       ),
     );
   }
-}
-
-void showBlurredDialog(
-  BuildContext context,
-) {
-  bool isValid = true;
-  String name = '';
-  int price = 0;
-
-  showDialog(
-    context: context,
-    barrierDismissible: true,
-    builder: (BuildContext context) {
-      return StatefulBuilder(
-        builder: (context, setState) {
-          isValid = name.isNotEmpty && price >= 0;
-          return Dialog(
-            insetAnimationCurve: Curves.linear,
-            insetAnimationDuration: const Duration(milliseconds: 500),
-            child: Center(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(20.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      const Text('Student', style: TextStyle(fontSize: 24)),
-                      const SizedBox(height: 20),
-                      TextField(
-                        onChanged: (value) {
-                          setState(() {
-                            name = value;
-                          });
-                        },
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Enter a name',
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      const Text('Lesson amount',
-                          style: TextStyle(fontSize: 24)),
-                      const SizedBox(height: 20),
-                      TextField(
-                        onChanged: (value) {
-                          setState(() {
-                            price = int.tryParse(value) ?? 0;
-                          });
-                        },
-                        decoration: const InputDecoration(
-                          border: OutlineInputBorder(),
-                          labelText: 'Enter the amount',
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      ElevatedButton(
-                        onPressed: () {
-                          if (isValid) {
-                            context
-                                .read<StudentBloc>()
-                                .add(StudentEvent.create(name, price));
-                            Navigator.of(context).pop();
-                          }
-                        },
-                        child: Text(
-                          'Сохранить',
-                          style: TextStyle(
-                              color: isValid ? Colors.deepPurple : Colors.grey),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          );
-        },
-      );
-    },
-  );
 }

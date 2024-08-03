@@ -8,12 +8,14 @@ part of 'student_request.dart';
 
 StudentRequest _$StudentRequestFromJson(Map<String, dynamic> json) =>
     StudentRequest(
+      id: (json['id'] as num?)?.toInt() ?? 0,
       name: json['name'] as String,
       price: (json['price'] as num).toInt(),
     );
 
 Map<String, dynamic> _$StudentRequestToJson(StudentRequest instance) =>
     <String, dynamic>{
+      'id': instance.id,
       'name': instance.name,
       'price': instance.price,
     };
