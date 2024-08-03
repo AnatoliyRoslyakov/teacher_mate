@@ -17,7 +17,7 @@ class TextFormFieldWidget extends StatelessWidget {
     this.maxSym = 1000,
     required this.hintText,
     this.prefixIcon,
-    this.textAlign = TextAlign.center,
+    this.textAlign = TextAlign.start,
   });
 
   @override
