@@ -1,10 +1,11 @@
+import 'dart:async';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 sealed class ConfigEvent {
   const ConfigEvent();
 
-  const factory ConfigEvent.inint() = ConfigInitEvent;
+  const factory ConfigEvent.init() = ConfigInitEvent;
 }
 
 class ConfigInitEvent extends ConfigEvent {
@@ -13,7 +14,9 @@ class ConfigInitEvent extends ConfigEvent {
 
 class ConfigState {
   final bool isConnected;
+
   const ConfigState({required this.isConnected});
+
   factory ConfigState.initial() => const ConfigState(isConnected: true);
 
   ConfigState copyWith({
@@ -26,13 +29,25 @@ class ConfigState {
 }
 
 class ConfigBloc extends Bloc<ConfigEvent, ConfigState> {
+  late StreamSubscription<List<ConnectivityResult>> subscription;
+
   ConfigBloc() : super(ConfigState.initial()) {
     on<ConfigInitEvent>(_init);
+    add(const ConfigInitEvent());
   }
 
   Future<void> _init(
       ConfigInitEvent event, Emitter<ConfigState> emitter) async {
-    final bool isConnected = await InternetConnectionChecker().hasConnection;
-    emitter(state.copyWith(isConnected: isConnected));
+    return emitter.forEach(Connectivity().onConnectivityChanged,
+        onData: (data) {
+      final isConnected = !data.contains(ConnectivityResult.none);
+      return state.copyWith(isConnected: isConnected);
+    });
+  }
+
+  @override
+  Future<void> close() {
+    subscription.cancel();
+    return super.close();
   }
 }

@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:teacher_mate/src/bloc/auth_bloc/auth_bloc.dart';
 import 'package:teacher_mate/src/bloc/config_bloc/config_bloc.dart';
@@ -140,11 +139,7 @@ void _showNointernatConnection(BuildContext context) {
     builder: (BuildContext context) {
       return const NoInternetConnectionDialog();
     },
-  ).then((value) {
-    Future<void>.delayed(const Duration(seconds: 1)).then((value) {
-      context.read<ConfigBloc>().add(const ConfigInitEvent());
-    });
-  });
+  );
 }
 
 class NoInternetConnectionDialog extends StatelessWidget {
@@ -154,6 +149,7 @@ class NoInternetConnectionDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Dialog(
+        backgroundColor: Colors.white,
         insetPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 26),
         shadowColor: Colors.transparent,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
@@ -180,13 +176,11 @@ class NoInternetConnectionDialog extends StatelessWidget {
                 const SizedBox(
                   height: 24,
                 ),
-                ElevatedButton(
-                  onPressed: () {
+                AppButton.base(
+                  label: 'Try again',
+                  onTap: () {
                     Navigator.pop(context, true);
                   },
-                  child: const Text(
-                    'Try again',
-                  ),
                 )
               ],
             ),

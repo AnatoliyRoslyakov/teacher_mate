@@ -54,7 +54,7 @@ List<BlocProvider> _globalBlocs() {
     ),
     BlocProvider<ConfigBloc>(
       create: (context) =>
-          injector.get<ConfigBloc>()..add(const ConfigEvent.inint()),
+          injector.get<ConfigBloc>()..add(const ConfigEvent.init()),
     ),
     BlocProvider<LessonBloc>(
         create: (context) =>
