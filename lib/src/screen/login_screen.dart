@@ -17,12 +17,11 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  @override
   String code = '';
+  @override
   Widget build(BuildContext context) {
     return BlocListener<ConfigBloc, ConfigState>(
       listener: (context, state) {
-        log(state.isConnected.toString());
         if (!state.isConnected) {
           _showNointernatConnection(context);
           return;
@@ -80,14 +79,14 @@ class _LoginScreenState extends State<LoginScreen> {
                             SizedBox(
                                 child: TextFormFieldWidget(
                                     textAlign: TextAlign.center,
-                                    lines: (1, 1),
                                     onChange: (text) {
                                       setState(() {
                                         code = text;
                                       });
                                       context
                                           .read<AuthBloc>()
-                                          .add(AuthUpdateCodeEvent(text));
+                                          .add(AuthUpdateCodeEvent(code));
+                                      log(text);
                                       return code;
                                     },
                                     hintText: 'code')),

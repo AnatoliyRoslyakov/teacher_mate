@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:teacher_mate/core/api/auth_interceptors.dart';
 import 'package:teacher_mate/core/api/dio_auth_action.dart';
-import 'package:teacher_mate/core/models/response/auth_response.dart';
 import 'package:teacher_mate/src/repository/auth_repository/auth_repository.dart';
 
 sealed class AuthEvent {
@@ -81,6 +80,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState>
     emitter(
       AuthState.notAuthed(),
     );
+
     await authRepository.logout();
   }
 
@@ -88,8 +88,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState>
       AuthGetTokenEvent event, Emitter<AuthState> emitter) async {
     try {
       String token = await authRepository.login(code: state.code);
-      log(token);
-      log(state.code);
       emitter(state.copyWith(token: token));
     } catch (e) {
       emitter(
