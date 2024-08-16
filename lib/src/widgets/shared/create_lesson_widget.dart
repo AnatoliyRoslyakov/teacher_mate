@@ -17,6 +17,7 @@ class CreateLessonWidget extends StatefulWidget {
   final int selectedType;
   final int studentId;
   final int lessonId;
+  final bool mobile;
   const CreateLessonWidget(
       {super.key,
       required this.initialStartTime,
@@ -25,7 +26,8 @@ class CreateLessonWidget extends StatefulWidget {
       required this.description,
       required this.selectedType,
       required this.studentId,
-      required this.lessonId});
+      required this.lessonId,
+      this.mobile = false});
 
   @override
   State<CreateLessonWidget> createState() => _CreateLessonWidgetState();
@@ -205,6 +207,7 @@ class _CreateLessonWidgetState extends State<CreateLessonWidget> {
                   height: 16,
                 ),
                 StudentListWidget(
+                  mobile: widget.mobile,
                   height: 200,
                   width: 400,
                   selectStudent: selectStudent,

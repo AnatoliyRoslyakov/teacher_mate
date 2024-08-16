@@ -11,12 +11,14 @@ class CreateStudentWidget extends StatefulWidget {
   final String name;
   final bool edit;
   final int price;
-  const CreateStudentWidget(
-      {super.key,
-      required this.id,
-      required this.name,
-      required this.edit,
-      required this.price});
+
+  const CreateStudentWidget({
+    super.key,
+    required this.id,
+    required this.name,
+    required this.edit,
+    required this.price,
+  });
 
   @override
   State<CreateStudentWidget> createState() => _CreateStudentWidgetState();

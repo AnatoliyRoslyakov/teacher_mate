@@ -25,6 +25,7 @@ class CreateLessonScreen extends StatelessWidget {
     return ModalBottomSheetScaffoldWrapper(
         title: edit ? 'Edit lesson' : 'Create lesson',
         child: CreateLessonWidget(
+          mobile: true,
           initialStartTime: initialStartTime,
           initialEndTime: initialEndTime,
           edit: edit,
