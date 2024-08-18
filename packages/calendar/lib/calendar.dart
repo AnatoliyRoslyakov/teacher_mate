@@ -14,6 +14,9 @@ class Calendar extends StatefulWidget {
   final bool startOfWeek;
   final bool threeDays;
   final bool mobile;
+  final DateTime currentTime;
+  final bool isLoading;
+  final void Function(DateTime currentTime) getCurrentTime;
   final void Function(
       {required BuildContext context,
       required DateTime initialStartTime,
@@ -36,9 +39,12 @@ class Calendar extends StatefulWidget {
     required this.student,
     required this.createLesson,
     required this.threeDays,
+    required this.currentTime,
+    required this.getCurrentTime,
+    required this.isLoading,
   });
   @override
-  _CalendarState createState() => _CalendarState();
+  State<Calendar> createState() => _CalendarState();
 }
 
 class _CalendarState extends State<Calendar> {
@@ -48,8 +54,7 @@ class _CalendarState extends State<Calendar> {
   ScrollController timeVerticalController = ScrollController();
   late ScrollController scrollController;
   bool? isAnimated = true;
-
-  DateTime currentTime = DateTime.now();
+  late DateTime currentTime;
 
   PageController _pageController = PageController();
   int _currentPage = 10000;
@@ -58,6 +63,7 @@ class _CalendarState extends State<Calendar> {
   @override
   void initState() {
     super.initState();
+    currentTime = widget.currentTime;
     final double initPosition = (DateTime.now().hour - widget.startHour) *
             2 *
             widget.minutesGrid *
@@ -95,18 +101,21 @@ class _CalendarState extends State<Calendar> {
     setState(() {
       currentTime = DateTime.now();
     });
+    widget.getCurrentTime.call(currentTime);
   }
 
   void prevWeek() {
     setState(() {
       currentTime = currentTime.subtract(Duration(days: widget.viewDay));
     });
+    widget.getCurrentTime.call(currentTime);
   }
 
   void nextWeek() {
     setState(() {
       currentTime = currentTime.add(Duration(days: widget.viewDay));
     });
+    widget.getCurrentTime.call(currentTime);
   }
 
   List<List<LessonEntity>> get lessonsData {
@@ -122,21 +131,8 @@ class _CalendarState extends State<Calendar> {
 
   @override
   Widget build(BuildContext context) {
-    // из-за этого идет задержка, пока виджеты полностью построятся
-
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   if (DateTime.now().hour > 13) {
-    //     scrollController.jumpTo(((DateTime.now().hour - widget.startHour) *
-    //             2 *
-    //             widget.minutesGrid *
-    //             (widget.minutesGrid == 1 ? 60 : 120)) -
-    //         60);
-    //   }
-    // });
-
     final startTime =
         widget.startOfWeek ? currentTime.startOfCurrentWeek() : currentTime;
-
     return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
       return Column(
@@ -219,6 +215,7 @@ class _CalendarState extends State<Calendar> {
                                     widget.viewDay,
                                     (index) => Expanded(
                                             child: CalendarGridSection(
+                                          isLoading: widget.isLoading,
                                           createLesson: widget.createLesson,
                                           mobile: widget.mobile,
                                           student: widget.student,

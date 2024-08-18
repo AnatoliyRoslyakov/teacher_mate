@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:calendar/calendar.dart';
 import 'package:calendar/src/event_card_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 //import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
 class CalendarGridSection extends StatefulWidget {
@@ -18,6 +19,7 @@ class CalendarGridSection extends StatefulWidget {
   final bool threeDays;
   final double size;
   final bool mobile;
+  final bool isLoading;
   final void Function(
       {required BuildContext context,
       required DateTime initialStartTime,
@@ -43,6 +45,7 @@ class CalendarGridSection extends StatefulWidget {
     required this.mobile,
     required this.createLesson,
     required this.threeDays,
+    required this.isLoading,
   });
 
   @override
@@ -138,21 +141,41 @@ class _CalendarGridSectionState extends State<CalendarGridSection> {
                       initialEndTime: endEvent,
                     );
                   },
-                  child: Container(
-                    width: double.infinity,
-                    height: widget.minutesGrid * 120,
-                    decoration: BoxDecoration(
-                        //сб и вс
-                        // color:  weekdayIndex == 6 || weekdayIndex == 7
-                        //     ? const Color.fromARGB(20, 0, 0, 0)
-                        //     : Colors.transparent,
-                        //прошедшие дни
-                        color: DateTime.now().millisecondsSinceEpoch >
-                                endEvent.millisecondsSinceEpoch
-                            ? const Color.fromARGB(10, 0, 0, 0)
-                            : null,
-                        border: Border.all(color: Colors.black12, width: 0.5)),
-                  ),
+                  child: widget.isLoading
+                      ? SizedBox(
+                          width: double.infinity,
+                          height: widget.minutesGrid * 120,
+                          child: Shimmer.fromColors(
+                            baseColor: Colors.grey,
+                            highlightColor: Colors.black,
+                            child: Container(
+                              width: double.infinity,
+                              height: widget.minutesGrid * 120,
+                              decoration: BoxDecoration(
+                                  color: DateTime.now().millisecondsSinceEpoch >
+                                          endEvent.millisecondsSinceEpoch
+                                      ? const Color.fromARGB(10, 0, 0, 0)
+                                      : null,
+                                  border: Border.all(
+                                      color: Colors.black12, width: 0.5)),
+                            ),
+                          ))
+                      : Container(
+                          width: double.infinity,
+                          height: widget.minutesGrid * 120,
+                          decoration: BoxDecoration(
+                              //сб и вс
+                              // color:  weekdayIndex == 6 || weekdayIndex == 7
+                              //     ? const Color.fromARGB(20, 0, 0, 0)
+                              //     : Colors.transparent,
+                              //прошедшие дни
+                              color: DateTime.now().millisecondsSinceEpoch >
+                                      endEvent.millisecondsSinceEpoch
+                                  ? const Color.fromARGB(10, 0, 0, 0)
+                                  : null,
+                              border: Border.all(
+                                  color: Colors.black12, width: 0.5)),
+                        ),
                 );
               }),
             ),

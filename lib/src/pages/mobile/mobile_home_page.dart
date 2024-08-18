@@ -39,6 +39,11 @@ class _MobileHomePageState extends State<MobileHomePage>
     });
   }
 
+  DateTime calendarTime = DateTime.now();
+  void getCurrentTime(DateTime currentTime) {
+    calendarTime = currentTime;
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<ConfigBloc, ConfigState>(
@@ -64,21 +69,22 @@ class _MobileHomePageState extends State<MobileHomePage>
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      state.isLoading
-                          ? const Center(child: CircularProgressIndicator())
-                          : Expanded(
-                              child: Calendar(
-                                  createLesson: createLessonPage,
-                                  mobile: true,
-                                  minutesGrid: settings.minutesGrid,
-                                  startHour: settings.startDay,
-                                  endHour: settings.endDay,
-                                  viewDay: settings.viewDays,
-                                  lessons: state.mapLessons,
-                                  student: stateStudent.studentEntity,
-                                  startOfWeek: settings.week,
-                                  threeDays: settings.three),
-                            ),
+                      Expanded(
+                        child: Calendar(
+                            isLoading: state.isLoading,
+                            currentTime: calendarTime,
+                            getCurrentTime: getCurrentTime,
+                            createLesson: createLessonPage,
+                            mobile: true,
+                            minutesGrid: settings.minutesGrid,
+                            startHour: settings.startDay,
+                            endHour: settings.endDay,
+                            viewDay: settings.viewDays,
+                            lessons: state.mapLessons,
+                            student: stateStudent.studentEntity,
+                            startOfWeek: settings.week,
+                            threeDays: settings.three),
+                      ),
                     ],
                   ),
                 ],

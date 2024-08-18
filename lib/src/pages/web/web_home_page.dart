@@ -17,6 +17,11 @@ class WebHomePage extends StatefulWidget {
 }
 
 class _WebHomePageState extends State<WebHomePage> {
+  DateTime calendarTime = DateTime.now();
+  void getCurrentTime(DateTime currentTime) {
+    calendarTime = currentTime;
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<LessonBloc, LessonState>(builder: (context, state) {
@@ -65,27 +70,27 @@ class _WebHomePageState extends State<WebHomePage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    state.isLoading
-                        ? const Center(child: CircularProgressIndicator())
-                        : Expanded(
-                            flex: 2,
-                            child: Center(
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.only(top: 20, left: 20),
-                                child: Calendar(
-                                    threeDays: settings.three,
-                                    createLesson: createLessonDialog,
-                                    minutesGrid: settings.minutesGrid,
-                                    startHour: settings.startDay,
-                                    endHour: settings.endDay,
-                                    viewDay: settings.viewDays,
-                                    lessons: state.mapLessons,
-                                    student: stateStudent.studentEntity,
-                                    startOfWeek: settings.week),
-                              ),
-                            ),
-                          ),
+                    Expanded(
+                      flex: 2,
+                      child: Center(
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 20, left: 20),
+                          child: Calendar(
+                              isLoading: state.isLoading,
+                              currentTime: calendarTime,
+                              getCurrentTime: getCurrentTime,
+                              threeDays: settings.three,
+                              createLesson: createLessonDialog,
+                              minutesGrid: settings.minutesGrid,
+                              startHour: settings.startDay,
+                              endHour: settings.endDay,
+                              viewDay: settings.viewDays,
+                              lessons: state.mapLessons,
+                              student: stateStudent.studentEntity,
+                              startOfWeek: settings.week),
+                        ),
+                      ),
+                    ),
                     const TogglePanelWidget()
                   ],
                 ),
