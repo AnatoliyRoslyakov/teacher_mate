@@ -16,7 +16,12 @@ class UserInfoWidget extends StatelessWidget {
         builder: (context, state) {
       return Container(
         height: mobile ? 170 : 100,
-        decoration: const BoxDecoration(color: Colors.amber),
+        decoration: BoxDecoration(
+            gradient: LinearGradient(colors: [
+              Colors.amber.withOpacity(1),
+              Colors.amber.withOpacity(0.4)
+            ]),
+            color: Colors.amber.withOpacity(1)),
         child: Padding(
           padding: EdgeInsets.only(top: mobile ? 100 : 30, left: 20),
           child: Column(

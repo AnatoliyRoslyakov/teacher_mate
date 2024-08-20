@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -16,12 +18,17 @@ class DrawerMobileWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const UserInfoWidget(),
+        ClipRRect(
+            clipBehavior: Clip.antiAlias,
+            child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 6.0, sigmaY: 6.0),
+                child: const UserInfoWidget())),
         Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
             children: [
               AppButton.settings(
+                  backgroundColor: Colors.white.withOpacity(0.4),
                   label: 'Calendar settings',
                   icon: Icons.settings,
                   onTap: () {
@@ -32,6 +39,7 @@ class DrawerMobileWidget extends StatelessWidget {
                 height: 10,
               ),
               AppButton.settings(
+                backgroundColor: Colors.white.withOpacity(0.4),
                 label: 'My students list',
                 icon: Icons.group,
                 onTap: () {
@@ -43,6 +51,7 @@ class DrawerMobileWidget extends StatelessWidget {
                 height: 10,
               ),
               AppButton.settings(
+                backgroundColor: Colors.white.withOpacity(0.4),
                 iconColor: Colors.red,
                 label: 'Logout',
                 icon: Icons.logout,

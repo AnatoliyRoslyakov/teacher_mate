@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 class ModalBottomSheetScaffoldWrapper extends StatelessWidget {
@@ -17,83 +19,90 @@ class ModalBottomSheetScaffoldWrapper extends StatelessWidget {
   final VoidCallback? firstOnPressed;
   final VoidCallback? secondOnPressed;
   @override
-  Widget build(BuildContext context) => Scaffold(
-        backgroundColor: Colors.white,
-        body: Column(
-          children: [
-            Center(
-              child: Column(
+  Widget build(BuildContext context) => ClipRRect(
+        clipBehavior: Clip.antiAlias,
+        child: BackdropFilter(
+            filter: ImageFilter.blur(
+                sigmaX: 20.0, sigmaY: 20.0, tileMode: TileMode.mirror),
+            child: Scaffold(
+              backgroundColor: Colors.white.withOpacity(0.7),
+              body: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 6),
-                    child: Container(
-                      width: 30,
-                      height: 4,
-                      clipBehavior: Clip.antiAlias,
-                      decoration: ShapeDecoration(
-                        color: const Color(0xFF989CAD),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(3),
-                        ),
-                      ),
-                    ),
-                  ),
-                  ConstrainedBox(
-                    constraints: const BoxConstraints(maxHeight: 50),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Row(
-                        children: [
-                          if (firstIcon != null)
-                            InkWell(
-                              onTap: firstOnPressed,
-                              child: SizedBox(
-                                height: 24,
-                                width: 24,
-                                child: FittedBox(
-                                  fit: BoxFit.cover,
-                                  child: firstIcon,
-                                ),
+                  Center(
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 6),
+                          child: Container(
+                            width: 30,
+                            height: 4,
+                            clipBehavior: Clip.antiAlias,
+                            decoration: ShapeDecoration(
+                              color: const Color(0xFF989CAD),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(3),
                               ),
-                            )
-                          else
-                            const SizedBox(
-                              width: 50,
-                              height: 50,
                             ),
-                          const Spacer(),
-                          Text(
-                            title,
-                            style: const TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.w600),
                           ),
-                          const Spacer(),
-                          if (secondIcon != null)
-                            InkWell(
-                              onTap: secondOnPressed,
-                              child: SizedBox(
-                                height: 24,
-                                width: 24,
-                                child: FittedBox(
-                                  fit: BoxFit.cover,
-                                  child: secondIcon,
+                        ),
+                        ConstrainedBox(
+                          constraints: const BoxConstraints(maxHeight: 50),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Row(
+                              children: [
+                                if (firstIcon != null)
+                                  InkWell(
+                                    onTap: firstOnPressed,
+                                    child: SizedBox(
+                                      height: 24,
+                                      width: 24,
+                                      child: FittedBox(
+                                        fit: BoxFit.cover,
+                                        child: firstIcon,
+                                      ),
+                                    ),
+                                  )
+                                else
+                                  const SizedBox(
+                                    width: 50,
+                                    height: 50,
+                                  ),
+                                const Spacer(),
+                                Text(
+                                  title,
+                                  style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w600),
                                 ),
-                              ),
-                            )
-                          else
-                            const SizedBox(
-                              width: 50,
-                              height: 50,
+                                const Spacer(),
+                                if (secondIcon != null)
+                                  InkWell(
+                                    onTap: secondOnPressed,
+                                    child: SizedBox(
+                                      height: 24,
+                                      width: 24,
+                                      child: FittedBox(
+                                        fit: BoxFit.cover,
+                                        child: secondIcon,
+                                      ),
+                                    ),
+                                  )
+                                else
+                                  const SizedBox(
+                                    width: 50,
+                                    height: 50,
+                                  ),
+                              ],
                             ),
-                        ],
-                      ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
+                  Expanded(child: child),
                 ],
               ),
-            ),
-            Expanded(child: child),
-          ],
-        ),
+            )),
       );
 }

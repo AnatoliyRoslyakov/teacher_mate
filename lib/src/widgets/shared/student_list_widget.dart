@@ -93,6 +93,10 @@ class _StudentListWidgetState extends State<StudentListWidget> {
                                           decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(8),
+                                              gradient: LinearGradient(colors: [
+                                                Colors.amber,
+                                                Colors.amber.withOpacity(0.5)
+                                              ]),
                                               color: studentId ==
                                                       stateStudent
                                                           .studentEntity[i].id
@@ -174,6 +178,10 @@ class _StudentListWidgetState extends State<StudentListWidget> {
                                           decoration: BoxDecoration(
                                               borderRadius:
                                                   BorderRadius.circular(8),
+                                              gradient: LinearGradient(colors: [
+                                                Colors.amber,
+                                                Colors.amber.withOpacity(0.7)
+                                              ]),
                                               color: Colors.amber),
                                           child: Padding(
                                             padding: const EdgeInsets.all(8.0),

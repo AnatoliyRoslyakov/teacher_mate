@@ -289,6 +289,7 @@ class _CreateLessonWidgetState extends State<CreateLessonWidget> {
                   : const SizedBox.shrink(),
               widget.edit
                   ? AppButton.icon(
+                      backgroundColor: Colors.transparent,
                       icon: Icons.delete,
                       iconColor: Colors.red,
                       onTap: () {

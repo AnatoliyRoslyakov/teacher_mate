@@ -65,6 +65,7 @@ class AppButton extends StatelessWidget {
     required IconData icon,
     required void Function()? onTap,
     Color iconColor = Colors.amber,
+    Color backgroundColor = Colors.white,
   }) {
     return AppButton(
       label: '',
@@ -72,7 +73,9 @@ class AppButton extends StatelessWidget {
       onTap: onTap,
       iconColor: iconColor,
       buttonStyle: ElevatedButton.styleFrom(
-        backgroundColor: Colors.white,
+        overlayColor: Colors.amber,
+        shadowColor: Colors.transparent,
+        backgroundColor: backgroundColor,
         padding: EdgeInsets.zero,
         minimumSize: const Size(50, 50),
         elevation: 0,

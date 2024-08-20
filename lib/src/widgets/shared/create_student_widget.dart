@@ -76,7 +76,10 @@ class _CreateStudentWidgetState extends State<CreateStudentWidget> {
                       onChange: (value) => '', // tg = value,
                     ),
                   ),
-                  AppButton.icon(icon: Icons.telegram, onTap: () {})
+                  AppButton.icon(
+                      backgroundColor: Colors.transparent,
+                      icon: Icons.telegram,
+                      onTap: () {})
                 ],
               ),
               const DividerTitleWidget(title: 'Price'),

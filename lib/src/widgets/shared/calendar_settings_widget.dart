@@ -85,7 +85,7 @@ class _CalendarSettingsWidgetState extends State<CalendarSettingsWidget> {
                   ),
                   Container(
                     decoration: BoxDecoration(
-                        border: Border.all(color: Colors.black12),
+                        border: Border.all(color: Colors.white),
                         borderRadius: BorderRadius.circular(12)),
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
@@ -100,8 +100,8 @@ class _CalendarSettingsWidgetState extends State<CalendarSettingsWidget> {
                                 context.read<SettingsBloc>().add(
                                     SettingsEvent.threeDays(threeDays: value));
                               }),
-                          const SizedBox(
-                            height: 8,
+                          const Divider(
+                            color: Colors.white,
                           ),
                           SettingsCardWidget2(
                               title: 'Week',
@@ -112,6 +112,9 @@ class _CalendarSettingsWidgetState extends State<CalendarSettingsWidget> {
                                     .read<SettingsBloc>()
                                     .add(SettingsEvent.week(week: value));
                               }),
+                          const Divider(
+                            color: Colors.white,
+                          ),
                           Padding(
                             padding: const EdgeInsets.only(left: 8, top: 12),
                             child: SettingsCardWidget(
@@ -178,11 +181,8 @@ class SettingsCardWidget2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 50,
-      decoration: BoxDecoration(
-          border: Border.all(color: Colors.black12),
-          borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(children: [
@@ -190,11 +190,21 @@ class SettingsCardWidget2 extends StatelessWidget {
           const SizedBox(width: 5),
           Text(title, style: const TextStyle(fontSize: 16)),
           const Spacer(),
-          Switch(
-            activeColor: Colors.white,
-            activeTrackColor: Colors.amber,
-            value: select,
-            onChanged: onChanged,
+          Theme(
+            data: ThemeData(
+              useMaterial3: true,
+            ).copyWith(
+              colorScheme:
+                  Theme.of(context).colorScheme.copyWith(outline: Colors.white),
+            ),
+            child: Switch(
+              inactiveThumbColor: Colors.white,
+              inactiveTrackColor: Colors.transparent,
+              activeColor: Colors.white,
+              activeTrackColor: Colors.amber,
+              value: select,
+              onChanged: onChanged,
+            ),
           ),
         ]),
       ),
@@ -265,7 +275,7 @@ class SettingsCardWidget extends StatelessWidget {
                   border: Border.all(
                     color: Colors.black12,
                   ),
-                  color: Colors.white,
+                  color: Colors.white.withOpacity(0.5),
                 ),
                 elevation: 0,
               ),
