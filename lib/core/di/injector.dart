@@ -14,14 +14,15 @@ import 'package:teacher_mate/src/repository/auth_repository/auth_repository.dart
 import 'package:teacher_mate/src/repository/lesson_repository/lesson_repository.dart';
 import 'package:teacher_mate/src/repository/student_repository/student_repository.dart';
 import 'package:teacher_mate/src/repository/user_details_repository/user_details_repository.dart';
+import 'package:teacher_mate/src/router/app_router.dart';
 
 final injector = GetIt.instance;
 
 Future<void> initInjector(IAppConfig config) async {
+  await _registerLibraries();
   await _registerApi(config);
   // await _registerUtils();
   // await _registerServices();
-  await _registerLibraries();
   await _registerRepositories();
   await _registerBloc();
 }
@@ -48,6 +49,10 @@ Future<void> _registerApi(IAppConfig config) async {
     ),
   );
 }
+
+// Future<void> _registerUtils() async {
+//   injector.registerSingleton<AppRouter>(AppRouter(sharedPreferences: injector.get()));
+// }
 
 Future<void> _registerRepositories() async {
   injector.registerSingleton<ILessonRepository>(

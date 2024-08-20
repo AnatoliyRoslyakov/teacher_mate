@@ -1,15 +1,23 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:teacher_mate/src/pages/mobile/cupertino_modal_sheet_page.dart';
 import 'package:teacher_mate/src/screen/create_lesson_screen.dart';
 import 'package:teacher_mate/src/screen/create_student_screen.dart';
 import 'package:teacher_mate/src/screen/home_screen.dart';
-import 'package:collection/collection.dart';
+import 'package:teacher_mate/src/screen/intro_screen.dart';
 import 'package:teacher_mate/src/screen/login_screen.dart';
 import 'package:teacher_mate/src/screen/settings_screen.dart';
 import 'package:teacher_mate/src/screen/student_screen.dart';
+import 'package:teacher_mate/src/screen/welcom_screen.dart';
 
 class AppRouter {
+  final SharedPreferences sharedPreferences;
+  AppRouter({
+    required this.sharedPreferences,
+  });
   static final GlobalKey<NavigatorState> rootNavigatorKey =
       GlobalKey<NavigatorState>();
 
@@ -18,7 +26,7 @@ class AppRouter {
 
   GoRouter router() {
     return GoRouter(
-      initialLocation: MobileRoutes.login.path,
+      initialLocation: MobileRoutes.welcom.path,
       navigatorKey: rootNavigatorKey,
       routes: <RouteBase>[
         GoRoute(
@@ -87,6 +95,20 @@ class AppRouter {
           },
         ),
         GoRoute(
+          name: MobileRoutes.intro.name,
+          path: MobileRoutes.intro.path,
+          builder: (BuildContext context, GoRouterState state) {
+            return const IntroScreen();
+          },
+        ),
+        GoRoute(
+          name: MobileRoutes.welcom.name,
+          path: MobileRoutes.welcom.path,
+          builder: (BuildContext context, GoRouterState state) {
+            return const WelcomScreen();
+          },
+        ),
+        GoRoute(
           name: MobileRoutes.login.name,
           path: MobileRoutes.login.path,
           builder: (BuildContext context, GoRouterState state) {
@@ -104,6 +126,8 @@ enum MobileRoutes {
   settings,
   students,
   createStudent,
+  intro,
+  welcom,
   home;
 
   static MobileRoutes? fromName(String? name) {

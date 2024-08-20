@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:teacher_mate/core/di/injector.dart';
 import 'package:teacher_mate/src/bloc/auth_bloc/auth_bloc.dart';
 import 'package:teacher_mate/src/bloc/config_bloc/config_bloc.dart';
@@ -26,7 +29,8 @@ class App extends StatefulWidget {
   State<App> createState() => _AppState();
 }
 
-final GoRouter router = AppRouter().router();
+final GoRouter router =
+    AppRouter(sharedPreferences: injector.get<SharedPreferences>()).router();
 
 class _AppState extends State<App> {
   @override
@@ -75,9 +79,15 @@ List<BlocListener> _globalListeners() {
   return [
     BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
+        log(state.isFirstStart.toString());
         if (state.token.isNotEmpty) {
           AppRouter.rootNavigatorKey.currentContext
               ?.goNamed(MobileRoutes.home.name);
+          return;
+        } else if (state.isFirstStart) {
+          AppRouter.rootNavigatorKey.currentContext
+              ?.goNamed(MobileRoutes.intro.name);
+          return;
         } else {
           AppRouter.rootNavigatorKey.currentContext
               ?.goNamed(MobileRoutes.login.name);

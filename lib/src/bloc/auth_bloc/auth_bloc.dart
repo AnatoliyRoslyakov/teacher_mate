@@ -38,17 +38,25 @@ class AuthUpdateCodeEvent extends AuthEvent {
 class AuthState {
   final String token;
   final String code;
-  const AuthState({required this.code, required this.token});
+  final bool isFirstStart;
+  const AuthState(
+      {required this.isFirstStart, required this.code, required this.token});
 
-  factory AuthState.notAuthed() => const AuthState(code: '', token: '');
+  factory AuthState.notAuthed() => const AuthState(
+        isFirstStart: false,
+        code: '',
+        token: '',
+      );
 
   AuthState copyWith({
     String? token,
     String? code,
+    bool? isFirstStart,
   }) {
     return AuthState(
       token: token ?? this.token,
       code: code ?? this.code,
+      isFirstStart: isFirstStart ?? this.isFirstStart,
     );
   }
 }
@@ -68,11 +76,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState>
 
   Future<void> _init(AuthInitEvent event, Emitter<AuthState> emitter) async {
     String token = await authRepository.checkAuth();
+    bool firstStart = await authRepository.checkFirstLaunch();
     if (token.isNotEmpty) {
-      emitter(state.copyWith(token: token));
+      emitter(state.copyWith(token: token, isFirstStart: false));
       return;
     }
-    emitter(AuthState.notAuthed());
+    emitter(state.copyWith(isFirstStart: firstStart));
   }
 
   Future<void> _logout(
@@ -88,7 +97,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState>
       AuthGetTokenEvent event, Emitter<AuthState> emitter) async {
     try {
       String token = await authRepository.login(code: state.code);
-      emitter(state.copyWith(token: token));
+      emitter(state.copyWith(token: token, isFirstStart: false));
     } catch (e) {
       emitter(
         AuthState.notAuthed(),
@@ -98,7 +107,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState>
 
   Future<void> _updateCode(
       AuthUpdateCodeEvent event, Emitter<AuthState> emitter) async {
-    emitter(state.copyWith(code: event.code));
+    emitter(state.copyWith(code: event.code, isFirstStart: false));
   }
 
   @override

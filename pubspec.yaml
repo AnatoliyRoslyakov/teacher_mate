@@ -35,6 +35,9 @@ dependencies:
   flutter_staggered_animations: ^1.1.1
   internet_connection_checker: ^1.0.0+1
   connectivity_plus: ^6.0.4
+  carousel_slider: ^5.0.0
+  step_progress_indicator: ^1.0.2
+  flutter_native_splash: ^2.4.1
 
 dev_dependencies:
   flutter_test:
