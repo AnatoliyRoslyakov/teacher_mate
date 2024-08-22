@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -40,8 +41,8 @@ class ConfigBloc extends Bloc<ConfigEvent, ConfigState> {
       ConfigInitEvent event, Emitter<ConfigState> emitter) async {
     return emitter.forEach(Connectivity().onConnectivityChanged,
         onData: (data) {
-      final isConnected = !data.contains(ConnectivityResult.none);
-      return state.copyWith(isConnected: isConnected);
+      final isConnected = data.contains(ConnectivityResult.none);
+      return state.copyWith(isConnected: !isConnected);
     });
   }
 

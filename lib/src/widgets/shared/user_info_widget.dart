@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:teacher_mate/src/bloc/user_details_bloc/user_details_bloc.dart';
+import 'package:teacher_mate/src/theme/app_text_style.dart';
 
 class UserInfoWidget extends StatelessWidget {
   final bool mobile;
@@ -39,15 +40,13 @@ class UserInfoWidget extends StatelessWidget {
                     children: [
                       Text(
                         state.name,
-                        style: const TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.w600),
+                        style: AppTextStyle.b7f24,
                       ),
                       Row(
                         children: [
                           Text(
                             state.tgName,
-                            style: const TextStyle(
-                                fontSize: 12, fontWeight: FontWeight.w300),
+                            style: AppTextStyle.b3f12,
                           ),
                           const SizedBox(
                             width: 5,

@@ -20,14 +20,14 @@ class LessonBloc extends Bloc<LessonEvent, LessonState> {
 // создание урока
   Future<void> _create(
       LessonCreateEvent event, Emitter<LessonState> emitter) async {
-    await lessonRepository.addLesson([
-      LessonRequest(
-          description: event.description,
-          studentId: event.studentId,
-          start: event.start ~/ 1000,
-          end: event.end ~/ 1000,
-          type: event.type)
-    ]);
+    await lessonRepository.addLesson(List.generate(
+        event.generate ? 4 : 1,
+        (i) => LessonRequest(
+            description: event.description,
+            studentId: event.studentId,
+            start: (event.start + i * 7 * Duration.millisecondsPerDay) ~/ 1000,
+            end: (event.end + i * 7 * Duration.millisecondsPerDay) ~/ 1000,
+            type: event.type)));
     add(const LessonReadEvent());
   }
 

@@ -20,6 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<ConfigBloc, ConfigState>(
+      listenWhen: (p, c) => p.isConnected != c.isConnected,
       listener: (context, state) {
         if (!state.isConnected) {
           _showNointernatConnection(context);
@@ -179,7 +180,9 @@ class NoInternetConnectionDialog extends StatelessWidget {
                 AppButton.base(
                   label: 'Try again',
                   onTap: () {
-                    Navigator.pop(context, true);
+                    Navigator.pop(
+                      context,
+                    );
                   },
                 )
               ],

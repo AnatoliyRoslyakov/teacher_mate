@@ -7,7 +7,7 @@ import 'package:step_progress_indicator/step_progress_indicator.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'dart:math';
 
-import 'package:teacher_mate/src/router/app_router.dart';
+import 'package:teacher_mate/core/router/app_router.dart';
 
 class IntroScreen extends StatelessWidget {
   const IntroScreen({super.key});

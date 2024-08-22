@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:teacher_mate/src/theme/app_text_style.dart';
 
 class TextFormFieldWidget extends StatelessWidget {
   final String Function(String text) onChange;
@@ -23,6 +24,7 @@ class TextFormFieldWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      style: AppTextStyle.b4f15,
       textAlign: textAlign,
       initialValue: initValue,
       inputFormatters: [
@@ -41,7 +43,7 @@ class TextFormFieldWidget extends StatelessWidget {
         prefixIcon:
             prefixIcon != null ? Icon(prefixIcon, color: Colors.grey) : null,
         hintText: hintText,
-        hintStyle: const TextStyle(fontWeight: FontWeight.w400),
+        hintStyle: AppTextStyle.b4f15.copyWith(color: Colors.grey),
         isDense: true,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 14,

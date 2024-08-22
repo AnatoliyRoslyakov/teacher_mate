@@ -6,7 +6,7 @@ import 'package:teacher_mate/src/bloc/config_bloc/config_bloc.dart';
 import 'package:teacher_mate/src/bloc/lesson_bloc/lesson_bloc.dart';
 import 'package:teacher_mate/src/bloc/settings_bloc/settings_bloc.dart';
 import 'package:teacher_mate/src/bloc/student_bloc/student_bloc.dart';
-import 'package:teacher_mate/src/router/app_router.dart';
+import 'package:teacher_mate/core/router/app_router.dart';
 
 class MobileHomePage extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;

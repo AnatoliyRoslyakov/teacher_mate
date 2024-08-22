@@ -3,12 +3,14 @@ part of 'lesson_bloc.dart';
 sealed class LessonEvent {
   const LessonEvent();
 
-  const factory LessonEvent.create(
-      {required int start,
-      required int end,
-      required int type,
-      required int studentId,
-      required String description}) = LessonCreateEvent;
+  const factory LessonEvent.create({
+    required int start,
+    required int end,
+    required int type,
+    required int studentId,
+    required String description,
+    required bool generate,
+  }) = LessonCreateEvent;
 
   const factory LessonEvent.read() = LessonReadEvent;
 
@@ -29,12 +31,14 @@ class LessonCreateEvent extends LessonEvent {
   final int type;
   final int studentId;
   final String description;
+  final bool generate;
   const LessonCreateEvent({
     required this.start,
     required this.end,
     required this.type,
     required this.studentId,
     required this.description,
+    required this.generate,
   });
 }
 

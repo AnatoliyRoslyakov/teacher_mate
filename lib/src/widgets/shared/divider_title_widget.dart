@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:teacher_mate/src/theme/app_text_style.dart';
 
 class DividerTitleWidget extends StatelessWidget {
   final String title;
@@ -17,6 +18,7 @@ class DividerTitleWidget extends StatelessWidget {
         const Divider(),
         Text(
           title,
+          style: AppTextStyle.b4f12,
         ),
         SizedBox(
           height: height,

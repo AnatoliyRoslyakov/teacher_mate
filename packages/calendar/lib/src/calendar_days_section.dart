@@ -1,4 +1,5 @@
 import 'package:calendar/calendar.dart';
+import 'package:calendar/src/calendar_text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -24,15 +25,10 @@ class CalendarDaysSection extends StatelessWidget {
               SizedBox(
                 height: 40,
                 width: 40,
-                child: Padding(
-                  padding: const EdgeInsets.only(right: 15),
-                  child: FittedBox(
-                    alignment: Alignment.topLeft,
-                    fit: BoxFit.contain,
-                    child: Text(
-                      time,
-                    ),
-                  ),
+                child: Text(
+                  textAlign: TextAlign.center,
+                  time,
+                  style: CalendarTextStyle.b3,
                 ),
               ),
               Expanded(
@@ -55,6 +51,7 @@ class CalendarDaysSection extends StatelessWidget {
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 time,
+                                style: CalendarTextStyle.b3,
                               ),
                             ),
                           ),
@@ -92,9 +89,8 @@ class CalendarDaysSection extends StatelessWidget {
                                           textAlign: TextAlign.center,
                                           maxLines: 1,
                                           time,
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.w600,
-                                              color: Colors.white),
+                                          style: CalendarTextStyle.b5
+                                              .copyWith(color: Colors.white),
                                         ),
                                       ),
                                     )),
@@ -110,8 +106,7 @@ class CalendarDaysSection extends StatelessWidget {
                                       textAlign: TextAlign.center,
                                       maxLines: 1,
                                       time,
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.w600),
+                                      style: CalendarTextStyle.b5,
                                     ),
                                   ),
                                 ),

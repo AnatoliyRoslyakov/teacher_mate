@@ -12,7 +12,7 @@ import 'package:teacher_mate/src/bloc/settings_bloc/settings_bloc.dart';
 import 'package:teacher_mate/src/bloc/student_bloc/student_bloc.dart';
 import 'package:teacher_mate/src/bloc/user_details_bloc/user_details_bloc.dart';
 import 'package:teacher_mate/src/config/app_config.dart';
-import 'package:teacher_mate/src/router/app_router.dart';
+import 'package:teacher_mate/core/router/app_router.dart';
 import 'package:url_strategy/url_strategy.dart';
 
 void main() async {

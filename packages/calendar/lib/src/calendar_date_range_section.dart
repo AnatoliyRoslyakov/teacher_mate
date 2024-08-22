@@ -1,4 +1,5 @@
 import 'package:calendar/calendar.dart';
+import 'package:calendar/src/calendar_text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -74,13 +75,12 @@ class _DateRangeSectionState extends State<DateRangeSection> {
               icon: const Icon(Icons.arrow_back),
               onPressed: () {
                 widget.afterDate.call();
-
                 _updateDate(false);
               },
             ),
             Text(
-              '$formattedStartDate - $formattedEndDate',
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w400),
+              '$formattedStartDate — $formattedEndDate',
+              style: CalendarTextStyle.b3f16,
             ),
             IconButton(
               icon: const Icon(Icons.arrow_forward),

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:teacher_mate/src/widgets/shared/create_lesson_widget.dart';
 
@@ -14,21 +16,41 @@ void createLessonDialog(
     context: context,
     barrierDismissible: true,
     builder: (BuildContext context) {
-      return Dialog(
-        backgroundColor: Colors.white,
-        child: SizedBox(
-          width: 600,
-          child: CreateLessonWidget(
-              // добавить заголовок
-              initialStartTime: initialStartTime,
-              initialEndTime: initialEndTime,
-              edit: edit,
-              description: description,
-              selectedType: selectedType,
-              studentId: studentId,
-              lessonId: lessonId),
-        ),
-      );
+      return ClipRRect(
+          clipBehavior: Clip.antiAlias,
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+            child: Dialog(
+              insetAnimationCurve: Curves.ease,
+              backgroundColor: Colors.white.withOpacity(0.8),
+              child: SizedBox(
+                width: 600,
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: Text(
+                        edit ? 'Edit lesson' : 'Create lesson',
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w600, fontSize: 18),
+                      ),
+                    ),
+                    Expanded(
+                      child: CreateLessonWidget(
+                          // добавить заголовок
+                          initialStartTime: initialStartTime,
+                          initialEndTime: initialEndTime,
+                          edit: edit,
+                          description: description,
+                          selectedType: selectedType,
+                          studentId: studentId,
+                          lessonId: lessonId),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ));
     },
   );
 }

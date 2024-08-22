@@ -1,3 +1,4 @@
+import 'package:calendar/src/calendar_text_style.dart';
 import 'package:flutter/material.dart';
 
 class CalendarTimeSection extends StatelessWidget {
@@ -39,7 +40,7 @@ class CalendarTimeSection extends StatelessWidget {
             height: minutesGrid * 120,
             child: Text(
               timeIntervals[index],
-              style: TextStyle(fontSize: mobile ? 12 : 16),
+              style: CalendarTextStyle.b3.copyWith(fontSize: mobile ? 12 : 16),
             ),
           );
         }),

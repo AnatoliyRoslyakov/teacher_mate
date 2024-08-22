@@ -3,7 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:teacher_mate/src/bloc/student_bloc/student_bloc.dart';
 import 'package:teacher_mate/src/pages/web/create_student_dialog.dart';
-import 'package:teacher_mate/src/router/app_router.dart';
+import 'package:teacher_mate/core/router/app_router.dart';
+import 'package:teacher_mate/src/theme/app_text_style.dart';
 
 class StudentListWidget extends StatefulWidget {
   final bool mobile;
@@ -11,6 +12,7 @@ class StudentListWidget extends StatefulWidget {
   final double? height;
   final double? width;
   final Function(int id)? selectStudent;
+  final bool toggle;
   const StudentListWidget({
     super.key,
     this.mobile = false,
@@ -18,6 +20,7 @@ class StudentListWidget extends StatefulWidget {
     this.height,
     this.width,
     this.studentId = -1,
+    this.toggle = false,
   });
 
   @override
@@ -124,6 +127,8 @@ class _StudentListWidgetState extends State<StudentListWidget> {
                                                         stateStudent
                                                             .studentEntity[i]
                                                             .name,
+                                                        style:
+                                                            AppTextStyle.b4f14,
                                                         overflow: TextOverflow
                                                             .ellipsis,
                                                       ),
@@ -206,6 +211,8 @@ class _StudentListWidgetState extends State<StudentListWidget> {
                                                             .name,
                                                         overflow: TextOverflow
                                                             .ellipsis,
+                                                        style:
+                                                            AppTextStyle.b4f14,
                                                       ),
                                                     ],
                                                   ),
@@ -236,7 +243,10 @@ class _StudentListWidgetState extends State<StudentListWidget> {
                 widget.mobile
                     ? context.push(MobileRoutes.createStudent.path,
                         extra: {'edit': false, 'id': 0, 'name': '', 'price': 0})
-                    : createStudentDialog(context: context);
+                    : createStudentDialog(
+                        context: context,
+                        nested: !widget.toggle,
+                      );
               },
               child: Container(
                   height: widget.selectStudent == null ? 50 : 40,

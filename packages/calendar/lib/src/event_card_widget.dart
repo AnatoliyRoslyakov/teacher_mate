@@ -1,5 +1,6 @@
 import 'package:calendar/calendar.dart';
 import 'package:calendar/src/calendar_grid_section.dart';
+import 'package:calendar/src/calendar_text_style.dart';
 import 'package:flutter/material.dart';
 
 class EventCardWidget extends StatelessWidget {
@@ -77,33 +78,35 @@ class EventCardWidget extends StatelessWidget {
                             .withOpacity(0.6)
                         : Colors.grey.withOpacity(0.6),
                   ),
-                  child: FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        FittedBox(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          maxLines: 2,
+                          style: CalendarTextStyle.b5,
+                          widget.student
+                              .firstWhere(
+                                (e) => e.id == lesson.studentId,
+                                orElse: () => StudentEntity(
+                                    id: 0, name: 'unknown', price: 0),
+                              )
+                              .name,
+                        ),
+                      ),
+                      Flexible(
+                        child: FittedBox(
                           fit: BoxFit.scaleDown,
                           child: Text(
-                            style: const TextStyle(fontWeight: FontWeight.w600),
-                            widget.student
-                                .firstWhere(
-                                  (e) => e.id == lesson.studentId,
-                                  orElse: () => StudentEntity(
-                                      id: 0, name: 'unknown', price: 0),
-                                )
-                                .name,
-                          ),
-                        ),
-                        FittedBox(
-                          // fit: BoxFit.scaleDown,
-                          child: Text(
+                            style: CalendarTextStyle.b3,
+                            overflow: TextOverflow.ellipsis,
                             maxLines: 2,
                             '${lesson.start.hour}:${lesson.start.minute < 10 ? '0${lesson.start.minute}' : lesson.start.minute}\n${lesson.end.hour}:${lesson.end.minute < 10 ? '0${lesson.end.minute}' : lesson.end.minute}',
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ],

@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:teacher_mate/src/theme/app_text_style.dart';
 
 class ModalBottomSheetScaffoldWrapper extends StatelessWidget {
   const ModalBottomSheetScaffoldWrapper({
@@ -71,9 +72,7 @@ class ModalBottomSheetScaffoldWrapper extends StatelessWidget {
                                 const Spacer(),
                                 Text(
                                   title,
-                                  style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w600),
+                                  style: AppTextStyle.b5f18,
                                 ),
                                 const Spacer(),
                                 if (secondIcon != null)

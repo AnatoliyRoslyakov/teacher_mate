@@ -1,6 +1,8 @@
 import 'package:calendar/src/calendar_date_range_section.dart';
 import 'package:calendar/src/calendar_days_section.dart';
 import 'package:calendar/src/calendar_grid_section.dart';
+import 'package:calendar/src/calendar_text_style.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:calendar/src/calendar_time_section.dart';
 
@@ -86,6 +88,7 @@ class _CalendarState extends State<Calendar> {
     super.dispose();
   }
 
+  bool loading = false;
   void _onPageChanged() {
     if (_pageController.page?.round() != _currentPage) {
       if ((_pageController.page?.round() ?? _currentPage) > _currentPage) {
@@ -164,13 +167,13 @@ class _CalendarState extends State<Calendar> {
                     width: 20,
                     height: 20,
                     decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black87, width: 2),
+                      border: Border.all(color: Colors.black87, width: 1),
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: Center(
                       child: Text(
                         DateTime.now().day.toString(),
-                        style: const TextStyle(fontSize: 12),
+                        style: CalendarTextStyle.b4f12,
                       ),
                     ),
                   ),
@@ -189,7 +192,7 @@ class _CalendarState extends State<Calendar> {
               controller: _pageController,
               itemBuilder: (context, index) {
                 return Padding(
-                  padding: const EdgeInsets.only(left: 10, top: 10),
+                  padding: const EdgeInsets.only(left: 0, top: 10),
                   child: Column(
                     children: [
                       CalendarDaysSection(

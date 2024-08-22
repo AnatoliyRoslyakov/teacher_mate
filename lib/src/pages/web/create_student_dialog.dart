@@ -1,25 +1,45 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:teacher_mate/src/widgets/shared/create_student_widget.dart';
 
-void createStudentDialog({
-  required BuildContext context,
-  int id = 0,
-  String name = '',
-  bool edit = false,
-  int price = 0,
-}) {
+void createStudentDialog(
+    {required BuildContext context,
+    int id = 0,
+    String name = '',
+    bool edit = false,
+    int price = 0,
+    bool nested = false}) {
   showDialog(
     context: context,
     barrierDismissible: true,
     builder: (BuildContext context) {
-      return Dialog(
-          insetAnimationCurve: Curves.linear,
-          insetAnimationDuration: const Duration(milliseconds: 500),
-          backgroundColor: Colors.white,
-          child: SizedBox(
-              width: 600,
-              child: CreateStudentWidget(
-                  id: id, name: name, edit: edit, price: price)));
+      return ClipRRect(
+          clipBehavior: Clip.antiAlias,
+          child: BackdropFilter(
+            filter: ImageFilter.blur(
+                sigmaX: nested ? 0 : 10.0, sigmaY: nested ? 0 : 10.0),
+            child: Dialog(
+                backgroundColor: Colors.white.withOpacity(nested ? 1 : 0.8),
+                insetAnimationCurve: Curves.easeInCubic,
+                insetAnimationDuration: const Duration(milliseconds: 500),
+                child: SizedBox(
+                    width: 600,
+                    child: Column(children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: Text(
+                          edit ? 'Edit student' : 'Create student',
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w600, fontSize: 18),
+                        ),
+                      ),
+                      Expanded(
+                        child: CreateStudentWidget(
+                            id: id, name: name, edit: edit, price: price),
+                      ),
+                    ]))),
+          ));
     },
   );
 }

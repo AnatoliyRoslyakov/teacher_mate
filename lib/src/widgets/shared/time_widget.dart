@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:teacher_mate/src/theme/app_text_style.dart';
 
 class TimeWidget extends StatelessWidget {
   const TimeWidget({
@@ -19,14 +20,12 @@ class TimeWidget extends StatelessWidget {
       children: [
         Text(
           helperText,
-          style: const TextStyle(fontSize: 10),
+          style: AppTextStyle.b3f10,
         ),
         Text(
           selectedTimeEnd,
-          style: TextStyle(
-              fontSize: 32,
-              fontWeight: FontWeight.w600,
-              color: isValid ? Colors.black : Colors.red),
+          style: AppTextStyle.b7f32
+              .copyWith(color: isValid ? Colors.black87 : Colors.red),
           textAlign: TextAlign.center,
         ),
       ],

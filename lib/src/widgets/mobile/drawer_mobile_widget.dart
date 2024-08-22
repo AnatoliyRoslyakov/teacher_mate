@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:teacher_mate/src/bloc/auth_bloc/auth_bloc.dart';
-import 'package:teacher_mate/src/router/app_router.dart';
+import 'package:teacher_mate/core/router/app_router.dart';
 import 'package:teacher_mate/src/widgets/shared/app_button.dart';
 import 'package:teacher_mate/src/widgets/shared/user_info_widget.dart';
 

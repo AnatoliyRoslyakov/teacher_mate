@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:teacher_mate/src/bloc/lesson_bloc/lesson_bloc.dart';
+import 'package:teacher_mate/src/theme/app_text_style.dart';
 import 'package:teacher_mate/src/widgets/shared/app_button.dart';
 import 'package:teacher_mate/src/widgets/shared/divider_title_widget.dart';
 import 'package:teacher_mate/src/widgets/shared/student_list_widget.dart';
@@ -43,6 +44,7 @@ class _CreateLessonWidgetState extends State<CreateLessonWidget> {
   late int studentId;
   late String description;
   late int lessonId;
+  late bool generate;
 
   void selectStudent(int id) {
     studentId = id;
@@ -58,7 +60,7 @@ class _CreateLessonWidgetState extends State<CreateLessonWidget> {
     selectedType = widget.selectedType;
     studentId = widget.studentId;
     lessonId = widget.lessonId;
-
+    generate = false;
     super.initState();
   }
 
@@ -164,6 +166,7 @@ class _CreateLessonWidgetState extends State<CreateLessonWidget> {
                     ),
                   ],
                 ),
+
                 const DividerTitleWidget(title: 'The color of the lesson'),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -224,12 +227,14 @@ class _CreateLessonWidgetState extends State<CreateLessonWidget> {
                     data: Theme.of(context)
                         .copyWith(dividerColor: Colors.transparent),
                     child: ExpansionTile(
+                      initiallyExpanded: description.isEmpty ? false : true,
+                      collapsedBackgroundColor: Colors.transparent,
                       enableFeedback: true,
                       dense: true,
                       tilePadding: EdgeInsets.zero,
-                      title: const Text(
+                      title: Text(
                         'Description',
-                        style: TextStyle(fontSize: 14),
+                        style: AppTextStyle.b4f12,
                       ),
                       children: [
                         TextFormFieldWidget(
@@ -247,6 +252,17 @@ class _CreateLessonWidgetState extends State<CreateLessonWidget> {
                     ),
                   ),
                 ),
+                widget.edit
+                    ? const SizedBox.shrink()
+                    : const DividerTitleWidget(title: 'Generating lessons'),
+                widget.edit
+                    ? const SizedBox.shrink()
+                    : TitleSwitchWidget(
+                        onChanged: (bool select) {
+                          generate = select;
+                        },
+                        select: generate,
+                      ),
               ],
             ),
           ),
@@ -272,6 +288,7 @@ class _CreateLessonWidgetState extends State<CreateLessonWidget> {
                                       description: description))
                               : context.read<LessonBloc>().add(
                                   LessonEvent.create(
+                                      generate: generate,
                                       start: start,
                                       end: end,
                                       type: selectedType,
@@ -309,5 +326,58 @@ class _CreateLessonWidgetState extends State<CreateLessonWidget> {
         ],
       ),
     );
+  }
+}
+
+class TitleSwitchWidget extends StatefulWidget {
+  final void Function(bool) onChanged;
+  final bool select;
+  const TitleSwitchWidget({
+    super.key,
+    required this.onChanged,
+    required this.select,
+  });
+
+  @override
+  State<TitleSwitchWidget> createState() => _TitleSwitchWidgetState();
+}
+
+class _TitleSwitchWidgetState extends State<TitleSwitchWidget> {
+  late bool selectValue;
+  @override
+  void initState() {
+    selectValue = widget.select;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(children: [
+      Expanded(
+        child: Text('Duplicate a lesson for a month',
+            maxLines: 2, style: AppTextStyle.b4f16),
+      ),
+      Theme(
+        data: ThemeData(
+          useMaterial3: true,
+        ).copyWith(
+          colorScheme:
+              Theme.of(context).colorScheme.copyWith(outline: Colors.white),
+        ),
+        child: Switch(
+          inactiveThumbColor: Colors.white,
+          inactiveTrackColor: Colors.transparent,
+          activeColor: Colors.white,
+          activeTrackColor: Colors.amber,
+          value: selectValue,
+          onChanged: (bool generate) {
+            widget.onChanged.call(generate);
+            setState(() {
+              selectValue = !selectValue;
+            });
+          },
+        ),
+      ),
+    ]);
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:teacher_mate/src/bloc/settings_bloc/settings_bloc.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:teacher_mate/src/theme/app_text_style.dart';
 import 'package:teacher_mate/src/widgets/shared/app_button.dart';
 
 class CalendarSettingsWidget extends StatefulWidget {
@@ -188,7 +189,7 @@ class SettingsCardWidget2 extends StatelessWidget {
         child: Row(children: [
           Icon(icon),
           const SizedBox(width: 5),
-          Text(title, style: const TextStyle(fontSize: 16)),
+          Text(title, style: AppTextStyle.b4f16),
           const Spacer(),
           Theme(
             data: ThemeData(
@@ -248,7 +249,7 @@ class SettingsCardWidget extends StatelessWidget {
             children: [
               Icon(icon),
               const SizedBox(width: 5),
-              Text(title, style: const TextStyle(fontSize: 16)),
+              Text(title, style: AppTextStyle.b4f16),
             ],
           ),
           DropdownButtonHideUnderline(
@@ -257,7 +258,11 @@ class SettingsCardWidget extends StatelessWidget {
               items: List.generate(valueList.length, (i) {
                 return DropdownMenuItem(
                   value: valueList[i].toString(),
-                  child: Text(textList[i]),
+                  child: Text(
+                    textList[i],
+                    style: AppTextStyle.b4f16.copyWith(
+                        color: inactive ? Colors.black38 : Colors.black87),
+                  ),
                 );
               }),
               value: initialValue.toString(),

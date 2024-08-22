@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:teacher_mate/src/widgets/shared/student_list_widget.dart';
 
@@ -111,7 +113,11 @@ class _TogglePanelWidgetState extends State<TogglePanelWidget>
                   child: Container(
                     width: _panelWidth,
                     height: double.infinity,
-                    color: Colors.white,
+                    decoration: BoxDecoration(
+                        gradient: LinearGradient(colors: [
+                      Colors.white.withOpacity(0.7),
+                      Colors.grey.withOpacity(0.2),
+                    ])),
                     child: const Padding(
                       padding: EdgeInsets.all(20),
                       child: Column(
@@ -127,7 +133,10 @@ class _TogglePanelWidgetState extends State<TogglePanelWidget>
                           SizedBox(
                             height: 40,
                           ),
-                          Expanded(child: StudentListWidget()),
+                          Expanded(
+                              child: StudentListWidget(
+                            toggle: true,
+                          )),
                         ],
                       ),
                     ),

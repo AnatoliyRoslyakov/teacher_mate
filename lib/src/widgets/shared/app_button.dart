@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:teacher_mate/src/theme/app_text_style.dart';
 
 class AppButton extends StatelessWidget {
   final String label;
@@ -95,8 +96,7 @@ class AppButton extends StatelessWidget {
       child: icon == null
           ? Text(
               label,
-              style: const TextStyle(
-                  color: Colors.white, fontWeight: FontWeight.w600),
+              style: AppTextStyle.b5f15.copyWith(color: Colors.white),
             )
           : label.isEmpty
               ? Icon(
@@ -128,8 +128,7 @@ class AppButton extends StatelessWidget {
                     ),
                     Text(
                       label,
-                      style: const TextStyle(
-                          color: Colors.black87, fontWeight: FontWeight.w500),
+                      style: AppTextStyle.b4f15,
                     ),
                   ],
                 ),

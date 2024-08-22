@@ -14,7 +14,7 @@ import 'package:teacher_mate/src/repository/auth_repository/auth_repository.dart
 import 'package:teacher_mate/src/repository/lesson_repository/lesson_repository.dart';
 import 'package:teacher_mate/src/repository/student_repository/student_repository.dart';
 import 'package:teacher_mate/src/repository/user_details_repository/user_details_repository.dart';
-import 'package:teacher_mate/src/router/app_router.dart';
+import 'package:teacher_mate/core/router/app_router.dart';
 
 final injector = GetIt.instance;
 
