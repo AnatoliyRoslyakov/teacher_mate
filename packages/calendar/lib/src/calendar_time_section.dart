@@ -1,4 +1,4 @@
-import 'package:calendar/src/calendar_text_style.dart';
+import 'package:calendar/src/theme/calendar_text_style.dart';
 import 'package:flutter/material.dart';
 
 class CalendarTimeSection extends StatelessWidget {

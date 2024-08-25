@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:teacher_mate/src/theme/app_colors.dart';
 import 'package:teacher_mate/src/theme/app_text_style.dart';
 
 class AppButton extends StatelessWidget {
   final String label;
-  final IconData? icon;
+  final Widget? icon;
   final Color? iconColor;
   final void Function()? onTap;
   final ButtonStyle buttonStyle;
@@ -14,16 +15,16 @@ class AppButton extends StatelessWidget {
     required this.icon,
     required this.onTap,
     required this.buttonStyle,
-    this.iconColor = Colors.amber,
+    this.iconColor = AppColors.mainColor,
   });
 
   factory AppButton.settings({
     required String label,
-    required IconData icon,
+    required Widget icon,
     required void Function()? onTap,
     bool mobile = true,
     Color backgroundColor = Colors.white,
-    Color iconColor = Colors.amber,
+    Color iconColor = AppColors.mainColor,
   }) {
     return AppButton(
       label: label,
@@ -51,7 +52,7 @@ class AppButton extends StatelessWidget {
       icon: null,
       onTap: onTap,
       buttonStyle: ElevatedButton.styleFrom(
-        backgroundColor: onTap == null ? Colors.white : Colors.amber,
+        backgroundColor: onTap == null ? Colors.white : AppColors.mainColor,
         padding: EdgeInsets.zero,
         minimumSize: const Size(double.infinity, 50),
         elevation: 0,
@@ -63,9 +64,9 @@ class AppButton extends StatelessWidget {
   }
 
   factory AppButton.icon({
-    required IconData icon,
+    required Widget icon,
     required void Function()? onTap,
-    Color iconColor = Colors.amber,
+    Color iconColor = AppColors.mainColor,
     Color backgroundColor = Colors.white,
   }) {
     return AppButton(
@@ -74,7 +75,7 @@ class AppButton extends StatelessWidget {
       onTap: onTap,
       iconColor: iconColor,
       buttonStyle: ElevatedButton.styleFrom(
-        overlayColor: Colors.amber,
+        overlayColor: AppColors.mainColor,
         shadowColor: Colors.transparent,
         backgroundColor: backgroundColor,
         padding: EdgeInsets.zero,
@@ -99,11 +100,7 @@ class AppButton extends StatelessWidget {
               style: AppTextStyle.b5f15.copyWith(color: Colors.white),
             )
           : label.isEmpty
-              ? Icon(
-                  icon,
-                  size: 25,
-                  color: iconColor,
-                )
+              ? SizedBox(height: 25, width: 25, child: icon)
               : Row(
                   children: [
                     const SizedBox(
@@ -115,13 +112,8 @@ class AppButton extends StatelessWidget {
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Icon(
-                          icon,
-                          size: 20,
-                          color: iconColor,
-                        ),
-                      ),
+                          padding: const EdgeInsets.all(7.5),
+                          child: SizedBox(height: 20, width: 20, child: icon)),
                     ),
                     const SizedBox(
                       width: 10,

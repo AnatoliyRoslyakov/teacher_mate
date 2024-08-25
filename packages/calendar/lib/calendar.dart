@@ -1,8 +1,7 @@
 import 'package:calendar/src/calendar_date_range_section.dart';
 import 'package:calendar/src/calendar_days_section.dart';
 import 'package:calendar/src/calendar_grid_section.dart';
-import 'package:calendar/src/calendar_text_style.dart';
-import 'package:flutter/gestures.dart';
+import 'package:calendar/src/theme/calendar_text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:calendar/src/calendar_time_section.dart';
 

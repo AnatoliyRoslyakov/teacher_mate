@@ -2,9 +2,12 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:teacher_mate/src/bloc/auth_bloc/auth_bloc.dart';
 import 'package:teacher_mate/core/router/app_router.dart';
+import 'package:teacher_mate/src/theme/app_colors.dart';
+import 'package:teacher_mate/src/theme/resource/svgs.dart';
 import 'package:teacher_mate/src/widgets/shared/app_button.dart';
 import 'package:teacher_mate/src/widgets/shared/user_info_widget.dart';
 
@@ -30,7 +33,10 @@ class DrawerMobileWidget extends StatelessWidget {
               AppButton.settings(
                   backgroundColor: Colors.white.withOpacity(0.4),
                   label: 'Calendar settings',
-                  icon: Icons.settings,
+                  icon: SvgPicture.asset(
+                    Svgs.settings,
+                    color: AppColors.mainColor,
+                  ),
                   onTap: () {
                     Navigator.pop(context);
                     context.push(MobileRoutes.settings.path);
@@ -41,7 +47,10 @@ class DrawerMobileWidget extends StatelessWidget {
               AppButton.settings(
                 backgroundColor: Colors.white.withOpacity(0.4),
                 label: 'My students list',
-                icon: Icons.group,
+                icon: SvgPicture.asset(
+                  Svgs.users,
+                  color: AppColors.mainColor,
+                ),
                 onTap: () {
                   Navigator.pop(context);
                   context.push(MobileRoutes.students.path);
@@ -52,9 +61,11 @@ class DrawerMobileWidget extends StatelessWidget {
               ),
               AppButton.settings(
                 backgroundColor: Colors.white.withOpacity(0.4),
-                iconColor: Colors.red,
                 label: 'Logout',
-                icon: Icons.logout,
+                icon: SvgPicture.asset(
+                  Svgs.logout,
+                  color: Colors.red,
+                ),
                 onTap: () {
                   context.read<AuthBloc>().add(const AuthEvent.logout());
                 },

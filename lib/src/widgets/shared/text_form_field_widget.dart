@@ -8,7 +8,7 @@ class TextFormFieldWidget extends StatelessWidget {
   final (int minLines, int maxLines) lines;
   final int maxSym;
   final String hintText;
-  final IconData? prefixIcon;
+  final Widget? prefixIcon;
   final TextAlign textAlign;
   const TextFormFieldWidget({
     super.key,
@@ -40,8 +40,14 @@ class TextFormFieldWidget extends StatelessWidget {
         onChange.call(text);
       },
       decoration: InputDecoration(
-        prefixIcon:
-            prefixIcon != null ? Icon(prefixIcon, color: Colors.grey) : null,
+        prefixIcon: prefixIcon != null
+            ? Padding(
+                padding: const EdgeInsets.only(left: 12, right: 12),
+                child: prefixIcon,
+              )
+            : null,
+        prefixIconConstraints:
+            const BoxConstraints(maxHeight: 40, maxWidth: 40),
         hintText: hintText,
         hintStyle: AppTextStyle.b4f15.copyWith(color: Colors.grey),
         isDense: true,

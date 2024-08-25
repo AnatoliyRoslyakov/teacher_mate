@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:teacher_mate/src/bloc/student_bloc/student_bloc.dart';
 import 'package:teacher_mate/src/pages/web/create_student_dialog.dart';
 import 'package:teacher_mate/core/router/app_router.dart';
+import 'package:teacher_mate/src/theme/app_colors.dart';
 import 'package:teacher_mate/src/theme/app_text_style.dart';
+import 'package:teacher_mate/src/theme/resource/svgs.dart';
 
 class StudentListWidget extends StatefulWidget {
   final bool mobile;
@@ -81,7 +84,7 @@ class _StudentListWidgetState extends State<StudentListWidget> {
                               itemBuilder: (context, i) {
                                 return widget.selectStudent != null
                                     ? InkWell(
-                                        hoverColor: Colors.amber,
+                                        hoverColor: AppColors.mainColor,
                                         borderRadius: BorderRadius.circular(8),
                                         onTap: () {
                                           widget.selectStudent?.call(
@@ -97,13 +100,14 @@ class _StudentListWidgetState extends State<StudentListWidget> {
                                               borderRadius:
                                                   BorderRadius.circular(8),
                                               gradient: LinearGradient(colors: [
-                                                Colors.amber,
-                                                Colors.amber.withOpacity(0.5)
+                                                AppColors.mainColor,
+                                                AppColors.mainColor
+                                                    .withOpacity(0.5)
                                               ]),
                                               color: studentId ==
                                                       stateStudent
                                                           .studentEntity[i].id
-                                                  ? Colors.amber
+                                                  ? AppColors.mainColor
                                                   : Colors.grey
                                                       .withOpacity(0.2)),
                                           child: Padding(
@@ -116,9 +120,16 @@ class _StudentListWidgetState extends State<StudentListWidget> {
                                                 Expanded(
                                                   child: Row(
                                                     children: [
-                                                      const Icon(
-                                                        Icons.person,
-                                                        color: Colors.white,
+                                                      SvgPicture.asset(
+                                                        Svgs.user,
+                                                        color: studentId ==
+                                                                stateStudent
+                                                                    .studentEntity[
+                                                                        i]
+                                                                    .id
+                                                            ? Colors.white
+                                                            : AppColors
+                                                                .mainColor,
                                                       ),
                                                       const SizedBox(
                                                         width: 5,
@@ -184,10 +195,11 @@ class _StudentListWidgetState extends State<StudentListWidget> {
                                               borderRadius:
                                                   BorderRadius.circular(8),
                                               gradient: LinearGradient(colors: [
-                                                Colors.amber,
-                                                Colors.amber.withOpacity(0.7)
+                                                AppColors.mainColor,
+                                                AppColors.mainColor
+                                                    .withOpacity(0.7)
                                               ]),
-                                              color: Colors.amber),
+                                              color: AppColors.mainColor),
                                           child: Padding(
                                             padding: const EdgeInsets.all(8.0),
                                             child: Row(
@@ -198,8 +210,8 @@ class _StudentListWidgetState extends State<StudentListWidget> {
                                                 Expanded(
                                                   child: Row(
                                                     children: [
-                                                      const Icon(
-                                                        Icons.person,
+                                                      SvgPicture.asset(
+                                                        Svgs.user,
                                                         color: Colors.white,
                                                       ),
                                                       const SizedBox(
@@ -255,9 +267,11 @@ class _StudentListWidgetState extends State<StudentListWidget> {
                           bottomRight: Radius.circular(10),
                           bottomLeft: Radius.circular(10)),
                       color: Colors.grey.withOpacity(0.3)),
-                  child: const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Center(child: Icon(Icons.add))))),
+                  child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Center(
+                          child: SvgPicture.asset(Svgs.plus,
+                              color: Colors.grey))))),
         ],
       ),
     );

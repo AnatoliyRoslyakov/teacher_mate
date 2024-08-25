@@ -5,6 +5,7 @@ import 'package:teacher_mate/src/bloc/lesson_bloc/lesson_bloc.dart';
 import 'package:teacher_mate/src/bloc/settings_bloc/settings_bloc.dart';
 import 'package:teacher_mate/src/bloc/student_bloc/student_bloc.dart';
 import 'package:teacher_mate/src/pages/web/create_lesson_dialog.dart';
+import 'package:teacher_mate/src/theme/app_colors.dart';
 import 'package:teacher_mate/src/widgets/web/toggle_panel_widget.dart';
 
 class WebHomePage extends StatefulWidget {
@@ -51,7 +52,7 @@ class _WebHomePageState extends State<WebHomePage> {
                             text: const TextSpan(
                               text: 'Teacher',
                               style: TextStyle(
-                                  color: Colors.amber,
+                                  color: AppColors.mainColor,
                                   fontSize: 30,
                                   fontWeight: FontWeight.w700),
                               children: <TextSpan>[

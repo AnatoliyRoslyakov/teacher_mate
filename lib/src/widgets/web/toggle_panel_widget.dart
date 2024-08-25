@@ -1,6 +1,5 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
+import 'package:teacher_mate/src/theme/app_text_style.dart';
 import 'package:teacher_mate/src/widgets/shared/student_list_widget.dart';
 
 class TogglePanelWidget extends StatefulWidget {
@@ -116,24 +115,24 @@ class _TogglePanelWidgetState extends State<TogglePanelWidget>
                     decoration: BoxDecoration(
                         gradient: LinearGradient(colors: [
                       Colors.white.withOpacity(0.7),
-                      Colors.grey.withOpacity(0.2),
+                      Colors.grey.withOpacity(0.1),
                     ])),
-                    child: const Padding(
-                      padding: EdgeInsets.all(20),
+                    child: Padding(
+                      padding: const EdgeInsets.all(20),
                       child: Column(
                         children: [
-                          SizedBox(
+                          const SizedBox(
                             height: 55,
                           ),
                           Text(
                             'List of students',
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(fontSize: 20),
+                            style: AppTextStyle.b5f18,
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 40,
                           ),
-                          Expanded(
+                          const Expanded(
                               child: StudentListWidget(
                             toggle: true,
                           )),

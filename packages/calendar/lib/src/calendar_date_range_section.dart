@@ -1,6 +1,8 @@
 import 'package:calendar/calendar.dart';
-import 'package:calendar/src/calendar_text_style.dart';
+import 'package:calendar/src/theme/calendar_text_style.dart';
+import 'package:calendar/src/theme/svgs.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 
 class DateRangeSection extends StatefulWidget {
@@ -22,7 +24,7 @@ class DateRangeSection extends StatefulWidget {
       required this.mobile,
       required this.threeWeek});
   @override
-  _DateRangeSectionState createState() => _DateRangeSectionState();
+  State<DateRangeSection> createState() => _DateRangeSectionState();
 }
 
 class _DateRangeSectionState extends State<DateRangeSection> {
@@ -72,7 +74,9 @@ class _DateRangeSectionState extends State<DateRangeSection> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: <Widget>[
             IconButton(
-              icon: const Icon(Icons.arrow_back),
+              icon: SvgPicture.asset(
+                Svgs.left,
+              ),
               onPressed: () {
                 widget.afterDate.call();
                 _updateDate(false);
@@ -83,7 +87,9 @@ class _DateRangeSectionState extends State<DateRangeSection> {
               style: CalendarTextStyle.b3f16,
             ),
             IconButton(
-              icon: const Icon(Icons.arrow_forward),
+              icon: SvgPicture.asset(
+                Svgs.right,
+              ),
               onPressed: () {
                 widget.nextDate.call();
                 _updateDate(true);

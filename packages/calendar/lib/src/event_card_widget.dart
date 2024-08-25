@@ -1,6 +1,6 @@
 import 'package:calendar/calendar.dart';
 import 'package:calendar/src/calendar_grid_section.dart';
-import 'package:calendar/src/calendar_text_style.dart';
+import 'package:calendar/src/theme/calendar_text_style.dart';
 import 'package:flutter/material.dart';
 
 class EventCardWidget extends StatelessWidget {
@@ -69,6 +69,13 @@ class EventCardWidget extends StatelessWidget {
                   height: height * 2,
                   width: (widget.size / widget.viewDay) - 100 / widget.viewDay,
                   decoration: BoxDecoration(
+                    border: Border.all(
+                      width: 1,
+                      color: widget.lessons[index].type >= 0
+                          ? ColorType.values[widget.lessons[index].type].color
+                              .withOpacity(0.45)
+                          : Colors.grey.withOpacity(0.45),
+                    ),
                     borderRadius: const BorderRadius.only(
                       topRight: Radius.circular(7),
                       bottomRight: Radius.circular(7),

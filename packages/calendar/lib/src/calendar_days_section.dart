@@ -1,5 +1,5 @@
 import 'package:calendar/calendar.dart';
-import 'package:calendar/src/calendar_text_style.dart';
+import 'package:calendar/src/theme/calendar_text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -155,7 +155,8 @@ class CalendarDaysSection extends StatelessWidget {
                                 textAlign: TextAlign.center,
                                 maxLines: 2,
                                 time,
-                                style: const TextStyle(color: Colors.white),
+                                style: CalendarTextStyle.b3
+                                    .copyWith(color: Colors.white),
                               ),
                             ),
                           )),
@@ -170,6 +171,7 @@ class CalendarDaysSection extends StatelessWidget {
                             textAlign: TextAlign.center,
                             maxLines: 2,
                             time,
+                            style: CalendarTextStyle.b3,
                           ),
                         ),
                       ),

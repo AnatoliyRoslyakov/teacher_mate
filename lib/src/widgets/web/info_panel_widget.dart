@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:teacher_mate/src/theme/app_colors.dart';
 
 class InfoPanelWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.amber,
+      color: AppColors.mainColor,
       padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

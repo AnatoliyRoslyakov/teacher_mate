@@ -1,9 +1,12 @@
 import 'package:calendar/calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:teacher_mate/src/bloc/lesson_bloc/lesson_bloc.dart';
+import 'package:teacher_mate/src/theme/app_colors.dart';
 import 'package:teacher_mate/src/theme/app_text_style.dart';
+import 'package:teacher_mate/src/theme/resource/svgs.dart';
 import 'package:teacher_mate/src/widgets/shared/app_button.dart';
 import 'package:teacher_mate/src/widgets/shared/divider_title_widget.dart';
 import 'package:teacher_mate/src/widgets/shared/student_list_widget.dart';
@@ -307,8 +310,10 @@ class _CreateLessonWidgetState extends State<CreateLessonWidget> {
               widget.edit
                   ? AppButton.icon(
                       backgroundColor: Colors.transparent,
-                      icon: Icons.delete,
-                      iconColor: Colors.red,
+                      icon: SvgPicture.asset(
+                        Svgs.trash,
+                        color: Colors.red,
+                      ),
                       onTap: () {
                         context
                             .read<LessonBloc>()
@@ -368,7 +373,7 @@ class _TitleSwitchWidgetState extends State<TitleSwitchWidget> {
           inactiveThumbColor: Colors.white,
           inactiveTrackColor: Colors.transparent,
           activeColor: Colors.white,
-          activeTrackColor: Colors.amber,
+          activeTrackColor: AppColors.mainColor,
           value: selectValue,
           onChanged: (bool generate) {
             widget.onChanged.call(generate);

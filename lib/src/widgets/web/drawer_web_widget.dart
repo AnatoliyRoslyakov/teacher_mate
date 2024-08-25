@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:teacher_mate/src/bloc/auth_bloc/auth_bloc.dart';
+import 'package:teacher_mate/src/theme/app_colors.dart';
+import 'package:teacher_mate/src/theme/app_text_style.dart';
 import 'package:teacher_mate/src/widgets/shared/calendar_settings_widget.dart';
 import 'package:teacher_mate/src/widgets/shared/user_info_widget.dart';
 import 'package:teacher_mate/src/widgets/web/info_panel_widget.dart';
@@ -59,11 +61,9 @@ class _DrawerWebWidgetState extends State<DrawerWebWidget> {
                         const SizedBox(
                           width: 10,
                         ),
-                        const Text(
+                        Text(
                           'Logout',
-                          style: TextStyle(
-                              color: Colors.black87,
-                              fontWeight: FontWeight.w500),
+                          style: AppTextStyle.b4f14,
                         ),
                       ],
                     ),
@@ -91,7 +91,7 @@ class _DrawerWebWidgetState extends State<DrawerWebWidget> {
                           child: Icon(
                             Icons.settings,
                             size: 20,
-                            color: Colors.amber,
+                            color: AppColors.mainColor,
                           ),
                         ),
                       ),
@@ -137,7 +137,7 @@ class _DrawerWebWidgetState extends State<DrawerWebWidget> {
                     child: Icon(
                       Icons.info,
                       size: 20,
-                      color: Colors.amber,
+                      color: AppColors.mainColor,
                     ),
                   ),
                 ),

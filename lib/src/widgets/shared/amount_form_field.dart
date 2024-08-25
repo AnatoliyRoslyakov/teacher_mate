@@ -6,7 +6,7 @@ class AmountFormFieldWidget extends StatelessWidget {
   final int Function(int text) onChange;
   final String initValue;
   final String hintText;
-  final IconData? prefixIcon;
+  final Widget? prefixIcon;
   final Color iconColor;
   const AmountFormFieldWidget({
     super.key,
@@ -35,8 +35,14 @@ class AmountFormFieldWidget extends StatelessWidget {
         onChange.call(int.tryParse(text) ?? 0);
       },
       decoration: InputDecoration(
-        prefixIcon:
-            prefixIcon != null ? Icon(prefixIcon, color: iconColor) : null,
+        prefixIcon: prefixIcon != null
+            ? Padding(
+                padding: const EdgeInsets.only(left: 12, right: 12),
+                child: prefixIcon,
+              )
+            : null,
+        prefixIconConstraints:
+            const BoxConstraints(maxHeight: 40, maxWidth: 40),
         hintText: hintText,
         hintStyle: AppTextStyle.b4f15.copyWith(color: Colors.grey),
         isDense: true,

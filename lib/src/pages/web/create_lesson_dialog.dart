@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:teacher_mate/src/theme/app_text_style.dart';
 import 'package:teacher_mate/src/widgets/shared/create_lesson_widget.dart';
 
 void createLessonDialog(
@@ -31,8 +32,7 @@ void createLessonDialog(
                       padding: const EdgeInsets.only(top: 20),
                       child: Text(
                         edit ? 'Edit lesson' : 'Create lesson',
-                        style: const TextStyle(
-                            fontWeight: FontWeight.w600, fontSize: 18),
+                        style: AppTextStyle.b5f18,
                       ),
                     ),
                     Expanded(

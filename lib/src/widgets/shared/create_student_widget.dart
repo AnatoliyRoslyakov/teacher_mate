@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:teacher_mate/src/bloc/student_bloc/student_bloc.dart';
+import 'package:teacher_mate/src/theme/resource/svgs.dart';
 import 'package:teacher_mate/src/widgets/shared/amount_form_field.dart';
 import 'package:teacher_mate/src/widgets/shared/app_button.dart';
 import 'package:teacher_mate/src/widgets/shared/divider_title_widget.dart';
@@ -51,7 +53,10 @@ class _CreateStudentWidgetState extends State<CreateStudentWidget> {
             child: ListView(children: [
               const DividerTitleWidget(title: 'Student'),
               TextFormFieldWidget(
-                prefixIcon: Icons.person,
+                prefixIcon: SvgPicture.asset(
+                  Svgs.user,
+                  color: Colors.grey,
+                ),
                 hintText: 'Student name',
                 maxSym: 15,
                 lines: (1, 1),
@@ -68,7 +73,10 @@ class _CreateStudentWidgetState extends State<CreateStudentWidget> {
                 children: [
                   Expanded(
                     child: TextFormFieldWidget(
-                      prefixIcon: Icons.telegram,
+                      prefixIcon: SvgPicture.asset(
+                        Svgs.telegram2,
+                        color: Colors.grey,
+                      ),
                       hintText: '@MyStudent',
                       maxSym: 15,
                       lines: (1, 1),
@@ -78,14 +86,19 @@ class _CreateStudentWidgetState extends State<CreateStudentWidget> {
                   ),
                   AppButton.icon(
                       backgroundColor: Colors.transparent,
-                      icon: Icons.telegram,
+                      icon: SvgPicture.asset(
+                        Svgs.telegram,
+                      ),
                       onTap: () {})
                 ],
               ),
               const DividerTitleWidget(title: 'Price'),
               AmountFormFieldWidget(
                   initValue: price == 0 ? '' : price.toString(),
-                  prefixIcon: Icons.attach_money,
+                  prefixIcon: SvgPicture.asset(
+                    Svgs.dollar,
+                    color: Colors.grey,
+                  ),
                   onChange: (value) {
                     setState(() {
                       price = value;
@@ -126,8 +139,10 @@ class _CreateStudentWidgetState extends State<CreateStudentWidget> {
               widget.edit
                   ? AppButton.icon(
                       backgroundColor: Colors.transparent,
-                      icon: Icons.delete,
-                      iconColor: Colors.red,
+                      icon: SvgPicture.asset(
+                        Svgs.trash,
+                        color: Colors.red,
+                      ),
                       onTap: () {
                         context
                             .read<StudentBloc>()

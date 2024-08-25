@@ -1,7 +1,10 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:teacher_mate/src/bloc/auth_bloc/auth_bloc.dart';
 import 'package:teacher_mate/src/bloc/config_bloc/config_bloc.dart';
+import 'package:teacher_mate/src/theme/app_colors.dart';
+import 'package:teacher_mate/src/theme/resource/svgs.dart';
 import 'package:teacher_mate/src/util/url_util.dart';
 import 'package:teacher_mate/src/widgets/shared/app_button.dart';
 
@@ -52,7 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 text: const TextSpan(
                                   text: 'Teacher',
                                   style: TextStyle(
-                                      color: Colors.amber,
+                                      color: AppColors.mainColor,
                                       fontSize: 30,
                                       fontWeight: FontWeight.w700),
                                   children: <TextSpan>[
@@ -97,8 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               width: 150,
                               child: AppButton.settings(
                                 label: 'Get the code',
-                                iconColor: Colors.blue,
-                                icon: Icons.telegram,
+                                icon: SvgPicture.asset(Svgs.telegram),
                                 onTap: () {
                                   UrlUtils.openBot();
                                 },

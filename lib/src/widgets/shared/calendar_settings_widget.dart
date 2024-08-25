@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:teacher_mate/src/bloc/settings_bloc/settings_bloc.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:teacher_mate/src/theme/app_colors.dart';
 import 'package:teacher_mate/src/theme/app_text_style.dart';
+import 'package:teacher_mate/src/theme/resource/svgs.dart';
 import 'package:teacher_mate/src/widgets/shared/app_button.dart';
 
 class CalendarSettingsWidget extends StatefulWidget {
@@ -39,7 +42,10 @@ class _CalendarSettingsWidgetState extends State<CalendarSettingsWidget> {
                       children: [
                         SettingsCardWidget(
                             title: 'Grid',
-                            icon: Icons.border_horizontal,
+                            icon: SvgPicture.asset(
+                              Svgs.grid,
+                              color: AppColors.mainColor,
+                            ),
                             initialValue: state.minutesGrid,
                             valueList: const [0.5, 1.0],
                             textList: const ['30 minutes', '60 minutes'],
@@ -53,7 +59,10 @@ class _CalendarSettingsWidgetState extends State<CalendarSettingsWidget> {
                         ),
                         SettingsCardWidget(
                             title: 'Start time',
-                            icon: Icons.access_time,
+                            icon: SvgPicture.asset(
+                              Svgs.clock,
+                              color: AppColors.mainColor,
+                            ),
                             initialValue: state.startDay,
                             valueList: List.generate(16, (index) => index + 1),
                             textList: List.generate(
@@ -68,7 +77,10 @@ class _CalendarSettingsWidgetState extends State<CalendarSettingsWidget> {
                         ),
                         SettingsCardWidget(
                             title: 'End time',
-                            icon: Icons.access_time,
+                            icon: SvgPicture.asset(
+                              Svgs.clock,
+                              color: AppColors.mainColor,
+                            ),
                             initialValue: state.endDay,
                             valueList: List.generate(8, (index) => index + 16),
                             textList: List.generate(
@@ -95,7 +107,10 @@ class _CalendarSettingsWidgetState extends State<CalendarSettingsWidget> {
                         children: [
                           SettingsCardWidget2(
                               title: '3 Days',
-                              icon: Icons.event,
+                              icon: SvgPicture.asset(
+                                Svgs.calendar3,
+                                color: AppColors.mainColor,
+                              ),
                               select: state.three,
                               onChanged: (bool value) {
                                 context.read<SettingsBloc>().add(
@@ -106,7 +121,10 @@ class _CalendarSettingsWidgetState extends State<CalendarSettingsWidget> {
                           ),
                           SettingsCardWidget2(
                               title: 'Week',
-                              icon: Icons.date_range,
+                              icon: SvgPicture.asset(
+                                Svgs.calendar7,
+                                color: AppColors.mainColor,
+                              ),
                               select: state.week,
                               onChanged: (bool value) {
                                 context
@@ -121,7 +139,10 @@ class _CalendarSettingsWidgetState extends State<CalendarSettingsWidget> {
                             child: SettingsCardWidget(
                                 inactive: state.week || state.three,
                                 title: 'Date range',
-                                icon: Icons.event_note,
+                                icon: SvgPicture.asset(
+                                  Svgs.calendarEdit,
+                                  color: AppColors.mainColor,
+                                ),
                                 initialValue: state.viewDays,
                                 valueList:
                                     List.generate(15, (index) => index + 1),
@@ -151,7 +172,11 @@ class _CalendarSettingsWidgetState extends State<CalendarSettingsWidget> {
                         width: 12,
                       ),
                       AppButton.icon(
-                          icon: Icons.repeat,
+                          backgroundColor: Colors.transparent,
+                          icon: SvgPicture.asset(
+                            Svgs.repeat,
+                            color: AppColors.mainColor,
+                          ),
                           onTap: () {
                             context
                                 .read<SettingsBloc>()
@@ -170,7 +195,7 @@ class _CalendarSettingsWidgetState extends State<CalendarSettingsWidget> {
 class SettingsCardWidget2 extends StatelessWidget {
   final bool select;
   final String title;
-  final IconData icon;
+  final Widget icon;
   final void Function(bool) onChanged;
   const SettingsCardWidget2({
     super.key,
@@ -187,7 +212,7 @@ class SettingsCardWidget2 extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Row(children: [
-          Icon(icon),
+          icon,
           const SizedBox(width: 5),
           Text(title, style: AppTextStyle.b4f16),
           const Spacer(),
@@ -202,7 +227,7 @@ class SettingsCardWidget2 extends StatelessWidget {
               inactiveThumbColor: Colors.white,
               inactiveTrackColor: Colors.transparent,
               activeColor: Colors.white,
-              activeTrackColor: Colors.amber,
+              activeTrackColor: AppColors.mainColor,
               value: select,
               onChanged: onChanged,
             ),
@@ -215,7 +240,7 @@ class SettingsCardWidget2 extends StatelessWidget {
 
 class SettingsCardWidget extends StatelessWidget {
   final String title;
-  final IconData icon;
+  final Widget icon;
   final num initialValue;
   final List<num> valueList;
   final List<String> textList;
@@ -247,7 +272,7 @@ class SettingsCardWidget extends StatelessWidget {
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           Row(
             children: [
-              Icon(icon),
+              icon,
               const SizedBox(width: 5),
               Text(title, style: AppTextStyle.b4f16),
             ],

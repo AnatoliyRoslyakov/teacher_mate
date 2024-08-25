@@ -1,12 +1,14 @@
 import 'package:calendar/calendar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:teacher_mate/src/bloc/config_bloc/config_bloc.dart';
 import 'package:teacher_mate/src/bloc/lesson_bloc/lesson_bloc.dart';
 import 'package:teacher_mate/src/bloc/settings_bloc/settings_bloc.dart';
 import 'package:teacher_mate/src/bloc/student_bloc/student_bloc.dart';
 import 'package:teacher_mate/core/router/app_router.dart';
+import 'package:teacher_mate/src/theme/resource/svgs.dart';
 
 class MobileHomePage extends StatefulWidget {
   final GlobalKey<ScaffoldState> scaffoldKey;
@@ -64,7 +66,7 @@ class _MobileHomePageState extends State<MobileHomePage>
                           onPressed: () {
                             widget.scaffoldKey.currentState?.openDrawer();
                           },
-                          icon: const Icon(Icons.menu))),
+                          icon: SvgPicture.asset(Svgs.menu))),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,

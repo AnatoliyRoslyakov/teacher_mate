@@ -133,7 +133,7 @@ class _CalendarGridSectionState extends State<CalendarGridSection> {
                                 ? 30
                                 : 00);
                 return InkWell(
-                  hoverColor: Colors.amber,
+                  hoverColor: const Color.fromARGB(76, 68, 137, 255),
                   onTap: () {
                     widget.createLesson(
                       context: context,
@@ -261,7 +261,7 @@ class _CalendarGridSectionState extends State<CalendarGridSection> {
 //                                 ? 30
 //                                 : 00);
 //                     return InkWell(
-//                       hoverColor: Colors.amber,
+//                       hoverColor: AppColors.mainColor,
 //                       onTap: () {
 //                         widget.createLesson(
 //                           context,
