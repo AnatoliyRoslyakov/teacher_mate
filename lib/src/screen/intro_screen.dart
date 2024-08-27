@@ -2,12 +2,15 @@ import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'dart:math';
 
 import 'package:teacher_mate/core/router/app_router.dart';
+import 'package:teacher_mate/src/theme/app_text_style.dart';
+import 'package:teacher_mate/src/theme/resource/svgs.dart';
 
 class IntroScreen extends StatelessWidget {
   const IntroScreen({super.key});
@@ -27,7 +30,7 @@ class IntroScreen extends StatelessWidget {
 
     return CircularMotionAnimation(
       web: kIsWeb,
-      startAngel: 0, // 0, pi/2, 3pi/4, pi,
+      startAngel: 6 * pi / 4, // 0, pi/2, 3pi/4, pi,
       step: 4, // step >= 1
       scale: 1.4,
       sliderContent: List.generate(
@@ -50,17 +53,24 @@ class SliderContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          title,
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
-        ),
-        const SizedBox(
-          height: 12,
-        ),
-        Text(textAlign: TextAlign.center, description)
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        children: [
+          Text(
+            title,
+            style: AppTextStyle.b7f24,
+          ),
+          const SizedBox(
+            height: 12,
+          ),
+          Text(
+            textAlign: TextAlign.center,
+            description,
+            style: AppTextStyle.b4f16,
+          )
+        ],
+      ),
     );
   }
 }
@@ -80,9 +90,9 @@ class CircularMotionAnimation extends StatefulWidget {
       this.step = 4,
       this.scale = 1,
       this.colors = const [
+        Colors.blue,
         Colors.amber,
         Colors.green,
-        Colors.blue,
         Colors.purple,
         Colors.red,
       ],
@@ -156,202 +166,230 @@ class _CircularMotionAnimationState extends State<CircularMotionAnimation>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 30),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(
-                height: 100,
-              ),
-              Expanded(
-                flex: 3,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Transform.translate(
-                      offset: Offset(
-                        25 * cos(_currentAngle + pi),
-                        -50 * sin(_currentAngle + pi),
-                      ),
-                      child: Container(
-                        width: 180 * _scale,
-                        height: 180 * _scale,
-                        decoration: BoxDecoration(
-                          color: _colors[indexColor].withOpacity(0.2),
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: _colors[indexColor].withOpacity(0.5),
-                              spreadRadius: 3,
-                              blurRadius: 10,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Transform.translate(
-                      offset: Offset(
-                        20 * cos(_currentAngle),
-                        20 * sin(_currentAngle),
-                      ),
-                      child: ClipRRect(
-                          borderRadius: BorderRadius.circular(200),
-                          clipBehavior: Clip.antiAlias,
-                          child: BackdropFilter(
-                            filter: ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
-                            child: Container(
-                              width: 200 * _scale,
-                              height: 200 * _scale,
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                    color:
-                                        const Color.fromARGB(69, 255, 255, 255),
-                                    width: 4),
-                                gradient: RadialGradient(
-                                  colors: [
-                                    _colors[indexColor].withOpacity(0.5),
-                                    _colors[indexColor].withOpacity(0.2),
-                                  ],
-                                ),
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                          )),
-                    ),
-                    Transform.translate(
-                      offset: Offset(
-                        130 * _scale * cos(_currentAngle),
-                        140 * _scale * sin(_currentAngle),
-                      ),
-                      child: Container(
-                        width: 16,
-                        height: 16,
-                        decoration: BoxDecoration(
-                          color: _colors[indexColor].withOpacity(0.5),
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: _colors[indexColor].withOpacity(0.3),
-                              spreadRadius: 2,
-                              blurRadius: 3,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Transform.translate(
-                      offset: Offset(
-                        110 * _scale * cos(_currentAngle + 3 * pi / 6),
-                        110 * _scale * sin(_currentAngle + 3 * pi / 5),
-                      ),
-                      child: Container(
-                        width: 20,
-                        height: 20,
-                        decoration: BoxDecoration(
-                          color: _colors[indexColor].withOpacity(0.8),
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: _colors[indexColor].withOpacity(0.3),
-                              spreadRadius: 2,
-                              blurRadius: 4,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
+      backgroundColor: Colors.white,
+      body: Stack(
+        children: [
+          Align(
+            alignment: kIsWeb ? Alignment.bottomCenter : Alignment.center,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                SvgPicture.asset(
+                  Svgs.man,
+                  height: kIsWeb
+                      ? MediaQuery.of(context).size.height * 0.8
+                      : MediaQuery.of(context).size.height * 0.25,
                 ),
-              ),
-              SizedBox(
-                height: widget.web ? 200 : null,
-                child: CarouselSlider(
-                  items: widget.sliderContent,
-                  carouselController: buttonCarouselController,
-                  options: CarouselOptions(
-                    scrollPhysics: const NeverScrollableScrollPhysics(),
-                    autoPlay: false,
-                    enlargeCenterPage: true,
-                    viewportFraction: 1,
-                    aspectRatio: widget.web ? 10 : 16 / 9,
-                    enlargeFactor: 0.6,
-                    enlargeStrategy: CenterPageEnlargeStrategy.height,
-                    initialPage: 0,
+                SvgPicture.asset(
+                  Svgs.women,
+                  height: kIsWeb
+                      ? MediaQuery.of(context).size.height * 0.8
+                      : MediaQuery.of(context).size.height * 0.25,
+                ),
+              ],
+            ),
+          ),
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 30),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(
+                    height: 100,
                   ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 20, left: 20, right: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    indexColor == 0
-                        ? const SizedBox.shrink()
-                        : TextButton(
-                            onPressed: indexColor != 0
-                                ? () {
-                                    buttonCarouselController.previousPage(
-                                        duration: widget.duration,
-                                        curve: widget.animation);
-                                    _animateQuarter(reverse: true);
-                                  }
-                                : null,
-                            child: const Text(
-                              'Back',
-                              style: TextStyle(
-                                  color: Colors.grey,
-                                  fontWeight: FontWeight.w300),
-                            )),
-                    CircularStepProgressIndicator(
-                      height: 70,
-                      width: 70,
-                      totalSteps: _step,
-                      currentStep: indexColor + 1,
-                      stepSize: 4,
-                      padding: pi / 10,
-                      unselectedColor: Colors.transparent,
-                      selectedColor: _colors[indexColor],
-                      roundedCap: (_, isSelected) => isSelected,
-                      child: Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(200),
-                          onTap: _step != indexColor + 1
-                              ? () {
-                                  buttonCarouselController.nextPage(
-                                      duration: widget.duration,
-                                      curve: widget.animation);
-                                  _animateQuarter.call();
-                                }
-                              : () {
-                                  context.go(MobileRoutes.login.path);
-                                },
-                          child: CircleAvatar(
-                            backgroundColor: _colors[indexColor],
-                            child: _step == indexColor + 1
-                                ? const Text(
-                                    'GO',
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w300),
-                                  )
-                                : const Icon(
-                                    Icons.play_arrow,
-                                    color: Colors.white,
-                                  ),
+                  Expanded(
+                    flex: 3,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Transform.translate(
+                          offset: Offset(
+                            25 * cos(_currentAngle + pi),
+                            -50 * sin(_currentAngle + pi),
+                          ),
+                          child: Container(
+                            width: 180 * _scale,
+                            height: 180 * _scale,
+                            decoration: BoxDecoration(
+                              color: _colors[indexColor].withOpacity(0.2),
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: _colors[indexColor].withOpacity(0.5),
+                                  spreadRadius: 3,
+                                  blurRadius: 10,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
+                        Transform.translate(
+                          offset: Offset(
+                            20 * cos(_currentAngle),
+                            20 * sin(_currentAngle),
+                          ),
+                          child: ClipRRect(
+                              borderRadius: BorderRadius.circular(200),
+                              clipBehavior: Clip.antiAlias,
+                              child: BackdropFilter(
+                                filter:
+                                    ImageFilter.blur(sigmaX: 4.0, sigmaY: 4.0),
+                                child: Container(
+                                  width: 200 * _scale,
+                                  height: 200 * _scale,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: const Color.fromARGB(
+                                            69, 255, 255, 255),
+                                        width: 4),
+                                    gradient: RadialGradient(
+                                      colors: [
+                                        _colors[indexColor].withOpacity(0.5),
+                                        _colors[indexColor].withOpacity(0.2),
+                                      ],
+                                    ),
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                              )),
+                        ),
+                        Transform.translate(
+                          offset: Offset(
+                            130 * _scale * cos(_currentAngle),
+                            140 * _scale * sin(_currentAngle),
+                          ),
+                          child: Container(
+                            width: 16,
+                            height: 16,
+                            decoration: BoxDecoration(
+                              color: _colors[indexColor].withOpacity(0.5),
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: _colors[indexColor].withOpacity(0.3),
+                                  spreadRadius: 2,
+                                  blurRadius: 3,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Transform.translate(
+                          offset: Offset(
+                            110 * _scale * cos(_currentAngle + 3 * pi / 6),
+                            110 * _scale * sin(_currentAngle + 3 * pi / 5),
+                          ),
+                          child: Container(
+                            width: 20,
+                            height: 20,
+                            decoration: BoxDecoration(
+                              color: _colors[indexColor].withOpacity(0.8),
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: _colors[indexColor].withOpacity(0.3),
+                                  spreadRadius: 2,
+                                  blurRadius: 4,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 100,
+                  ),
+                  SizedBox(
+                    height: widget.web ? 200 : null,
+                    child: CarouselSlider(
+                      items: widget.sliderContent,
+                      carouselController: buttonCarouselController,
+                      options: CarouselOptions(
+                        scrollPhysics: const NeverScrollableScrollPhysics(),
+                        autoPlay: false,
+                        enlargeCenterPage: true,
+                        viewportFraction: 1,
+                        aspectRatio: widget.web ? 10 : 2.5,
+                        enlargeFactor: 0.4,
+                        enlargeStrategy: CenterPageEnlargeStrategy.height,
+                        initialPage: 0,
                       ),
                     ),
-                  ],
-                ),
-              )
-            ],
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(bottom: 20, left: 20, right: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        indexColor == 0
+                            ? const SizedBox.shrink()
+                            : TextButton(
+                                onPressed: indexColor != 0
+                                    ? () {
+                                        buttonCarouselController.previousPage(
+                                            duration: widget.duration,
+                                            curve: widget.animation);
+                                        _animateQuarter(reverse: true);
+                                      }
+                                    : null,
+                                child: Text(
+                                  'Back',
+                                  style: AppTextStyle.b3f16
+                                      .copyWith(color: Colors.grey),
+                                )),
+                        CircularStepProgressIndicator(
+                          height: 70,
+                          width: 70,
+                          totalSteps: _step,
+                          currentStep: indexColor + 1,
+                          stepSize: 4,
+                          padding: pi / 10,
+                          unselectedColor: Colors.transparent,
+                          selectedColor: _colors[indexColor],
+                          roundedCap: (_, isSelected) => isSelected,
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(200),
+                              onTap: _step != indexColor + 1
+                                  ? () {
+                                      buttonCarouselController.nextPage(
+                                          duration: widget.duration,
+                                          curve: widget.animation);
+                                      _animateQuarter.call();
+                                    }
+                                  : () {
+                                      context.go(MobileRoutes.login.path);
+                                    },
+                              child: CircleAvatar(
+                                backgroundColor: _colors[indexColor],
+                                child: _step == indexColor + 1
+                                    ? Text(
+                                        'GO',
+                                        style: AppTextStyle.b3f16
+                                            .copyWith(color: Colors.white),
+                                      )
+                                    : const Icon(
+                                        Icons.play_arrow,
+                                        color: Colors.white,
+                                      ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

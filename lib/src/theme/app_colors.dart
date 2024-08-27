@@ -6,4 +6,5 @@ class AppColors {
   //Common colors
   // static const mainColor = Color(0xffFFBF00);
   static const mainColor = Color.fromARGB(255, 62, 94, 254);
+  // static const mainColor = Color.fromARGB(255, 10, 130, 222);
 }

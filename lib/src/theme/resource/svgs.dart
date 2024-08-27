@@ -34,4 +34,10 @@ class Svgs {
       '/Users/anatolijroslakov/GitHub/teacher_mate/assets/svg/telegram2.svg';
   static const SvgAsset menu =
       '/Users/anatolijroslakov/GitHub/teacher_mate/assets/svg/menu.svg';
+  static const SvgAsset image1 =
+      '/Users/anatolijroslakov/GitHub/teacher_mate/assets/svg/image1.svg';
+  static const SvgAsset women =
+      '/Users/anatolijroslakov/GitHub/teacher_mate/assets/svg/women.svg';
+  static const SvgAsset man =
+      '/Users/anatolijroslakov/GitHub/teacher_mate/assets/svg/man.svg';
 }

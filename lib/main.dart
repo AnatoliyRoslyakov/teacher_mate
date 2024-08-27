@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -79,12 +77,11 @@ List<BlocListener> _globalListeners() {
   return [
     BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
-        log(state.isFirstStart.toString());
         if (state.token.isNotEmpty) {
           AppRouter.rootNavigatorKey.currentContext
               ?.goNamed(MobileRoutes.home.name);
           return;
-        } else if (state.isFirstStart) {
+        } else if (!state.isFirstStart) {
           AppRouter.rootNavigatorKey.currentContext
               ?.goNamed(MobileRoutes.intro.name);
           return;

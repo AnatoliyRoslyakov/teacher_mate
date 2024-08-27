@@ -31,6 +31,13 @@ class AppTextStyle {
         fontSize: 12,
         color: Colors.black87,
       );
+
+  static TextStyle get b3f16 => _baseFonts.copyWith(
+        fontWeight: FontWeight.w300,
+        fontSize: 16,
+        color: Colors.black87,
+      );
+
   static TextStyle get b3f10 => _baseFonts.copyWith(
         fontWeight: FontWeight.w300,
         fontSize: 10,
