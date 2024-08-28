@@ -41,8 +41,9 @@ class ConfigBloc extends Bloc<ConfigEvent, ConfigState> {
       ConfigInitEvent event, Emitter<ConfigState> emitter) async {
     return emitter.forEach(Connectivity().onConnectivityChanged,
         onData: (data) {
-      final isConnected = data.contains(ConnectivityResult.none);
-      return state.copyWith(isConnected: !isConnected);
+      final isConnected = !data.contains(ConnectivityResult.none);
+      log(data.toString());
+      return state.copyWith(isConnected: isConnected);
     });
   }
 

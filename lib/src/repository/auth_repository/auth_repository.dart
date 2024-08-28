@@ -33,8 +33,9 @@ class AuthRepository implements IAuthRepository {
   @override
   Future<String> login({required String code}) async {
     final AuthResponse token = await apiHandler.login(AuthRequest(code: code));
-    preferences.setString(_tokenKey, token.token);
-    return token.token;
+    if (token.token == null) throw Exception('${token.error}');
+    preferences.setString(_tokenKey, token.token!);
+    return token.token!;
   }
 
   @override

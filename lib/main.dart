@@ -81,7 +81,7 @@ List<BlocListener> _globalListeners() {
           AppRouter.rootNavigatorKey.currentContext
               ?.goNamed(MobileRoutes.home.name);
           return;
-        } else if (!state.isFirstStart) {
+        } else if (state.isFirstStart) {
           AppRouter.rootNavigatorKey.currentContext
               ?.goNamed(MobileRoutes.intro.name);
           return;

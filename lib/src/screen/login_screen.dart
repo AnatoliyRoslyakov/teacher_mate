@@ -10,6 +10,8 @@ import 'package:teacher_mate/src/widgets/shared/app_button.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:teacher_mate/src/widgets/shared/text_form_field_widget.dart';
+import 'package:teacher_mate/src/widgets/toster.dart';
+import 'package:teacher_mate/src/widgets/toster_content.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -25,13 +27,24 @@ class _LoginScreenState extends State<LoginScreen> {
     return BlocListener<ConfigBloc, ConfigState>(
       listenWhen: (p, c) => p.isConnected != c.isConnected,
       listener: (context, state) {
-        if (!state.isConnected) {
-          _showNointernatConnection(context);
+        if (state.isConnected) {
           return;
+        } else {
+          _showNointernatConnection(context);
         }
       },
       child: BlocConsumer<AuthBloc, AuthState>(
-        listener: (context, state) {},
+        listener: (context, state) {
+          final Widget child = TosterContent(
+              icon: SvgPicture.asset(
+                Svgs.info,
+                color: Colors.white,
+              ),
+              label: 'Invalid code');
+          if (state.failur) {
+            Toster().show(child);
+          }
+        },
         builder: (context, state) => Scaffold(
           body: GestureDetector(
             onTap: () {
@@ -180,13 +193,14 @@ class NoInternetConnectionDialog extends StatelessWidget {
                   height: 24,
                 ),
                 AppButton.base(
-                  label: 'Try again',
-                  onTap: () {
-                    Navigator.pop(
-                      context,
-                    );
-                  },
-                )
+                    label: 'Try again',
+                    onTap: () {
+                      context.read<ConfigBloc>().state.isConnected
+                          ? Navigator.pop(
+                              context,
+                            )
+                          : null;
+                    })
               ],
             ),
           ),

@@ -4,8 +4,10 @@ part 'auth_response.g.dart';
 
 @JsonSerializable()
 class AuthResponse {
-  final String token;
+  final String? token;
+  final String? error;
   AuthResponse({
+    required this.error,
     required this.token,
   });
 

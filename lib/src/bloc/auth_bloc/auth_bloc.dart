@@ -39,24 +39,32 @@ class AuthState {
   final String token;
   final String code;
   final bool isFirstStart;
-  const AuthState(
-      {required this.isFirstStart, required this.code, required this.token});
+  final bool failur;
+  const AuthState({
+    required this.failur,
+    required this.isFirstStart,
+    required this.code,
+    required this.token,
+  });
 
   factory AuthState.notAuthed() => const AuthState(
         isFirstStart: false,
         code: '',
         token: '',
+        failur: false,
       );
 
   AuthState copyWith({
     String? token,
     String? code,
     bool? isFirstStart,
+    bool? failur,
   }) {
     return AuthState(
       token: token ?? this.token,
       code: code ?? this.code,
       isFirstStart: isFirstStart ?? this.isFirstStart,
+      failur: failur ?? this.failur,
     );
   }
 }
@@ -97,10 +105,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState>
       AuthGetTokenEvent event, Emitter<AuthState> emitter) async {
     try {
       String token = await authRepository.login(code: state.code);
-      emitter(state.copyWith(token: token, isFirstStart: false));
+      log(token);
+      emitter(state.copyWith(token: token, isFirstStart: false, failur: false));
     } catch (e) {
       emitter(
-        AuthState.notAuthed(),
+        state.copyWith(failur: true),
+      );
+      emitter(
+        state.copyWith(failur: false),
       );
     }
   }
