@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:calendar/calendar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:teacher_mate/core/models/request/student_delete_request.dart';
@@ -20,8 +22,8 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
 
   Future<void> _create(
       StudentCreateEvent event, Emitter<StudentState> emitter) async {
-    await studentRepository
-        .addStudent(StudentRequest(name: event.name, price: event.price));
+    await studentRepository.addStudent(StudentRequest(
+        name: event.name, price: event.price, tgName: event.tgName));
     add(const StudentReadEvent());
   }
 
@@ -31,15 +33,24 @@ class StudentBloc extends Bloc<StudentEvent, StudentState> {
     final data = await studentRepository.getListStudent();
     final studentEntity = List.generate(data.length, (i) {
       return StudentEntity(
-          id: data[i].id, name: data[i].name, price: data[i].price);
+          id: data[i].id,
+          name: data[i].name,
+          price: data[i].price,
+          tgName: data[i].tgName);
     });
     emitter(state.copyWith(isLoading: false, studentEntity: studentEntity));
   }
 
   Future<void> _update(
       StudentUpdateEvent event, Emitter<StudentState> emitter) async {
-    await studentRepository.updateStudent(
-        [StudentRequest(id: event.id, name: event.name, price: event.price)]);
+    await studentRepository.updateStudent([
+      StudentRequest(
+        id: event.id,
+        name: event.name,
+        price: event.price,
+        tgName: event.tgName,
+      )
+    ]);
     add(const StudentReadEvent());
   }
 

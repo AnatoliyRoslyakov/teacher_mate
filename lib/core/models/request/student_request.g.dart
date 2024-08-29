@@ -11,6 +11,7 @@ StudentRequest _$StudentRequestFromJson(Map<String, dynamic> json) =>
       id: (json['id'] as num?)?.toInt() ?? 0,
       name: json['name'] as String,
       price: (json['price'] as num).toInt(),
+      tgName: json['tgName'] as String,
     );
 
 Map<String, dynamic> _$StudentRequestToJson(StudentRequest instance) =>
@@ -18,4 +19,5 @@ Map<String, dynamic> _$StudentRequestToJson(StudentRequest instance) =>
       'id': instance.id,
       'name': instance.name,
       'price': instance.price,
+      'tgName': instance.tgName,
     };

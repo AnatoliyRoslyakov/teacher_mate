@@ -10,7 +10,8 @@ void createStudentDialog(
     String name = '',
     bool edit = false,
     int price = 0,
-    bool nested = false}) {
+    bool nested = false,
+    String tgName = ''}) {
   showDialog(
     context: context,
     barrierDismissible: true,
@@ -36,7 +37,12 @@ void createStudentDialog(
                       ),
                       Expanded(
                         child: CreateStudentWidget(
-                            id: id, name: name, edit: edit, price: price),
+                          id: id,
+                          name: name,
+                          edit: edit,
+                          price: price,
+                          tgName: tgName,
+                        ),
                       ),
                     ]))),
           ));

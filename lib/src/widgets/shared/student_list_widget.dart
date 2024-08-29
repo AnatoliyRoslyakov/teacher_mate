@@ -146,17 +146,6 @@ class _StudentListWidgetState extends State<StudentListWidget> {
                                                     ],
                                                   ),
                                                 ),
-                                                // Expanded(
-                                                //   child: Align(
-                                                //     alignment:
-                                                //         Alignment.centerRight,
-                                                //     child: Text(
-                                                //       'price: ${stateStudent.studentEntity[i].price}р',
-                                                //       overflow:
-                                                //           TextOverflow.ellipsis,
-                                                //     ),
-                                                //   ),
-                                                // ),
                                               ],
                                             ),
                                           ),
@@ -177,7 +166,10 @@ class _StudentListWidgetState extends State<StudentListWidget> {
                                                           .name,
                                                       'price': stateStudent
                                                           .studentEntity[i]
-                                                          .price
+                                                          .price,
+                                                      'tgName': stateStudent
+                                                          .studentEntity[i]
+                                                          .tgName
                                                     })
                                               : createStudentDialog(
                                                   context: context,
@@ -187,7 +179,9 @@ class _StudentListWidgetState extends State<StudentListWidget> {
                                                   name: stateStudent
                                                       .studentEntity[i].name,
                                                   price: stateStudent
-                                                      .studentEntity[i].price);
+                                                      .studentEntity[i].price,
+                                                  tgName: stateStudent
+                                                      .studentEntity[i].tgName);
                                         },
                                         child: Container(
                                           height: 50,
@@ -253,8 +247,13 @@ class _StudentListWidgetState extends State<StudentListWidget> {
           InkWell(
               onTap: () {
                 widget.mobile
-                    ? context.push(MobileRoutes.createStudent.path,
-                        extra: {'edit': false, 'id': 0, 'name': '', 'price': 0})
+                    ? context.push(MobileRoutes.createStudent.path, extra: {
+                        'edit': false,
+                        'id': 0,
+                        'name': '',
+                        'price': 0,
+                        'tgName': ''
+                      })
                     : createStudentDialog(
                         context: context,
                         nested: !widget.toggle,

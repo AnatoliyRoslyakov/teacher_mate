@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -77,13 +79,19 @@ class AppRouter {
             pageBuilder: (context, state) {
               return CupertinoModalSheetPage<void>(
                 builder: (context) {
+                  log(state.extra.toString());
                   final bool edit = (state.extra as Map)['edit'];
                   final int id = (state.extra as Map)['id'];
                   final String name = (state.extra as Map)['name'];
                   final int price = (state.extra as Map)['price'];
-
+                  final String tgName = (state.extra as Map)['tgName'];
                   return CreateStudentScreen(
-                      id: id, name: name, edit: edit, price: price);
+                    id: id,
+                    name: name,
+                    edit: edit,
+                    price: price,
+                    tgName: tgName,
+                  );
                 },
               );
             }),

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:teacher_mate/src/bloc/student_bloc/student_bloc.dart';
 import 'package:teacher_mate/src/theme/resource/svgs.dart';
+import 'package:teacher_mate/src/util/url_util.dart';
 import 'package:teacher_mate/src/widgets/shared/amount_form_field.dart';
 import 'package:teacher_mate/src/widgets/shared/app_button.dart';
 import 'package:teacher_mate/src/widgets/shared/divider_title_widget.dart';
@@ -13,14 +14,15 @@ class CreateStudentWidget extends StatefulWidget {
   final String name;
   final bool edit;
   final int price;
+  final String tgName;
 
-  const CreateStudentWidget({
-    super.key,
-    required this.id,
-    required this.name,
-    required this.edit,
-    required this.price,
-  });
+  const CreateStudentWidget(
+      {super.key,
+      required this.id,
+      required this.name,
+      required this.edit,
+      required this.price,
+      required this.tgName});
 
   @override
   State<CreateStudentWidget> createState() => _CreateStudentWidgetState();
@@ -32,6 +34,7 @@ class _CreateStudentWidgetState extends State<CreateStudentWidget> {
   late int price;
   late bool edit;
   late int id;
+  late String tgName;
 
   @override
   void initState() {
@@ -39,6 +42,7 @@ class _CreateStudentWidgetState extends State<CreateStudentWidget> {
     price = widget.price;
     edit = widget.edit;
     id = widget.id;
+    tgName = widget.tgName;
     super.initState();
   }
 
@@ -80,8 +84,13 @@ class _CreateStudentWidgetState extends State<CreateStudentWidget> {
                       hintText: '@MyStudent',
                       maxSym: 15,
                       lines: (1, 1),
-                      initValue: '',
-                      onChange: (value) => '', // tg = value,
+                      initValue: tgName,
+                      onChange: (value) {
+                        setState(() {
+                          tgName = value;
+                        });
+                        return tgName;
+                      },
                     ),
                   ),
                   AppButton.icon(
@@ -89,7 +98,9 @@ class _CreateStudentWidgetState extends State<CreateStudentWidget> {
                       icon: SvgPicture.asset(
                         Svgs.telegram,
                       ),
-                      onTap: () {})
+                      onTap: () {
+                        UrlUtils.openStudent(tgName);
+                      })
                 ],
               ),
               const DividerTitleWidget(title: 'Price'),
@@ -120,12 +131,10 @@ class _CreateStudentWidgetState extends State<CreateStudentWidget> {
                   onTap: isValid
                       ? () {
                           widget.edit
-                              ? context
-                                  .read<StudentBloc>()
-                                  .add(StudentEvent.update(id, name, price))
-                              : context
-                                  .read<StudentBloc>()
-                                  .add(StudentEvent.create(name, price));
+                              ? context.read<StudentBloc>().add(
+                                  StudentEvent.update(id, name, price, tgName))
+                              : context.read<StudentBloc>().add(
+                                  StudentEvent.create(name, price, tgName));
                           Navigator.of(context).pop();
                         }
                       : null,

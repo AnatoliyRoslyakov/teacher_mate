@@ -97,7 +97,10 @@ class EventCardWidget extends StatelessWidget {
                               .firstWhere(
                                 (e) => e.id == lesson.studentId,
                                 orElse: () => StudentEntity(
-                                    id: 0, name: 'unknown', price: 0),
+                                    id: 0,
+                                    name: 'unknown',
+                                    price: 0,
+                                    tgName: ''),
                               )
                               .name,
                         ),
