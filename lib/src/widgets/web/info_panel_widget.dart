@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:teacher_mate/src/theme/app_colors.dart';
+import 'package:teacher_mate/src/theme/app_text_style.dart';
 
 class InfoPanelWidget extends StatelessWidget {
+  const InfoPanelWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -10,13 +13,13 @@ class InfoPanelWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          // Текстовые кнопки с иконками
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               _buildTextButton(Icons.info, 'О нас', () {}),
               _buildTextButton(Icons.contact_mail, 'Контакты', () {}),
-              _buildTextButton(Icons.support, 'Поддержка', () {}),
+              Expanded(
+                  child: _buildTextButton(Icons.support, 'Поддержка', () {})),
             ],
           ),
 
@@ -38,24 +41,6 @@ class InfoPanelWidget extends StatelessWidget {
             ],
           ),
 
-          // const Divider(
-          //   color: Colors.black87,
-          //   thickness: 1,
-          // ),
-
-          // // Дополнительная информация
-          // const Text(
-          //   'Дополнительная информация:',
-          //   style: TextStyle(
-          //     fontWeight: FontWeight.bold,
-          //     fontSize: 16.0,
-          //   ),
-          // ),
-          // const SizedBox(height: 10.0),
-          // const Text(
-          //   'Мы стремимся предоставлять вам лучшие услуги. '
-          //   'Если у вас есть вопросы или предложения, не стесняйтесь обращаться к нам.',
-          //   style: TextStyle(color: Colors.black87),
           // ),
         ],
       ),
@@ -65,10 +50,13 @@ class InfoPanelWidget extends StatelessWidget {
   Widget _buildTextButton(IconData icon, String label, VoidCallback onPressed) {
     return TextButton.icon(
       onPressed: onPressed,
-      icon: Icon(icon, color: Colors.black87),
+      icon: Icon(
+        color: Colors.black87,
+        icon,
+      ),
       label: Text(
         label,
-        style: const TextStyle(color: Colors.black54),
+        style: AppTextStyle.b4f14,
       ),
     );
   }

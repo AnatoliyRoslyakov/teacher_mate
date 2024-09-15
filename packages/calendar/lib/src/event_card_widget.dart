@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:calendar/calendar.dart';
 import 'package:calendar/src/calendar_grid_section.dart';
 import 'package:calendar/src/theme/calendar_text_style.dart';
@@ -5,13 +7,13 @@ import 'package:flutter/material.dart';
 
 class EventCardWidget extends StatelessWidget {
   const EventCardWidget({
-    Key? key,
+    super.key,
     required this.top,
     required this.widget,
     required this.lesson,
     required this.height,
     required this.index,
-  }) : super(key: key);
+  });
 
   final double top;
   final CalendarGridSection widget;

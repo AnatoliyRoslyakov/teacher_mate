@@ -9,6 +9,7 @@ import 'package:teacher_mate/core/router/app_router.dart';
 import 'package:teacher_mate/src/theme/app_colors.dart';
 import 'package:teacher_mate/src/theme/resource/svgs.dart';
 import 'package:teacher_mate/src/widgets/shared/app_button.dart';
+import 'package:teacher_mate/src/widgets/shared/divider_title_widget.dart';
 import 'package:teacher_mate/src/widgets/shared/user_info_widget.dart';
 
 class DrawerMobileWidget extends StatelessWidget {
@@ -26,51 +27,85 @@ class DrawerMobileWidget extends StatelessWidget {
             child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 6.0, sigmaY: 6.0),
                 child: const UserInfoWidget())),
-        Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            children: [
-              AppButton.settings(
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              children: [
+                AppButton.settings(
                   backgroundColor: Colors.white.withOpacity(0.4),
-                  label: 'Calendar settings',
+                  label: 'My students list',
                   icon: SvgPicture.asset(
-                    Svgs.settings,
+                    Svgs.users,
                     color: AppColors.mainColor,
                   ),
                   onTap: () {
                     Navigator.pop(context);
-                    context.push(MobileRoutes.settings.path);
-                  }),
-              const SizedBox(
-                height: 10,
-              ),
-              AppButton.settings(
-                backgroundColor: Colors.white.withOpacity(0.4),
-                label: 'My students list',
-                icon: SvgPicture.asset(
-                  Svgs.users,
-                  color: AppColors.mainColor,
+                    context.push(MobileRoutes.students.path);
+                  },
                 ),
-                onTap: () {
-                  Navigator.pop(context);
-                  context.push(MobileRoutes.students.path);
-                },
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              AppButton.settings(
-                backgroundColor: Colors.white.withOpacity(0.4),
-                label: 'Logout',
-                icon: SvgPicture.asset(
-                  Svgs.logout,
-                  color: Colors.red,
+                const SizedBox(
+                  height: 10,
                 ),
-                onTap: () {
-                  context.read<AuthBloc>().add(const AuthEvent.logout());
-                },
-              ),
-            ],
+                AppButton.settings(
+                    backgroundColor: Colors.white.withOpacity(0.4),
+                    label: 'Calendar settings',
+                    icon: SvgPicture.asset(
+                      Svgs.settings,
+                      color: AppColors.mainColor,
+                    ),
+                    onTap: () {
+                      Navigator.pop(context);
+                      context.push(MobileRoutes.settings.path);
+                    }),
+                const SizedBox(
+                  height: 10,
+                ),
+                AppButton.settings(
+                  backgroundColor: Colors.white.withOpacity(0.4),
+                  label: 'Logout',
+                  icon: SvgPicture.asset(
+                    Svgs.logout,
+                    color: Colors.red,
+                  ),
+                  onTap: () {
+                    context.read<AuthBloc>().add(const AuthEvent.logout());
+                  },
+                ),
+                const DividerTitleWidget(
+                  title: 'Soon',
+                  height: 8,
+                ),
+                Opacity(
+                  opacity: 0.5,
+                  child: AppButton.settings(
+                      backgroundColor: Colors.white.withOpacity(0.4),
+                      label: 'Financial analysis',
+                      icon: SvgPicture.asset(
+                        Svgs.chart,
+                        color: AppColors.mainColor,
+                      ),
+                      onTap: () {}),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Opacity(
+                  opacity: 0.5,
+                  child: AppButton.settings(
+                      backgroundColor: Colors.white.withOpacity(0.4),
+                      label: 'Push Notifications',
+                      icon: SvgPicture.asset(
+                        Svgs.bell,
+                        color: AppColors.mainColor,
+                      ),
+                      onTap: () {}),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+              ],
+            ),
           ),
         ),
       ],

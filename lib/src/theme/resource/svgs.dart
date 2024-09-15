@@ -22,4 +22,7 @@ class Svgs {
   static const SvgAsset women = 'assets/svg/women.svg';
   static const SvgAsset man = 'assets/svg/man.svg';
   static const SvgAsset info = 'assets/svg/info.svg';
+  static const SvgAsset bell = 'assets/svg/bell.svg';
+  static const SvgAsset chart = 'assets/svg/chart.svg';
+  static const SvgAsset addStudents = 'assets/svg/addStudents.svg';
 }

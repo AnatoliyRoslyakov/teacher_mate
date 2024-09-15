@@ -82,7 +82,7 @@ class _CalendarSettingsWidgetState extends State<CalendarSettingsWidget> {
                               color: AppColors.mainColor,
                             ),
                             initialValue: state.endDay,
-                            valueList: List.generate(8, (index) => index + 16),
+                            valueList: List.generate(9, (index) => index + 16),
                             textList: List.generate(
                                 16, (index) => '${(index + 16)} hours'),
                             onChanged: (String? value) {

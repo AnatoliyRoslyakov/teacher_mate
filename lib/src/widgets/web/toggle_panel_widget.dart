@@ -115,7 +115,8 @@ class _TogglePanelWidgetState extends State<TogglePanelWidget>
                     decoration: BoxDecoration(
                         gradient: LinearGradient(colors: [
                       Colors.white.withOpacity(0.7),
-                      Colors.grey.withOpacity(0.1),
+                      const Color.fromARGB(255, 159, 175, 255)
+                          .withOpacity(0.001),
                     ])),
                     child: Padding(
                       padding: const EdgeInsets.all(20),

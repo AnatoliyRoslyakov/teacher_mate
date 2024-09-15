@@ -57,19 +57,20 @@ class _StudentListWidgetState extends State<StudentListWidget> {
                   : Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: stateStudent.studentEntity.isEmpty
-                          ? const Center(
+                          ? Center(
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text(
+                                  const Text(
                                     'The list is empty, add a student',
                                     style: TextStyle(color: Colors.grey),
                                   ),
-                                  Icon(
-                                    Icons.touch_app,
-                                    size: 100,
-                                    color: Colors.grey,
-                                  ),
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(20.0),
+                                      child: SvgPicture.asset(Svgs.addStudents),
+                                    ),
+                                  )
                                 ],
                               ),
                             )
@@ -223,17 +224,6 @@ class _StudentListWidgetState extends State<StudentListWidget> {
                                                     ],
                                                   ),
                                                 ),
-                                                // Expanded(
-                                                //   child: Align(
-                                                //     alignment:
-                                                //         Alignment.centerRight,
-                                                //     child: Text(
-                                                //       'price: ${stateStudent.studentEntity[i].price}р',
-                                                //       overflow:
-                                                //           TextOverflow.ellipsis,
-                                                //     ),
-                                                //   ),
-                                                // ),
                                               ],
                                             ),
                                           ),

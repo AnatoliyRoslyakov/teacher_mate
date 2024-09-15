@@ -227,11 +227,12 @@ class _CreateLessonWidgetState extends State<CreateLessonWidget> {
                   decoration: const BoxDecoration(
                       border: Border(top: BorderSide(color: Colors.black12))),
                   child: Theme(
-                    data: Theme.of(context)
-                        .copyWith(dividerColor: Colors.transparent),
+                    data: Theme.of(context).copyWith(
+                      dividerColor: Colors.transparent,
+                      splashColor: Colors.transparent,
+                    ),
                     child: ExpansionTile(
                       initiallyExpanded: description.isEmpty ? false : true,
-                      collapsedBackgroundColor: Colors.transparent,
                       enableFeedback: true,
                       dense: true,
                       tilePadding: EdgeInsets.zero,

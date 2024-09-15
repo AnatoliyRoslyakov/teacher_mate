@@ -8,6 +8,8 @@ import 'package:teacher_mate/src/bloc/lesson_bloc/lesson_bloc.dart';
 import 'package:teacher_mate/src/bloc/settings_bloc/settings_bloc.dart';
 import 'package:teacher_mate/src/bloc/student_bloc/student_bloc.dart';
 import 'package:teacher_mate/core/router/app_router.dart';
+import 'package:teacher_mate/src/theme/app_colors.dart';
+import 'package:teacher_mate/src/theme/app_text_style.dart';
 import 'package:teacher_mate/src/theme/resource/svgs.dart';
 
 class MobileHomePage extends StatefulWidget {
@@ -48,53 +50,78 @@ class _MobileHomePageState extends State<MobileHomePage>
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<ConfigBloc, ConfigState>(
-      listener: (context, state) {},
-      child: BlocBuilder<LessonBloc, LessonState>(builder: (context, state) {
-        return BlocBuilder<SettingsBloc, SettingsState>(
-            builder: (context, settings) {
-          return BlocBuilder<StudentBloc, StudentState>(
-              builder: (context, stateStudent) {
-            return Padding(
-              padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-              child: Stack(
-                children: [
-                  Positioned(
-                      top: 0,
-                      left: 0,
-                      child: IconButton(
-                          onPressed: () {
-                            widget.scaffoldKey.currentState?.openDrawer();
-                          },
-                          icon: SvgPicture.asset(Svgs.menu))),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Calendar(
-                            isLoading: state.isLoading,
-                            currentTime: calendarTime,
-                            getCurrentTime: getCurrentTime,
-                            createLesson: createLessonPage,
-                            mobile: true,
-                            minutesGrid: settings.minutesGrid,
-                            startHour: settings.startDay,
-                            endHour: settings.endDay,
-                            viewDay: settings.viewDays,
-                            lessons: state.mapLessons,
-                            student: stateStudent.studentEntity,
-                            startOfWeek: settings.week,
-                            threeDays: settings.three),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            );
-          });
+    return BlocBuilder<LessonBloc, LessonState>(builder: (context, state) {
+      return BlocBuilder<SettingsBloc, SettingsState>(
+          builder: (context, settings) {
+        return BlocBuilder<StudentBloc, StudentState>(
+            builder: (context, stateStudent) {
+          return Padding(
+            padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+            child: Stack(
+              children: [
+                BlocBuilder<ConfigBloc, ConfigState>(
+                    buildWhen: (p, c) => p != c,
+                    builder: (context, state) {
+                      return state.isConnected
+                          ? const SizedBox.shrink()
+                          : Container(
+                              width: double.infinity,
+                              height: 10,
+                              decoration: const BoxDecoration(
+                                  gradient: LinearGradient(
+                                      begin: Alignment.centerLeft,
+                                      end: Alignment.centerRight,
+                                      colors: [
+                                    Colors.white,
+                                    AppColors.mainColor,
+                                    Colors.white,
+                                  ])),
+                              child: Center(
+                                child: FittedBox(
+                                  child: Text(
+                                    'NO INTERNET CONNECTION',
+                                    style: AppTextStyle.b7f24
+                                        .copyWith(color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            );
+                    }),
+                Positioned(
+                    top: 0,
+                    left: 0,
+                    child: IconButton(
+                        onPressed: () {
+                          widget.scaffoldKey.currentState?.openDrawer();
+                        },
+                        icon: SvgPicture.asset(Svgs.menu))),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Calendar(
+                          isLoading: state.isLoading,
+                          currentTime: calendarTime,
+                          getCurrentTime: getCurrentTime,
+                          createLesson: createLessonPage,
+                          mobile: true,
+                          minutesGrid: settings.minutesGrid,
+                          startHour: settings.startDay,
+                          endHour: settings.endDay,
+                          viewDay: settings.viewDays,
+                          lessons: state.mapLessons,
+                          student: stateStudent.studentEntity,
+                          startOfWeek: settings.week,
+                          threeDays: settings.three),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
         });
-      }),
-    );
+      });
+    });
   }
 }
